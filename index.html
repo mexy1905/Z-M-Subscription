@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Z&M Subscription - Maç Arşivi</title>
+    <style>
+        /* Ana Stil */
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #121212; 
+            color: #e0e0e0; 
+            margin: 0; 
+            padding: 0; 
+            min-height: 100vh;
+        }
+        
+        /* Genel Konteyner ve Başlık */
+        .container { 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            padding: 20px; 
+        }
+        h1 { 
+            color: #D32F2F; /* KIRMIZI */
+            text-align: center; 
+            margin-bottom: 30px; 
+            font-size: 2.5em; 
+            letter-spacing: 1px;
+            padding-top: 20px;
+        }
+
+        /* Giriş Ekranı Stili */
+        #login-screen { 
+            text-align: center; 
+            padding: 50px; 
+            background: linear-gradient(145deg, #1e1e1e, #2a2a2a); 
+            border-radius: 12px; 
+            max-width: 400px; 
+            margin: 100px auto; 
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6); 
+        }
+        #login-screen h2 {
+            color: #D32F2F; /* KIRMIZI */
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+        .input-group { 
+            margin-bottom: 20px; 
+        }
+        .input-group input { 
+            width: 100%; 
+            padding: 12px; 
+            border: 1px solid #333; 
+            border-radius: 6px; 
+            background-color: #333; 
+            color: #e0e0e0; 
+            box-sizing: border-box; 
+            transition: border-color 0.3s;
+        }
+        .input-group input:focus {
+            border-color: #D32F2F; /* KIRMIZI */
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(211, 47, 47, 0.5); 
+        }
+        .button { 
+            background-color: #D32F2F; /* KIRMIZI */
+            color: white; 
+            padding: 12px 25px; 
+            border: none; 
+            border-radius: 6px; 
+            cursor: pointer; 
+            font-size: 16px; 
+            font-weight: bold;
+            transition: background-color 0.3s, transform 0.1s, box-shadow 0.3s; 
+            box-shadow: 0 4px #B71C1C; 
+        }
+        .button:active {
+            transform: translateY(2px);
+            box-shadow: 0 2px #B71C1C; 
+        }
+        .button:hover { 
+            background-color: #B71C1C; 
+        }
+        
+        /* Arşiv Ekranı Stili */
+        #arsiv-screen { 
+            display: none; 
+            padding-top: 60px; 
+        } 
+        #mac-listesi { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
+            gap: 25px; 
+            padding: 10px;
+        }
+        .mac-kart { 
+            background-color: #1e1e1e; 
+            border-radius: 10px; 
+            overflow: hidden; 
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); 
+            text-align: center; 
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .mac-kart:hover { 
+            transform: translateY(-8px); 
+            box-shadow: 0 12px 20px rgba(211, 47, 47, 0.3); 
+        }
+        .mac-kapak { 
+            width: 100%; 
+            height: 180px; 
+            object-fit: cover; 
+        }
+        .mac-bilgi { 
+            padding: 15px; 
+            flex-grow: 1;
+        }
+        .mac-bilgi h3 { 
+            margin: 5px 0 10px; 
+            color: white; 
+            font-size: 1.2em;
+        }
+        .mac-bilgi p { 
+            color: #aaa; 
+            font-size: 0.9em; 
+            margin-bottom: 20px; 
+        }
+        .indirme-butonu {
+            display: inline-block;
+            margin-bottom: 15px;
+            text-decoration: none;
+        }
+
+        /* --- YENİ MENÜ VE BİLDİRİM STİLLERİ --- */
+        #header-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 60px;
+            background-color: #1a1a1a;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            z-index: 100;
+        }
+        /* Menü butonu için kapsayıcı */
+        .menu-button-container {
+            position: relative;
+            display: inline-block;
+            margin-right: 20px;
+        }
+        .menu-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+            color: white;
+            font-size: 24px;
+            transition: color 0.3s;
+        }
+        .menu-button:hover {
+            color: #D32F2F; /* KIRMIZI */
+        }
+        /* Başlık üzerindeki bildirim balonu */
+        #menu-button-badge {
+            position: absolute;
+            top: 0px;
+            right: -10px;
+            background-color: #D32F2F;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 0.75em;
+            font-weight: bold;
+            min-width: 15px;
+            text-align: center;
+            line-height: 1;
+        }
+        .header-title {
+            color: #e0e0e0;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        
+        /* Yan Menü (Sidebar) */
+        #side-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 250px;
+            height: 100%;
+            background-color: #222;
+            z-index: 200;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.7);
+        }
+        #side-menu.open {
+            transform: translateX(0);
+        }
+        .menu-header {
+            padding: 20px;
+            background-color: #1a1a1a;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #D32F2F; /* KIRMIZI */
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+        .menu-header .close-button {
+            font-size: 28px;
+            cursor: pointer;
+            color: white;
+        }
+        .menu-item {
+            padding: 15px 20px;
+            cursor: pointer;
+            border-bottom: 1px solid #333;
+            transition: background-color 0.2s, color 0.2s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .menu-item:hover {
+            background-color: #333;
+            color: #D32F2F; /* KIRMIZI */
+        }
+        /* Menü içi bildirim balonu */
+        .badge {
+            background-color: #D32F2F;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 0.75em;
+            font-weight: bold;
+            line-height: 1;
+            min-width: 15px;
+            text-align: center;
+        }
+        
+        /* Duyuru metin stili */
+        .info-content h2, .info-content h3 { color: #D32F2F; margin-top: 15px; }
+        .info-content p, .info-content ul { line-height: 1.6; margin-bottom: 10px; }
+        .info-content ul { padding-left: 20px; }
+        
+        /* Menü Açıkken Arka Planı Karartma (Overlay) */
+        #menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 150;
+            display: none;
+        }
+
+        /* Mobil Uyum */
+        @media (max-width: 600px) {
+            .container { margin: 20px; padding: 10px; }
+            #login-screen { margin: 50px 20px; padding: 30px; max-width: 90%; }
+            #mac-listesi { grid-template-columns: 1fr; }
+            #side-menu { width: 80%; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. GİRİŞ EKRANI -->
+    <div id="login-screen">
+        <h2>Z&M Subscription Giriş</h2>
+        <div class="input-group">
+            <input type="text" id="username" placeholder="Kullanıcı Adı">
+        </div>
+        <div class="input-group">
+            <input type="password" id="password" placeholder="Şifre" onkeydown="if(event.key === 'Enter') loginControl()">
+        </div>
+        <button class="button" onclick="loginControl()">Giriş Yap</button>
+        <p id="error-message" style="color: #ff4d4d; margin-top: 15px; display: none;">Hatalı Kullanıcı Adı veya Şifre.</p>
+    </div>
+
+    <!-- 2. MAÇ ARŞİV EKRANI (Başlangıçta Gizli) -->
+    <div id="arsiv-screen">
+        
+        <!-- ÜST BAŞLIK VE MENÜ BUTONU -->
+        <div id="header-bar">
+            <div class="menu-button-container">
+                <button class="menu-button" onclick="toggleMenu(true)">
+                    <!-- Hamburger İkonu (SVG) -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+                </button>
+                <span id="menu-button-badge" class="badge" style="display:none;">0</span>
+            </div>
+            <span class="header-title">Z&M Maç Arşivi</span>
+        </div>
+
+        <!-- YAN MENÜ (SIDEBAR) -->
+        <div id="side-menu">
+            <div class="menu-header">
+                Filtrele
+                <span class="close-button" onclick="toggleMenu(false)">&times;</span>
+            </div>
+            
+            <!-- SABİT BİLGİ SAYFALARI -->
+            <div class="menu-item" onclick="showContent('Duyuru')">
+                Duyuru 
+                <span id="duyuru-badge" class="badge" style="display:none;">1</span>
+            </div>
+            <div class="menu-item" onclick="showContent('Kurallar')">
+                Kurallar
+                <span id="kurallar-badge" class="badge" style="display:none;">1</span>
+            </div>
+            
+            <!-- YENİ KATEGORİ FİLTRELERİ -->
+            <div class="menu-item" onclick="filterMaclar('Şampiyonlar Ligi Full Maçları')">
+                Şampiyonlar Ligi Full Maçları 
+                <span data-category="Şampiyonlar Ligi Full Maçları" class="badge category-badge" style="display:none;">0</span>
+            </div>
+            <div class="menu-item" onclick="filterMaclar('Süper Lig Full Maçları')">
+                Süper Lig Full Maçları 
+                <span data-category="Süper Lig Full Maçları" class="badge category-badge" style="display:none;">0</span>
+            </div>
+            <div class="menu-item" onclick="filterMaclar('İspanya(LaLiga) Ligi')">
+                İspanya(LaLiga) Ligi
+                <span data-category="İspanya(LaLiga) Ligi" class="badge category-badge" style="display:none;">0</span>
+            </div>
+            <div class="menu-item" onclick="filterMaclar('İngiltere(Premier) Ligi')">
+                İngiltere(Premier) Ligi
+                <span data-category="İngiltere(Premier) Ligi" class="badge category-badge" style="display:none;">0</span>
+            </div>
+            <div class="menu-item" onclick="filterMaclar('Almanya(Bundesliga) Ligi')">
+                Almanya(Bundesliga) Ligi
+                <span data-category="Almanya(Bundesliga) Ligi" class="badge category-badge" style="display:none;">0</span>
+            </div>
+            <div class="menu-item" onclick="filterMaclar('Avrupa Ligi Full Maçları')">
+                Avrupa Ligi Full Maçları
+                <span data-category="Avrupa Ligi Full Maçları" class="badge category-badge" style="display:none;">0</span>
+            </div>
+            <div class="menu-item" onclick="filterMaclar('Konferans Ligi Full Maçları')">
+                Konferans Ligi Full Maçları
+                <span data-category="Konferans Ligi Full Maçları" class="badge category-badge" style="display:none;">0</span>
+            </div>
+            <div class="menu-item" onclick="filterMaclar('Basketbol Maçları')">
+                Basketbol Maçları
+                <span data-category="Basketbol Maçları" class="badge category-badge" style="display:none;">0</span>
+            </div>
+            <div class="menu-item" onclick="filterMaclar('Diğer Full Maçlar')">
+                Diğer Full Maçlar 
+                <span data-category="Diğer Full Maçlar" class="badge category-badge" style="display:none;">0</span>
+            </div>
+        </div>
+
+        <!-- MENÜ AÇIKKEN ARKA PLANI KARARTAN KATMAN -->
+        <div id="menu-overlay" onclick="toggleMenu(false)"></div>
+
+        <!-- 3. DUYURU İÇERİK ALANI -->
+        <div id="duyuru-content" class="container" style="display:none;">
+            <h1>📣 Duyurular</h1>
+            <div id="duyuru-text" class="info-content" style="background-color: #1e1e1e; padding: 25px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.5);">
+                <!-- Metin JavaScript ile buraya eklenecek -->
+            </div>
+        </div>
+        
+        <!-- 4. KURALLAR İÇERİK ALANI -->
+        <div id="kurallar-content" class="container" style="display:none;">
+            <h1>⚡ Z&M Subscription Kuralları</h1>
+            <div id="kurallar-text" class="info-content" style="background-color: #1e1e1e; padding: 25px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.5);">
+                <!-- Metin JavaScript ile buraya eklenecek -->
+            </div>
+        </div>
+
+        <!-- 5. MAÇ LİSTESİ İÇERİK ALANI -->
+        <div id="arsiv-list-content" class="container" style="display:none;">
+            <h1>⚽ Maç Arşivi</h1>
+            <div id="mac-listesi">
+                <!-- Maç kartları JavaScript ile buraya eklenecek -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- 1. KULLANICI VE SABİT VERİLER ---
+
+        // KULLANICI LİSTESİ (Güncellenmiş Kullanıcı Adları ve Şifreler)
+        const kullanicilar = {
+            "mexy1905@": "Mexy",
+            "zeus1967@": "Zeus",
+            "krxy1905@zmsub": "5CORQU",
+            "wyrox1905@zmsub": "0CdPC",
+            "kayra1967@zmsub": "r95pH",
+            "gst1905@zmsub": "XOlAC"
+        };
+
+
+        // Duyuru verisi (metin ve yeni/okunmadı durumu)
+        const duyuruData = {
+            metin: `
+                <h2>Arşive Hoş Geldiniz!</h2>
+                <p>Sevgili kullanıcılarımız,</p>
+                <p>Z&M Subscription Maç Arşivi'ne hoş geldiniz. Arşivimizdeki tüm maçları sol menüden kategori seçerek filtreleyebilirsiniz. Yeni içerikler ve duyurular için menüdeki bildirimleri takip etmeyi unutmayın!</p>
+                <p style="font-style: italic; margin-top: 20px;">İyi seyirler dileriz!</p>
+            `,
+            yeni: true // Duyuru 'yeni' olarak işaretli
+        };
+        
+        // Kurallar verisi
+        const kurallarData = {
+            metin: `
+                <h2>Z&M Subscription Üyelik Kuralları</h2>
+                <p>Bu arşiv, sadece Z&M Subscription üyeleri için özel olarak hazırlanmıştır. Lütfen aşağıdaki kurallara harfiyen uyunuz.</p>
+                
+                <h3>1️⃣ Leak (Sızıntı) Kesinlikle Yasaktır</h3>
+                <ul>
+                    <li>Abonelik içeriklerini başka sunucuya, kişiye veya gruba göndermek kesin yasaktır.</li>
+                    <li>Leak tespit edilirse abonelik anında ve süresiz olarak sonlandırılır.</li>
+                </ul>
+                
+                <h3>2️⃣ Paylaşım ve Satış Yasaktır</h3>
+                <p>Satın alınan içerikler başkalarıyla paylaşılmaz, satılmaz veya yeniden dağıtılmaz.</p>
+                
+                <h3>3️⃣ Hesap Güvenliği Sorumluluğu Size Aittir</h3>
+                <p>Hesabınızdan yapılan tüm ihlaller (kural dışı paylaşımlar dahil) sizin sorumluluğunuzdadır.</p>
+                
+                <h3>4️⃣ İçerikler Kişisel Kullanım İçindir</h3>
+                <ul>
+                    <li>Z&M tarafından verilen maçlar, klipler, kayıtlar ve arşivler kişisel kullanım içindir.</li>
+                    <li>Herhangi bir platforma yüklemek, paylaşmak veya yayınlamak kesinlikle yasaktır.</li>
+                </ul>
+                
+                <h3>5️⃣ Spam / Rahatsız Etme Yasaktır</h3>
+                <p>Yönetici ve destek ekibini gereksiz mentionlamak veya spam yapmak yasaktır.</p>
+                
+                <h3>6️⃣ İade Koşulları</h3>
+                <p>Abonelik başladıktan sonra iade yapılmaz.</p>
+                
+                <h3>7️⃣ Kurallara Uymayanın Aboneliği İptal Edilir</h3>
+                <p>Kurallara aykırı davranan kişilerin aboneliği tek taraflı olarak, süresiz ve iadesiz olarak iptal edilir.</p>
+                
+                <p style="font-style: italic; margin-top: 25px;">Kurallara uyduğunuz için teşekkür ederiz.</p>
+            `,
+            yeni: true // Kurallar 'yeni' olarak işaretli
+        };
+
+        // Maç verileri (Yeni Kategori yapısına uygun güncellendi)
+        const macVerileri = [
+            // Şampiyonlar Ligi Full Maçları
+            { "id": 1, "ad": "CL: Kairat vs Olympiakos (Full)", "kapak_url": "https://placehold.co/300x180/0D47A1/ffffff?text=CL+FULL", "tarih": "09 Aralık 2025", "kategori": "Şampiyonlar Ligi Full Maçları", "drive_link": "https://drive.google.com/uc?export=download&id=CL_KAIRAT", "yeni": true },
+            { "id": 2, "ad": "CL: GS vs Real Madrid (2024 Finali)", "kapak_url": "https://placehold.co/300x180/6A1B9A/ffffff?text=CL+GS+FINAL", "tarih": "01 Haziran 2024", "kategori": "Şampiyonlar Ligi Full Maçları", "drive_link": "https://drive.google.com/uc?export=download&id=CL_GS_REAL", "yeni": false },
+            
+            // Süper Lig Full Maçları
+            { "id": 3, "ad": "STSL: Beşiktaş vs Gaziantep FK (Full)", "kapak_url": "https://placehold.co/300x180/212121/ffffff?text=STSL+BJK", "tarih": "08 Aralık 2025", "kategori": "Süper Lig Full Maçları", "drive_link": "https://drive.google.com/uc?export=download&id=STSL_BJK_GFK", "yeni": true },
+            { "id": 4, "ad": "STSL: FB vs GS Derbi", "kapak_url": "https://placehold.co/300x180/ff5722/ffffff?text=STSL+DERBI", "tarih": "15 Mart 2025", "kategori": "Süper Lig Full Maçları", "drive_link": "https://drive.google.com/uc?export=download&id=STSL_FB_GS", "yeni": false},
+            
+            // İspanya(LaLiga) Ligi
+            { "id": 5, "ad": "LaLiga: Real Madrid vs Celta Vigo", "kapak_url": "https://placehold.co/300x180/D32F2F/ffffff?text=LALIGA+RM", "tarih": "07 Aralık 2025", "kategori": "İspanya(LaLiga) Ligi", "drive_link": "https://drive.google.com/uc?export=download&id=LALIGA_RM", "yeni": true },
+            
+            // İngiltere(Premier) Ligi
+            { "id": 6, "ad": "PL: Brighton vs Wolves", "kapak_url": "https://placehold.co/300x180/37474F/ffffff?text=PL+BRIGHTON", "tarih": "07 Aralık 2025", "kategori": "İngiltere(Premier) Ligi", "drive_link": "https://drive.google.com/uc?export=download&id=PL_BHA", "yeni": false},
+            
+            // Almanya(Bundesliga) Ligi
+            { "id": 7, "ad": "Bundesliga: Bayern vs Dortmund", "kapak_url": "https://placehold.co/300x180/D50000/ffffff?text=B+LIGA+BAYERN", "tarih": "07 Aralık 2025", "kategori": "Almanya(Bundesliga) Ligi", "drive_link": "https://drive.google.com/uc?export=download&id=BLIGA_BAY", "yeni": true},
+
+            // Avrupa Ligi Full Maçları
+            { "id": 8, "ad": "UEL: Fenerbahçe vs Ferencvaroş (Full)", "kapak_url": "https://placehold.co/300x180/FFAB00/ffffff?text=UEL+FB", "tarih": "30 Kasım 2025", "kategori": "Avrupa Ligi Full Maçları", "drive_link": "https://drive.google.com/uc?export=download&id=UEL_FB", "yeni": false},
+
+            // Konferans Ligi Full Maçları
+            { "id": 9, "ad": "UECL: Beşiktaş vs Brugge (Full)", "kapak_url": "https://placehold.co/300x180/673AB7/ffffff?text=UECL+BJK", "tarih": "16 Kasım 2025", "kategori": "Konferans Ligi Full Maçları", "drive_link": "https://drive.google.com/uc?export=download&id=UECL_BJK", "yeni": false},
+
+            // Basketbol Maçları
+            { "id": 10, "ad": "EuroLeague: FB vs Olympiakos", "kapak_url": "https://placehold.co/300x180/1976D2/ffffff?text=BASKET+FB", "tarih": "07 Aralık 2025", "kategori": "Basketbol Maçları", "drive_link": "https://drive.google.com/uc?export=download&id=BASKET_FB", "yeni": true},
+            
+            // Diğer Full Maçlar
+            { "id": 11, "ad": "Serie A: Torino vs Roma (Full)", "kapak_url": "https://placehold.co/300x180/880E4F/ffffff?text=SERIE+A", "tarih": "08 Aralık 2025", "kategori": "Diğer Full Maçlar", "drive_link": "https://drive.google.com/uc?export=download&id=DIGER_SERIEA", "yeni": true }
+        ];
+
+        // Tüm kategori isimleri listesi (Badge'leri kontrol etmek için)
+        const allCategories = [
+            "Şampiyonlar Ligi Full Maçları", "Süper Lig Full Maçları", "İspanya(LaLiga) Ligi", "İngiltere(Premier) Ligi",
+            "Almanya(Bundesliga) Ligi", "Avrupa Ligi Full Maçları", "Konferans Ligi Full Maçları", "Basketbol Maçları",
+            "Diğer Full Maçlar"
+        ];
+
+        // --- 2. BİLDİRİM VE DURUM YÖNETİMİ ---
+
+        // Yeni maç ve duyuru sayılarını hesaplar
+        function calculateNewItemCounts() {
+            const categoryCounts = {};
+            let totalNew = 0;
+
+            // Kategori maç sayısını hesapla
+            macVerileri.forEach(mac => {
+                if (mac.yeni) {
+                    totalNew++;
+                    // mac.kategori'ye göre sayım yap
+                    const category = mac.kategori;
+                    categoryCounts[category] = (categoryCounts[category] || 0) + 1;
+                }
+            });
+
+            // Duyuru ve Kurallar sayısını ekle
+            if (duyuruData.yeni) {
+                totalNew++;
+                categoryCounts['Duyuru'] = 1; // Badge için
+            }
+
+            if (kurallarData.yeni) {
+                totalNew++;
+                categoryCounts['Kurallar'] = 1; // Badge için
+            }
+
+            categoryCounts['Total'] = totalNew;
+            return categoryCounts;
+        }
+
+        // Bildirim balonlarını (badges) günceller
+        function updateBadges() {
+            const counts = calculateNewItemCounts();
+            
+            // 1. Ana Menü Butonu Bildirimi
+            const menuBadge = document.getElementById('menu-button-badge');
+            if (counts.Total > 0) {
+                menuBadge.textContent = counts.Total;
+                menuBadge.style.display = 'block';
+            } else {
+                menuBadge.style.display = 'none';
+            }
+
+            // 2. Duyuru ve Kurallar Menü Bildirimi
+            document.getElementById('duyuru-badge').style.display = duyuruData.yeni ? 'inline-block' : 'none';
+            document.getElementById('kurallar-badge').style.display = kurallarData.yeni ? 'inline-block' : 'none';
+
+
+            // 3. Kategori Menü Bildirimleri
+            document.querySelectorAll('.category-badge').forEach(badge => {
+                const category = badge.getAttribute('data-category');
+                const count = counts[category] || 0;
+                
+                if (count > 0) {
+                    badge.textContent = count;
+                    badge.style.display = 'inline-block';
+                } else {
+                    badge.style.display = 'none';
+                }
+            });
+        }
+
+        // --- 3. GÖRÜNÜM KONTROL FONKSİYONLARI ---
+
+        // Tüm içerik alanlarını gizler
+        function hideAllContent() {
+            document.getElementById('duyuru-content').style.display = 'none';
+            document.getElementById('kurallar-content').style.display = 'none';
+            document.getElementById('arsiv-list-content').style.display = 'none';
+        }
+        
+        // Genel içerik gösterme fonksiyonu (Duyuru ve Kurallar için)
+        function showContent(contentType) {
+            toggleMenu(false); // Menüyü kapat
+            hideAllContent();
+            
+            let contentDiv, textDiv, dataObject;
+
+            if (contentType === 'Duyuru') {
+                contentDiv = document.getElementById('duyuru-content');
+                textDiv = document.getElementById('duyuru-text');
+                dataObject = duyuruData;
+            } else if (contentType === 'Kurallar') {
+                contentDiv = document.getElementById('kurallar-content');
+                textDiv = document.getElementById('kurallar-text');
+                dataObject = kurallarData;
+            } else {
+                return; // Geçersiz tür
+            }
+
+            textDiv.innerHTML = dataObject.metin;
+            contentDiv.style.display = 'block';
+
+            // Bildirimi Temizleme Mantığı
+            if (dataObject.yeni) {
+                dataObject.yeni = false;
+                updateBadges();
+            }
+        }
+
+
+        // Maçları seçilen kategoriye göre filtreler VE bildirimi temizler
+        function filterMaclar(category) {
+            toggleMenu(false); // Menüyü kapat
+            hideAllContent();
+            
+            const arsivContent = document.getElementById('arsiv-list-content');
+            arsivContent.style.display = 'block';
+
+            let filteredData;
+
+            if (allCategories.includes(category)) {
+                filteredData = macVerileri.filter(mac => 
+                    mac.kategori === category
+                );
+                
+                // Kategori Bildirimini Temizleme Mantığı
+                macVerileri.forEach(mac => { 
+                    // Eğer maç yeni ise ve seçilen kategoriye aitse
+                    if (mac.yeni && mac.kategori === category) {
+                        mac.yeni = false; // "Yeni" etiketini kaldır
+                    }
+                });
+                
+                // Liste başlığını güncelle
+                document.querySelector('#arsiv-list-content h1').textContent = `⚽ ${category}`;
+                
+            } else {
+                // Güvenli olması için tüm maçları göster (bu senaryo menüde olmamalı)
+                filteredData = macVerileri;
+                document.querySelector('#arsiv-list-content h1').textContent = `⚽ Tüm Maçlar`;
+            }
+            
+            
+            renderMacListesi(filteredData);
+            updateBadges(); // Bildirimleri güncelle
+        }
+
+        // --- 4. GİRİŞ VE LİSTELEME FONKSİYONLARI ---
+
+        function loginControl() {
+            // Kullanıcı adı küçük harfe çevriliyor (büyük/küçük harf duyarsız)
+            const girilenKullanici = document.getElementById('username').value.toLowerCase().trim();
+            // Şifre büyük/küçük harf duyarlı kalıyor
+            const girilenSifre = document.getElementById('password').value.trim();
+            const errorMessage = document.getElementById('error-message');
+            
+            // Giriş kontrolü
+            const dogruSifre = kullanicilar[girilenKullanici];
+            
+            if (dogruSifre && dogruSifre === girilenSifre) {
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('arsiv-screen').style.display = 'block';
+                errorMessage.style.display = 'none';
+                
+                // Giriş başarılı olunca ilk olarak Duyuru sayfasını göster
+                showContent('Duyuru');
+            } else {
+                errorMessage.style.display = 'block';
+                // Giriş denemesinden sonra alanları temizle
+                document.getElementById('password').value = '';
+                document.getElementById('username').value = ''; 
+            }
+        }
+
+        function renderMacListesi(dataToRender) {
+            const listeDiv = document.getElementById('mac-listesi');
+            listeDiv.innerHTML = '';
+
+            if (dataToRender.length === 0) {
+                 listeDiv.innerHTML = '<p style="text-align: center; color: #aaa; margin-top: 50px;">Seçilen kategori için arşivde maç bulunmamaktadır.</p>';
+                 return;
+            }
+            
+            dataToRender.forEach(mac => {
+                const kart = document.createElement('div');
+                kart.className = 'mac-kart';
+                
+                // Yeni maç ise kartın üstüne bir etiket ekleyelim
+                const newTag = mac.yeni ? '<div style="position: absolute; top: 10px; right: 10px; background-color: #D32F2F; color: white; padding: 5px 10px; border-radius: 5px; font-size: 0.8em; font-weight: bold;">YENİ</div>' : '';
+
+                const coverUrl = mac.kapak_url || 'https://placehold.co/300x180/333/fff?text=KAPAK+YOK';
+
+                kart.innerHTML = `
+                    <div style="position: relative;">
+                        <img src="${coverUrl}" alt="${mac.ad} Kapağı" class="mac-kapak" 
+                            onerror="this.onerror=null; this.src='https://placehold.co/300x180/333/fff?text=YUKLENEMEDI';">
+                        ${newTag}
+                    </div>
+                    <div class="mac-bilgi">
+                        <h3>${mac.ad}</h3>
+                        <p>Kategori: ${mac.kategori} | Tarih: ${mac.tarih}</p>
+                        <a href="${mac.drive_link}" target="_blank" class="button indirme-butonu">
+                            💾 İndir / İzle (Drive)
+                        </a>
+                    </div>
+                `;
+                listeDiv.appendChild(kart);
+            });
+        }
+
+        // --- 5. MENÜ FONKSİYONLARI ---
+
+        // Yan menüyü açıp kapatır
+        function toggleMenu(forceOpen) {
+            const menu = document.getElementById('side-menu');
+            const overlay = document.getElementById('menu-overlay');
+            
+            if (forceOpen === true) {
+                menu.classList.add('open');
+                overlay.style.display = 'block';
+            } else if (forceOpen === false) {
+                menu.classList.remove('open');
+                overlay.style.display = 'none';
+            } else {
+                // Toggle
+                menu.classList.toggle('open');
+                overlay.style.display = menu.classList.contains('open') ? 'block' : 'none';
+            }
+        }
+        
+        // Uygulama yüklendiğinde bildirimleri ayarla
+        document.addEventListener('DOMContentLoaded', updateBadges);
+
+    </script>
+</body>
+</html>
