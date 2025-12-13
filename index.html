@@ -27,7 +27,7 @@
             margin-bottom: 30px; 
             font-size: 2.5em; 
             letter-spacing: 1px;
-            padding-top: 20px;
+            padding-top: 60px; /* Header bar için boşluk */
         }
 
         /* Giriş Ekranı Stili */
@@ -86,7 +86,6 @@
         /* Arşiv Ekranı Stili */
         #arsiv-screen { 
             display: none; 
-            padding-top: 60px; 
         } 
         #mac-listesi { 
             display: grid; 
@@ -285,7 +284,7 @@
         <p id="error-message" style="color: #ff4d4d; margin-top: 15px; display: none;">Hatalı Kullanıcı Adı veya Şifre.</p>
     </div>
 
-    <!-- 2. MAÇ ARŞİV EKRANI (Başlangıçta Gizli) -->
+    <!-- 2. SUBSCRIPTION EKRANI (Başlangıçta Gizli) -->
     <div id="arsiv-screen">
         
         <!-- ÜST BAŞLIK VE MENÜ BUTONU -->
@@ -316,12 +315,16 @@
                 Duyuru 
                 <span id="duyuru-badge" class="badge" style="display:none;">1</span>
             </div>
+            <div class="menu-item" onclick="filterMaclar('Tüm İçerikler')"> 
+                Ana Sayfa / Tüm İçerikler
+                <span id="all-content-badge" class="badge" style="display:none;">0</span>
+            </div>
             <div class="menu-item" onclick="showContent('Kurallar')">
                 Kurallar
                 <span id="kurallar-badge" class="badge" style="display:none;">1</span>
             </div>
             
-            <!-- YENİ KATEGORİ FİLTRELERİ -->
+            <!-- KATEGORİ FİLTRELERİ -->
             <div class="menu-item" onclick="filterMaclar('Şampiyonlar Ligi Full Maçları')">
                 Şampiyonlar Ligi Full Maçları 
                 <span data-category="Şampiyonlar Ligi Full Maçları" class="badge category-badge" style="display:none;">0</span>
@@ -379,9 +382,9 @@
             </div>
         </div>
 
-        <!-- 5. MAÇ LİSTESİ İÇERİK ALANI -->
+        <!-- 5. İÇERİK LİSTESİ ALANI -->
         <div id="arsiv-list-content" class="container" style="display:none;">
-            <h1>⚽ Z&M Subscription</h1>
+            <h1>⚽ Z&M Subscription Arşivi</h1>
             <div id="mac-listesi">
                 <!-- Maç kartları JavaScript ile buraya eklenecek -->
             </div>
@@ -391,23 +394,24 @@
     <script>
         // --- 1. KULLANICI VE SABİT VERİLER ---
 
-        // KULLANICI LİSTESİ (Güncellenmiş Kullanıcı Adları ve Şifreler)
+        // KULLANICI LİSTESİ (Yeni kullanıcı eklendi)
         const kullanicilar = {
             "mexy1905@": "Mexy",
             "zeus1967@": "Zeus",
             "krxy1905@zmsub": "5CORQU",
             "wyrox1905@zmsub": "0CdPC",
             "kayra1967@zmsub": "r95pH",
-            "gst1905@zmsub": "XOlAC"
+            "gst1905@zmsub": "XOlAC",
+            "icardim1905@zmsub": "F3xW4" // YENİ KULLANICI EKLENDİ
         };
 
 
-        // Duyuru verisi (metin ve yeni/okunmadı durumu)
+        // Duyuru verisi 
         const duyuruData = {
             metin: `
                 <h2>Arşive Hoş Geldiniz!</h2>
                 <p>Sevgili kullanıcılarımız,</p>
-                <p>Z&M Subscription hoş geldiniz. Subscription'daki tüm maçları sol menüden kategori seçerek filtreleyebilirsiniz. Yeni içerikler ve duyurular için menüdeki bildirimleri takip etmeyi unutmayın!</p>
+                <p>Z&M Subscription İçerik Arşivi'ne hoş geldiniz. Arşivimizdeki tüm içerikleri sol menüden kategori seçerek filtreleyebilirsiniz. Yeni içerikler ve duyurular için menüdeki bildirimleri takip etmeyi unutmayın!</p>
                 <p style="font-style: italic; margin-top: 20px;">İyi seyirler dileriz!</p>
             `,
             yeni: true // Duyuru 'yeni' olarak işaretli
@@ -417,7 +421,7 @@
         const kurallarData = {
             metin: `
                 <h2>Z&M Subscription Üyelik Kuralları</h2>
-                <p>Bu Subscription, sadece Z&M Subscription üyeleri için özel olarak hazırlanmıştır. Lütfen aşağıdaki kurallara harfiyen uyunuz.</p>
+                <p>Bu arşiv, sadece Z&M Subscription üyeleri için özel olarak hazırlanmıştır. Lütfen aşağıdaki kurallara harfiyen uyunuz.</p>
                 
                 <h3>1️⃣ Leak (Sızıntı) Kesinlikle Yasaktır</h3>
                 <ul>
@@ -552,6 +556,23 @@
                     badge.style.display = 'none';
                 }
             });
+
+            // 4. Tüm İçerikler (Ana Sayfa) Bildirimi
+            const allContentBadge = document.getElementById('all-content-badge');
+            const newContentCount = Object.values(counts).reduce((acc, val) => {
+                // Sadece maç kategorileri (kategoriler allCategories dizisinde tanımlı olmalı) ve sabit sayfalar hariç tüm yeni içerikleri say
+                const isFixedPage = (val === 1 && (counts['Duyuru'] || counts['Kurallar']));
+                return acc + (isFixedPage ? 0 : val);
+            }, 0) - (counts['Duyuru'] || 0) - (counts['Kurallar'] || 0);
+
+            const totalMatchBadges = macVerileri.filter(m => m.yeni).length;
+
+            if (totalMatchBadges > 0) {
+                allContentBadge.textContent = totalMatchBadges;
+                allContentBadge.style.display = 'inline-block';
+            } else {
+                allContentBadge.style.display = 'none';
+            }
         }
 
         // --- 3. GÖRÜNÜM KONTROL FONKSİYONLARI ---
@@ -590,10 +611,12 @@
                 dataObject.yeni = false;
                 updateBadges();
             }
+            // Sayfayı üste kaydır
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
 
-        // Maçları seçilen kategoriye göre filtreler VE bildirimi temizler
+        // İçerikleri seçilen kategoriye göre filtreler VE bildirimi temizler
         function filterMaclar(category) {
             toggleMenu(false); // Menüyü kapat
             hideAllContent();
@@ -602,11 +625,17 @@
             arsivContent.style.display = 'block';
 
             let filteredData;
+            let titleText;
 
-            if (allCategories.includes(category)) {
+            if (category === 'Tüm İçerikler') {
+                filteredData = macVerileri;
+                titleText = '⚽ Tüm Subscription İçerikleri';
+            }
+            else if (allCategories.includes(category)) {
                 filteredData = macVerileri.filter(mac => 
                     mac.kategori === category
                 );
+                titleText = `⚽ ${category}`;
                 
                 // Kategori Bildirimini Temizleme Mantığı
                 macVerileri.forEach(mac => { 
@@ -615,19 +644,20 @@
                         mac.yeni = false; // "Yeni" etiketini kaldır
                     }
                 });
-                
-                // Liste başlığını güncelle
-                document.querySelector('#arsiv-list-content h1').textContent = `⚽ ${category}`;
-                
             } else {
-                // Güvenli olması için tüm maçları göster (bu senaryo menüde olmamalı)
+                // Güvenli olması için tüm maçları göster
                 filteredData = macVerileri;
-                document.querySelector('#arsiv-list-content h1').textContent = `⚽ Tüm Maçlar`;
+                titleText = `⚽ Tüm Subscription İçerikleri`;
             }
             
+            // Liste başlığını güncelle
+            document.querySelector('#arsiv-list-content h1').textContent = titleText;
             
             renderMacListesi(filteredData);
             updateBadges(); // Bildirimleri güncelle
+            
+            // Sayfayı üste kaydır
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         // --- 4. GİRİŞ VE LİSTELEME FONKSİYONLARI ---
@@ -662,7 +692,7 @@
             listeDiv.innerHTML = '';
 
             if (dataToRender.length === 0) {
-                 listeDiv.innerHTML = '<p style="text-align: center; color: #aaa; margin-top: 50px;">Seçilen kategori için arşivde maç bulunmamaktadır.</p>';
+                 listeDiv.innerHTML = '<p style="text-align: center; color: #aaa; margin-top: 50px;">Seçilen kategori için arşivde içerik bulunmamaktadır.</p>';
                  return;
             }
             
