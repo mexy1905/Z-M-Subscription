@@ -394,7 +394,7 @@
     <script>
         // --- 1. KULLANICI VE SABİT VERİLER ---
 
-        // KULLANICI LİSTESİ (Yeni kullanıcı eklendi)
+        // KULLANICI LİSTESİ 
         const kullanicilar = {
             "mexy1905@": "Mexy",
             "zeus1967@": "Zeus",
@@ -402,7 +402,7 @@
             "wyrox1905@zmsub": "0CdPC",
             "kayra1967@zmsub": "r95pH",
             "gst1905@zmsub": "XOlAC",
-            "icardim1905@zmsub": "F3xW4" // YENİ KULLANICI EKLENDİ
+            "icardim1905@zmsub": "F3xW4"
         };
 
 
@@ -434,7 +434,7 @@
                 
                 <h3>3️⃣ Hesap Güvenliği Sorumluluğu Size Aittir</h3>
                 <p>Hesabınızdan yapılan tüm ihlaller (kural dışı paylaşımlar dahil) sizin sorumluluğunuzdadır.</p>
-                
+                    
                 <h3>4️⃣ İçerikler Kişisel Kullanım İçindir</h3>
                 <ul>
                     <li>Z&M tarafından verilen maçlar, klipler, kayıtlar ve arşivler kişisel kullanım içindir.</li>
@@ -455,42 +455,171 @@
             yeni: true // Kurallar 'yeni' olarak işaretli
         };
 
-        // Maç verileri (Yeni Kategori yapısına uygun güncellendi)
+        // Maç verileri (Sadece sizin verdiğiniz 14 yeni maç ile güncellendi)
         const macVerileri = [
-            // Şampiyonlar Ligi Full Maçları
-            { "id": 1, "ad": "CL: Kairat vs Olympiakos (Full)", "kapak_url": "https://placehold.co/300x180/0D47A1/ffffff?text=CL+FULL", "tarih": "09 Aralık 2025", "kategori": "Şampiyonlar Ligi Full Maçları", "drive_link": "https://drive.google.com/uc?export=download&id=CL_KAIRAT", "yeni": true },
-            { "id": 2, "ad": "CL: GS vs Real Madrid (2024 Finali)", "kapak_url": "https://placehold.co/300x180/6A1B9A/ffffff?text=CL+GS+FINAL", "tarih": "01 Haziran 2024", "kategori": "Şampiyonlar Ligi Full Maçları", "drive_link": "https://drive.google.com/uc?export=download&id=CL_GS_REAL", "yeni": false },
-            
-            // Süper Lig Full Maçları
-            { "id": 3, "ad": "STSL: Beşiktaş vs Gaziantep FK (Full)", "kapak_url": "https://placehold.co/300x180/212121/ffffff?text=STSL+BJK", "tarih": "08 Aralık 2025", "kategori": "Süper Lig Full Maçları", "drive_link": "https://drive.google.com/uc?export=download&id=STSL_BJK_GFK", "yeni": true },
-            { "id": 4, "ad": "STSL: FB vs GS Derbi", "kapak_url": "https://placehold.co/300x180/ff5722/ffffff?text=STSL+DERBI", "tarih": "15 Mart 2025", "kategori": "Süper Lig Full Maçları", "drive_link": "https://drive.google.com/uc?export=download&id=STSL_FB_GS", "yeni": false},
-            
-            // İspanya(LaLiga) Ligi
-            { "id": 5, "ad": "LaLiga: Real Madrid vs Celta Vigo", "kapak_url": "https://placehold.co/300x180/D32F2F/ffffff?text=LALIGA+RM", "tarih": "07 Aralık 2025", "kategori": "İspanya(LaLiga) Ligi", "drive_link": "https://drive.google.com/uc?export=download&id=LALIGA_RM", "yeni": true },
-            
-            // İngiltere(Premier) Ligi
-            { "id": 6, "ad": "PL: Brighton vs Wolves", "kapak_url": "https://placehold.co/300x180/37474F/ffffff?text=PL+BRIGHTON", "tarih": "07 Aralık 2025", "kategori": "İngiltere(Premier) Ligi", "drive_link": "https://drive.google.com/uc?export=download&id=PL_BHA", "yeni": false},
-            
-            // Almanya(Bundesliga) Ligi
-            { "id": 7, "ad": "Bundesliga: Bayern vs Dortmund", "kapak_url": "https://placehold.co/300x180/D50000/ffffff?text=B+LIGA+BAYERN", "tarih": "07 Aralık 2025", "kategori": "Almanya(Bundesliga) Ligi", "drive_link": "https://drive.google.com/uc?export=download&id=BLIGA_BAY", "yeni": true},
+            // --- YENİ EKLENEN MAÇLAR (Tümü Süper Lig Full Maçları kategorisine eklendi) ---
 
-            // Avrupa Ligi Full Maçları
-            { "id": 8, "ad": "UEL: Fenerbahçe vs Ferencvaroş (Full)", "kapak_url": "https://placehold.co/300x180/FFAB00/ffffff?text=UEL+FB", "tarih": "30 Kasım 2025", "kategori": "Avrupa Ligi Full Maçları", "drive_link": "https://drive.google.com/uc?export=download&id=UEL_FB", "yeni": false},
+            // 13.12.2025.STSL.Antalyaspor.Galatasaray.Full.Match.beIN RAW
+            { "id": 1, "ad": "13.12.2025 STSL Antalyaspor vs Galatasaray | beIN RAW", 
+              "kapak_url": "https://hizliresim.com/4k3nnbk", 
+              "tarih": "13 Aralık 2025", 
+              "kategori": "Süper Lig Full Maçları", 
+              "drive_link": "https://drive.google.com/drive/folders/1y4XTYoeY88P7fzul54ShGPF26bpczrOM?usp=drive_link", 
+              "prematch": "https://drive.google.com/file/d/15dBgvNCzkNWFf-tPYpWB-QVQsNfIE2Qo/view?usp=sharing",
+              "yeni": true 
+            },
 
-            // Konferans Ligi Full Maçları
-            { "id": 9, "ad": "UECL: Beşiktaş vs Brugge (Full)", "kapak_url": "https://placehold.co/300x180/673AB7/ffffff?text=UECL+BJK", "tarih": "16 Kasım 2025", "kategori": "Konferans Ligi Full Maçları", "drive_link": "https://drive.google.com/uc?export=download&id=UECL_BJK", "yeni": false},
+            // 13.12.2025.STSL.Antalyaspor.Galatasaray.Full.Match.Match3
+            { "id": 2, "ad": "13.12.2025 STSL Antalyaspor vs Galatasaray | Match 3", 
+              "kapak_url": "https://hizliresim.com/iwvtr3z", 
+              "tarih": "13 Aralık 2025", 
+              "kategori": "Süper Lig Full Maçları", 
+              "drive_link": "https://drive.google.com/drive/folders/17Ob3IYGfMQPAF3HS4FsR5oU9KmVc-XKY?usp=drive_link", 
+              "prematch": "https://drive.google.com/file/d/15dBgvNCzkNWFf-tPYpWB-QVQsNfIE2Qo/view?usp=sharing",
+              "yeni": true 
+            },
 
-            // Basketbol Maçları
-            { "id": 10, "ad": "EuroLeague: FB vs Olympiakos", "kapak_url": "https://placehold.co/300x180/1976D2/ffffff?text=BASKET+FB", "tarih": "07 Aralık 2025", "kategori": "Basketbol Maçları", "drive_link": "https://drive.google.com/uc?export=download&id=BASKET_FB", "yeni": true},
+            // 08.12.2025.STSL.Besiktas.vs.GaziantepFK.BeIN.Usa
+            { "id": 3, "ad": "08.12.2025 STSL Beşiktaş vs GaziantepFK | BeIN USA", 
+              "kapak_url": "https://hizliresim.com/8fjzdqi", 
+              "tarih": "08 Aralık 2025", 
+              "kategori": "Süper Lig Full Maçları", 
+              "drive_link": "https://drive.google.com/file/d/12k76x2brKzWeTDo85v4xP_BVpFrJG8B_/view?usp=sharing", 
+              "prematch": "https://drive.google.com/file/d/1a8quB74cDXhyTdmP_N-d3tdXNPQgum2c/view?usp=sharing",
+              "yeni": true 
+            },
+
+            // 08.12.2025.STSL.Besiktas.vs.GaziantepFK.Матч
+            { "id": 4, "ad": "08.12.2025 STSL Beşiktaş vs GaziantepFK | Maç", 
+              "kapak_url": "https://hizliresim.com/ks0esav", 
+              "tarih": "08 Aralık 2025", 
+              "kategori": "Süper Lig Full Maçları", 
+              "drive_link": "https://drive.google.com/file/d/1yVxGGjhHkavD0FojaVab0_b1xAnh3PkJ/view?usp=sharing", 
+              "prematch": "https://drive.google.com/file/d/1a8quB74cDXhyTdmP_N-d3tdXNPQgum2c/view?usp=sharing",
+              "yeni": true 
+            },
+
+            // 08.12.2025.TSL.Besiktas.vs.Gaziantep.beIN.RAW.ts
+            { "id": 5, "ad": "08.12.2025 STSL Beşiktaş vs Gaziantep | beIN RAW TS", 
+              "kapak_url": "https://hizliresim.com/d13ueoe", 
+              "tarih": "08 Aralık 2025", 
+              "kategori": "Süper Lig Full Maçları", 
+              "drive_link": "https://drive.google.com/file/d/1Vz-pcGFsGU4odZHFDWLUOMC_cmyO2k10/view?usp=drive_link", 
+              "prematch": "https://drive.google.com/file/d/1a8quB74cDXhyTdmP_N-d3tdXNPQgum2c/view?usp=sharing",
+              "yeni": true 
+            },
+
+            // 07.12.2025.TSL.Goztepe.vs.Trabzonspor.Diamant.50FPS
+            { "id": 6, "ad": "07.12.2025 STSL Göztepe vs Trabzonspor | Diamant 50FPS", 
+              "kapak_url": "https://hizliresim.com/3uzbd3j", 
+              "tarih": "07 Aralık 2025", 
+              "kategori": "Süper Lig Full Maçları", 
+              "drive_link": "https://drive.google.com/drive/folders/1Zjiw5_o_plkUf1-JQbBNdCRRoOilgUxe?usp=drive_link", 
+              "prematch": null, // Klasör İçinde veya boş
+              "yeni": true 
+            },
+
+            // 07.12.2025.TSL.Goztepe.vs.Trabzonspor.Full.Match.beIN.RAW.50FPS
+            { "id": 7, "ad": "07.12.2025 STSL Göztepe vs Trabzonspor | beIN RAW 50FPS", 
+              "kapak_url": "https://hizliresim.com/8lnsb04", 
+              "tarih": "07 Aralık 2025", 
+              "kategori": "Süper Lig Full Maçları", 
+              "drive_link": "https://drive.google.com/drive/folders/16dOMHOM2EXVRZJhQJWuLiwRcjdLfkF1b?usp=sharing", 
+              "prematch": null, // Mevcut Değil
+              "yeni": true 
+            },
+
+            // 06.12.2025.TSL.Basaksehir.vs.Fenerbahce.beIN.RAW.50FPS.ts
+            { "id": 8, "ad": "06.12.2025 STSL Başakşehir vs Fenerbahçe | beIN RAW 50FPS", 
+              "kapak_url": null, // Kapak Yok
+              "tarih": "06 Aralık 2025", 
+              "kategori": "Süper Lig Full Maçları", 
+              "drive_link": "https://drive.google.com/drive/folders/16dOMHOM2EXVRZJhQJWuLiwRcjdLfkF1b?usp=sharing", 
+              "prematch": null, // Mevcut Değil
+              "yeni": true 
+            },
+
+            // 05.12.2025.TSL.Galatasaray.vs.Samsunspor.beIN.RAW.ts
+            { "id": 9, "ad": "05.12.2025 STSL Galatasaray vs Samsunspor | beIN RAW TS", 
+              "kapak_url": "https://hizliresim.com/5c59jw5", 
+              "tarih": "05 Aralık 2025", 
+              "kategori": "Süper Lig Full Maçları", 
+              "drive_link": "https://drive.google.com/drive/folders/1MA5MOXconaFYVr6l1gisG4hqY9wy5tCv?usp=drive_link", 
+              "prematch": null, // Klasör İçinde veya boş
+              "yeni": true 
+            },
+
+            // FB 1-1 GS RGFOOTBALL FULL MAÇ
+            { "id": 10, "ad": "Fenerbahçe 1-1 Galatasaray | RGFOOTBALL FULL MAÇ", 
+              "kapak_url": null, // Kapak Yok
+              "tarih": "Tarih Belirtilmemiş", 
+              "kategori": "Süper Lig Full Maçları", 
+              "drive_link": "https://drive.google.com/file/d/1ue-_HXr8_itbjcN_HKcqLKpEciboxc-0/view?usp=sharing", 
+              "prematch": "https://drive.google.com/drive/folders/1pbY_IL1N61lrws42P63P9LEAET0ks2gv?usp=drive_link",
+              "yeni": true 
+            },
+
+            // FB GS BEİN SPORTS 1 1080P50FPS
+            { "id": 11, "ad": "Fenerbahçe vs Galatasaray | beIN SPORTS 1080P50FPS", 
+              "kapak_url": null, // Kapak Yok
+              "tarih": "Tarih Belirtilmemiş", 
+              "kategori": "Süper Lig Full Maçları", 
+              "drive_link": "https://drive.google.com/file/d/1Lm2emGBpG9YVBIuh9bf0BhwY5tjZf9Hn/view?usp=drive_link", 
+              "prematch": "https://drive.google.com/drive/folders/1pbY_IL1N61lrws42P63P9LEAET0ks2gv?usp=drive_link",
+              "yeni": true 
+            },
             
-            // Diğer Full Maçlar
-            { "id": 11, "ad": "Serie A: Torino vs Roma (Full)", "kapak_url": "https://placehold.co/300x180/880E4F/ffffff?text=SERIE+A", "tarih": "08 Aralık 2025", "kategori": "Diğer Full Maçlar", "drive_link": "https://drive.google.com/uc?export=download&id=DIGER_SERIEA", "yeni": true }
+            // KOCAELİ GENÇLERBİRLİĞİ
+            { "id": 12, "ad": "KOCAELİ vs GENÇLERBİRLİĞİ | TFF 1. Lig", 
+              "kapak_url": null, // Kapak Yok
+              "tarih": "Tarih Belirtilmemiş", 
+              "kategori": "Süper Lig Full Maçları", // TFF 1. Lig de olsa bu kategoriye eklenmiştir.
+              "drive_link": "https://drive.google.com/drive/u/5/folders/1G9gBt9iAatSkqchNXL7Dr1QIJqgftZci", 
+              "prematch": null, 
+              "yeni": true 
+            },
+
+            // Trabzonspor 3-2 Konyaspor
+            { "id": 13, "ad": "Trabzonspor 3-2 Konyaspor", 
+              "kapak_url": null, // Kapak Yok
+              "tarih": "Tarih Belirtilmemiş", 
+              "kategori": "Süper Lig Full Maçları", 
+              "drive_link": "https://drive.google.com/drive/folders/1gTMlZvuOubi9r8EJZ_6mNbEaBKBH9P2n?usp=sharing", 
+              "prematch": null, // Mevcut Değil
+              "yeni": true 
+            },
+
+            // Galatasaray Fenerbaçe 2024 2025 (Samiyen) Bein4K
+            { "id": 14, "ad": "Galatasaray vs Fenerbahçe 2024/2025 (Samiyen) | Bein4K", 
+              "kapak_url": null, // Kapak Yok
+              "tarih": "2024/2025 Sezonu", 
+              "kategori": "Süper Lig Full Maçları", 
+              "drive_link": "https://drive.google.com/drive/folders/1RGh34RqgKZwmf9o8nVYhx3D__FYAokyM?usp=drive_link", 
+              "prematch": null, 
+              "yeni": true 
+            },
+
+            // Galatasaray 3-2 Gençlerbirliği
+            { "id": 15, "ad": "Galatasaray 3-2 Gençlerbirliği", 
+              "kapak_url": null, // Kapak Yok
+              "tarih": "Tarih Belirtilmemiş", 
+              "kategori": "Süper Lig Full Maçları", 
+              "drive_link": "https://drive.google.com/drive/folders/1kq7HyDBc-_Z0RSaMZiffdNOYcm4wct7o?usp=sharing", 
+              "prematch": "https://drive.google.com/file/d/1Rbe1H7sOZVKZQthGfHHsBSa-SB7Q4ZmN/view?usp=sharing",
+              "yeni": true 
+            }
         ];
 
-        // Tüm kategori isimleri listesi (Badge'leri kontrol etmek için)
+        // Tüm kategori isimleri listesi (Artık sadece bir kategoriye odaklanılabilir, diğerleri boş)
         const allCategories = [
-            "Şampiyonlar Ligi Full Maçları", "Süper Lig Full Maçları", "İspanya(LaLiga) Ligi", "İngiltere(Premier) Ligi",
-            "Almanya(Bundesliga) Ligi", "Avrupa Ligi Full Maçları", "Konferans Ligi Full Maçları", "Basketbol Maçları",
+            "Şampiyonlar Ligi Full Maçları", 
+            "Süper Lig Full Maçları", // Maçlar burada
+            "İspanya(LaLiga) Ligi",
+            "İngiltere(Premier) Ligi",
+            "Almanya(Bundesliga) Ligi",
+            "Avrupa Ligi Full Maçları",
+            "Konferans Ligi Full Maçları",
+            "Basketbol Maçları",
             "Diğer Full Maçlar"
         ];
 
@@ -559,12 +688,8 @@
 
             // 4. Tüm İçerikler (Ana Sayfa) Bildirimi
             const allContentBadge = document.getElementById('all-content-badge');
-            const newContentCount = Object.values(counts).reduce((acc, val) => {
-                // Sadece maç kategorileri (kategoriler allCategories dizisinde tanımlı olmalı) ve sabit sayfalar hariç tüm yeni içerikleri say
-                const isFixedPage = (val === 1 && (counts['Duyuru'] || counts['Kurallar']));
-                return acc + (isFixedPage ? 0 : val);
-            }, 0) - (counts['Duyuru'] || 0) - (counts['Kurallar'] || 0);
-
+            
+            // YENİ İçerik Sayısını Hesapla (Sadece maçları sayar)
             const totalMatchBadges = macVerileri.filter(m => m.yeni).length;
 
             if (totalMatchBadges > 0) {
@@ -705,10 +830,17 @@
 
                 const coverUrl = mac.kapak_url || 'https://placehold.co/300x180/333/fff?text=KAPAK+YOK';
 
+                // Prematch linki varsa, linki Prematch butonu olarak ekleyelim
+                const prematchButton = mac.prematch ? `
+                    <a href="${mac.prematch}" target="_blank" class="button indirme-butonu" style="background-color: #1976D2; box-shadow: 0 4px #0D47A1; margin-top: 5px;">
+                        🎬 PreMatch
+                    </a>
+                ` : '';
+
                 kart.innerHTML = `
                     <div style="position: relative;">
                         <img src="${coverUrl}" alt="${mac.ad} Kapağı" class="mac-kapak" 
-                            onerror="this.onerror=null; this.src='https://placehold.co/300x180/333/fff?text=YUKLENEMEDI';">
+                            onerror="this.onerror=null; this.src='https://placehold.co/300x180/333/fff?text=KAPAK+YOK';">
                         ${newTag}
                     </div>
                     <div class="mac-bilgi">
@@ -717,6 +849,7 @@
                         <a href="${mac.drive_link}" target="_blank" class="button indirme-butonu">
                             💾 İndir / İzle (Drive)
                         </a>
+                        ${prematchButton}
                     </div>
                 `;
                 listeDiv.appendChild(kart);
