@@ -162,30 +162,22 @@
 
         <div id="content-area" class="container">
             <h1 id="page-title">Duyuru Panosu</h1>
-            
             <div id="duyuru-bolumu" class="info-card">
-                <h2>📣 Subscriptionumuza Hoş Geldiniz!</h2>
-                <div id="duyuru-icerik">
-                    <p><strong>Sevgili kullanıcılarımız,</strong></p>
-                    <p>Z&M Subscription İçerik Arşivi'ne hoş geldiniz. Arşivimizdeki tüm içerikleri sol menüden kategori seçerek filtreleyebilirsiniz.</p>
-                </div>
+                <h2>📣 Z&M Subscription Arşivine Hoş Geldiniz!</h2>
+                <p>Arşivimizdeki tüm içerikleri sol menüden kategori seçerek filtreleyebilirsiniz.</p>
             </div>
-
             <div id="kurallar-bolumu" class="info-card" style="display:none;">
-                <h2>📜 Z&M Subscription Kuralları</h2>
-                <div class="rule-item"><strong>1. Leak Kesinlikle Yasaktır:</strong> İçerik paylaşımı üyeliğin sonlanmasına sebep olur.</div>
+                <h2>📜 Kurallar</h2>
+                <div class="rule-item"><strong>1. Leak Yasaktır:</strong> Abonelik anında iptal edilir.</div>
             </div>
-
             <div id="mac-listesi" style="display:none;"></div>
         </div>
     </div>
 
     <script type="module">
-        // Firebase kütüphaneleri
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
-        // GÜNCEL KULLANICI VE ŞİFRE LİSTESİ
         const kullanicilar = {
             "mexy1905@": "Mexy",
             "zeus1967@": "Zeus",
@@ -197,43 +189,32 @@
             "wiphy1905@zmsub": "E0W7W"
         };
 
-        // Firebase başlatma (Eğer dışarıda açılıyorsa hata vermemesi için kontrol eklendi)
         try {
             if (typeof __firebase_config !== 'undefined') {
-                const firebaseConfig = JSON.parse(__firebase_config);
-                const app = initializeApp(firebaseConfig);
-                const auth = getAuth(app);
-                signInAnonymously(auth).catch(e => console.error("Firebase Auth Error:", e));
+                const app = initializeApp(JSON.parse(__firebase_config));
+                signInAnonymously(getAuth(app));
             }
-        } catch (e) {
-            console.warn("Firebase başlatılamadı, yerel modda çalışıyor.");
-        }
+        } catch (e) {}
 
-        // Giriş Fonksiyonu
         window.loginControl = () => {
             const u = document.getElementById('username').value.trim().toLowerCase();
             const p = document.getElementById('password').value.trim();
-
             if (kullanicilar[u] && kullanicilar[u] === p) {
                 document.getElementById('login-screen').style.display = 'none';
                 document.getElementById('arsiv-screen').style.display = 'block';
                 showSection('duyurular');
             } else {
-                const err = document.getElementById('error-message');
-                err.style.display = 'block';
-                setTimeout(() => { err.style.display = 'none'; }, 3000);
+                document.getElementById('error-message').style.display = 'block';
+                setTimeout(() => document.getElementById('error-message').style.display = 'none', 3000);
             }
         };
 
-        // Menü ve Bölüm Fonksiyonları
         window.toggleMenu = (open) => {
             document.getElementById('side-menu').classList.toggle('open', open);
             document.getElementById('menu-overlay').style.display = open ? 'block' : 'none';
         };
 
-        window.toggleSubMenu = (id) => {
-            document.getElementById(id).classList.toggle('open');
-        };
+        window.toggleSubMenu = (id) => document.getElementById(id).classList.toggle('open');
 
         window.showSection = (section) => {
             toggleMenu(false);
@@ -243,8 +224,14 @@
             document.getElementById('page-title').innerText = (section === 'duyurular' ? 'Duyuru Panosu' : 'Kullanım Kuralları');
         };
 
+        // GERÇEK MAÇ VERİLERİNİN TAMAMI
         const macVerileri = [
-            { id: 1, ad: "Örnek Maç İçeriği", kategori: "GALATASARAY", tarih: "18.12.2025", link: "#", kapak: "https://via.placeholder.com/300x180" }
+            { id: 305, ad: "13.12.2025 Antalyaspor vs Galatasaray | beIN RAW", kategori: "GALATASARAY", tarih: "13.12.2025", link: "https://drive.google.com/drive/folders/1y4XTYoeY88P7fzul54ShGPF26bpczrOM?usp=drive_link", prematch: "https://drive.google.com/file/d/15dBgvNCzkNWFf-tPYpWB-QVQsNfIE2Qo/view?usp=sharing", kapak: "https://hizliresim.com/4k3nnbk" },
+            { id: 304, ad: "13.12.2025 Antalyaspor vs Galatasaray | Match 3", kategori: "GALATASARAY", tarih: "13.12.2025", link: "https://drive.google.com/drive/folders/17Ob3IYGfMQPAF3HS4FsR5oU9KmVc-XKY?usp=drive_link", prematch: "https://drive.google.com/file/d/15dBgvNCzkNWFf-tPYpWB-QVQsNfIE2Qo/view?usp=sharing", kapak: "https://hizliresim.com/iwvtr3z" },
+            { id: 303, ad: "05.12.2025 Galatasaray vs Samsunspor | beIN RAW", kategori: "GALATASARAY", tarih: "05.12.2025", link: "https://drive.google.com/drive/folders/1MA5MOXconaFYVr6l1gisG4hqY9wy5tCv?usp=drive_link", kapak: "https://hizliresim.com/5c59jw5" },
+            { id: 252, ad: "08.12.2025 Beşiktaş vs Gaziantep FK | beIN RAW", kategori: "BEŞİKTAŞ", tarih: "08.12.2025", link: "https://drive.google.com/file/d/1Vz-pcGFsGU4odZHFDWLUOMC_cmyO2k10/view?usp=drive_link", prematch: "https://drive.google.com/file/d/1a8quB74cDXhyTdmP_N-d3tdXNPQgum2c/view?usp=sharing", kapak: "https://hizliresim.com/d13ueoe" },
+            { id: 222, ad: "07.12.2025 Göztepe vs Trabzonspor | Diamant 50fps", kategori: "TRABZONSPOR", tarih: "07.12.2025", link: "https://drive.google.com/drive/folders/1Zjiw5_o_plkUf1-JQbBNdCRRoOilgUxe?usp=drive_link", kapak: "https://hizliresim.com/3uzbd3j" },
+            { id: 211, ad: "06.12.2025 Başakşehir vs Fenerbahçe | beIN RAW 50fps", kategori: "FENERBAHÇE", tarih: "06.12.2025", link: "https://drive.google.com/drive/folders/16dOMHOM2EXVRZJhQJWuLiwRcjdLfkF1b?usp=sharing", kapak: "https://hizliresim.com/219w7q8" }
         ];
 
         window.filterMaclar = (cat) => {
@@ -255,19 +242,11 @@
             list.style.display = 'grid';
             list.innerHTML = '';
             document.getElementById('page-title').innerText = cat;
-
             const filtered = cat === 'Tüm İçerikler' ? macVerileri : macVerileri.filter(m => m.kategori === cat);
-            filtered.forEach(m => {
+            filtered.sort((a,b) => b.id - a.id).forEach(m => {
                 const card = document.createElement('div');
                 card.className = 'mac-kart';
-                card.innerHTML = `
-                    <img src="${m.kapak}" class="mac-kapak">
-                    <div class="mac-bilgi">
-                        <h3>${m.ad}</h3>
-                        <p>${m.tarih}</p>
-                        <a href="${m.link}" target="_blank" class="button indirme-butonu">💾 İzle / İndir</a>
-                    </div>
-                `;
+                card.innerHTML = `<img src="${m.kapak}" class="mac-kapak" onerror="this.src='https://via.placeholder.com/300x180?text=Icerik'"><div class="mac-bilgi"><h3>${m.ad}</h3><p>${m.tarih}</p><a href="${m.link}" target="_blank" class="button indirme-butonu">💾 İzle / İndir</a>${m.prematch ? `<a href="${m.prematch}" target="_blank" class="button indirme-butonu" style="background:#1976D2; box-shadow:0 4px #0d47a1">🎬 PreMatch</a>` : ''}</div>`;
                 list.appendChild(card);
             });
         };
