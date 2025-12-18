@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Z&M Subscription | Arşiv</title>
     <style>
-        /* Ana Stil */
+        /* Ana Stil Ayarları */
         body { 
             font-family: 'Inter', sans-serif; 
             background-color: #121212; 
@@ -29,7 +29,7 @@
             padding-top: 60px; 
         }
 
-        /* Giriş Ekranı */
+        /* Giriş Ekranı Tasarımı */
         #login-screen { 
             text-align: center; 
             padding: 50px; 
@@ -59,7 +59,7 @@
         }
         .button:hover { background-color: #B71C1C; transform: translateY(-2px); }
 
-        /* Arşiv Ekranı */
+        /* Arşiv ve Liste Görünümü */
         #arsiv-screen { display: none; } 
         #mac-listesi { 
             display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
@@ -79,7 +79,7 @@
         
         .indirme-butonu { display: block; margin: 5px auto; text-decoration: none; font-size: 14px; width: 90%; }
 
-        /* Duyuru & Kurallar Stil */
+        /* Bilgi Kartları (Duyuru & Kurallar) */
         .info-card {
             background-color: #1e1e1e; padding: 30px; border-radius: 12px;
             border-left: 5px solid #D32F2F; line-height: 1.8; color: #ccc;
@@ -89,7 +89,7 @@
         .rule-item { margin-bottom: 15px; padding: 15px; border-bottom: 1px solid #2a2a2a; background: rgba(255,255,255,0.03); border-radius: 8px; }
         .rule-item strong { color: #D32F2F; display: block; margin-bottom: 5px; font-size: 1.1em; }
 
-        /* Header & Sidebar */
+        /* Navigasyon ve Yan Menü */
         #header-bar {
             position: fixed; top: 0; left: 0; width: 100%; height: 60px;
             background-color: #1a1a1a; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
@@ -120,8 +120,12 @@
 
     <div id="login-screen">
         <h2>Z&M Subscription</h2>
-        <div class="input-group"><input type="text" id="username" placeholder="Kullanıcı Adı"></div>
-        <div class="input-group"><input type="password" id="password" placeholder="Şifre" onkeydown="if(event.key === 'Enter') loginControl()"></div>
+        <div class="input-group">
+            <input type="text" id="username" placeholder="Kullanıcı Adı" autocomplete="off">
+        </div>
+        <div class="input-group">
+            <input type="password" id="password" placeholder="Şifre" onkeydown="if(event.key === 'Enter') loginControl()">
+        </div>
         <button class="button" onclick="loginControl()">Giriş Yap</button>
         <p id="error-message" style="color: #ff4d4d; margin-top: 15px; display: none;">Hatalı Giriş Bilgileri.</p>
     </div>
@@ -162,22 +166,22 @@
 
         <div id="content-area" class="container">
             <h1 id="page-title">Duyuru Panosu</h1>
+            
             <div id="duyuru-bolumu" class="info-card">
                 <h2>📣 Z&M Subscription Arşivine Hoş Geldiniz!</h2>
-                <p>Arşivimizdeki tüm içerikleri sol menüden kategori seçerek filtreleyebilirsiniz.</p>
+                <p>Arşivimizdeki tüm içerikleri sol menüden kategori seçerek filtreleyebilirsiniz. Keyifli seyirler dileriz.</p>
             </div>
+
             <div id="kurallar-bolumu" class="info-card" style="display:none;">
-                <h2>📜 Kurallar</h2>
-                <div class="rule-item"><strong>1. Leak Yasaktır:</strong> Abonelik anında iptal edilir.</div>
+                <h2>📜 Kullanım Kuralları</h2>
+                <div class="rule-item"><strong>1. Leak Yasaktır:</strong> İçerik sızdırmak süresiz yasaklanma sebebidir.</div>
             </div>
+
             <div id="mac-listesi" style="display:none;"></div>
         </div>
     </div>
 
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-
         const kullanicilar = {
             "mexy1905@": "Mexy",
             "zeus1967@": "Zeus",
@@ -188,13 +192,6 @@
             "icardim1905@zmsub": "F3xW4s",
             "wiphy1905@zmsub": "E0W7W"
         };
-
-        try {
-            if (typeof __firebase_config !== 'undefined') {
-                const app = initializeApp(JSON.parse(__firebase_config));
-                signInAnonymously(getAuth(app));
-            }
-        } catch (e) {}
 
         window.loginControl = () => {
             const u = document.getElementById('username').value.trim().toLowerCase();
@@ -221,17 +218,62 @@
             document.getElementById('duyuru-bolumu').style.display = (section === 'duyurular' ? 'block' : 'none');
             document.getElementById('kurallar-bolumu').style.display = (section === 'kurallar' ? 'block' : 'none');
             document.getElementById('mac-listesi').style.display = 'none';
-            document.getElementById('page-title').innerText = (section === 'duyurular' ? 'Duyuru Panosu' : 'Kullanım Kuralları');
         };
 
-        // GERÇEK MAÇ VERİLERİNİN TAMAMI
+        // --- DEV MAÇ ARŞİVİ ---
         const macVerileri = [
-            { id: 305, ad: "13.12.2025 Antalyaspor vs Galatasaray | beIN RAW", kategori: "GALATASARAY", tarih: "13.12.2025", link: "https://drive.google.com/drive/folders/1y4XTYoeY88P7fzul54ShGPF26bpczrOM?usp=drive_link", prematch: "https://drive.google.com/file/d/15dBgvNCzkNWFf-tPYpWB-QVQsNfIE2Qo/view?usp=sharing", kapak: "https://hizliresim.com/4k3nnbk" },
-            { id: 304, ad: "13.12.2025 Antalyaspor vs Galatasaray | Match 3", kategori: "GALATASARAY", tarih: "13.12.2025", link: "https://drive.google.com/drive/folders/17Ob3IYGfMQPAF3HS4FsR5oU9KmVc-XKY?usp=drive_link", prematch: "https://drive.google.com/file/d/15dBgvNCzkNWFf-tPYpWB-QVQsNfIE2Qo/view?usp=sharing", kapak: "https://hizliresim.com/iwvtr3z" },
-            { id: 303, ad: "05.12.2025 Galatasaray vs Samsunspor | beIN RAW", kategori: "GALATASARAY", tarih: "05.12.2025", link: "https://drive.google.com/drive/folders/1MA5MOXconaFYVr6l1gisG4hqY9wy5tCv?usp=drive_link", kapak: "https://hizliresim.com/5c59jw5" },
-            { id: 252, ad: "08.12.2025 Beşiktaş vs Gaziantep FK | beIN RAW", kategori: "BEŞİKTAŞ", tarih: "08.12.2025", link: "https://drive.google.com/file/d/1Vz-pcGFsGU4odZHFDWLUOMC_cmyO2k10/view?usp=drive_link", prematch: "https://drive.google.com/file/d/1a8quB74cDXhyTdmP_N-d3tdXNPQgum2c/view?usp=sharing", kapak: "https://hizliresim.com/d13ueoe" },
-            { id: 222, ad: "07.12.2025 Göztepe vs Trabzonspor | Diamant 50fps", kategori: "TRABZONSPOR", tarih: "07.12.2025", link: "https://drive.google.com/drive/folders/1Zjiw5_o_plkUf1-JQbBNdCRRoOilgUxe?usp=drive_link", kapak: "https://hizliresim.com/3uzbd3j" },
-            { id: 211, ad: "06.12.2025 Başakşehir vs Fenerbahçe | beIN RAW 50fps", kategori: "FENERBAHÇE", tarih: "06.12.2025", link: "https://drive.google.com/drive/folders/16dOMHOM2EXVRZJhQJWuLiwRcjdLfkF1b?usp=sharing", kapak: "https://hizliresim.com/219w7q8" }
+            // GALATASARAY
+            { id: 1001, ad: "13.12.2025 Antalyaspor vs Galatasaray | beIN RAW", kategori: "GALATASARAY", tarih: "13.12.2025", link: "https://drive.google.com/drive/folders/1y4XTYoeY88P7fzul54ShGPF26bpczrOM?usp=drive_link", prematch: "https://drive.google.com/file/d/15dBgvNCzkNWFf-tPYpWB-QVQsNfIE2Qo/view?usp=sharing", kapak: "https://hizliresim.com/4k3nnbk" },
+            { id: 1002, ad: "13.12.2025 Antalyaspor vs Galatasaray | Match 3", kategori: "GALATASARAY", tarih: "13.12.2025", link: "https://drive.google.com/drive/folders/17Ob3IYGfMQPAF3HS4FsR5oU9KmVc-XKY?usp=drive_link", prematch: "https://drive.google.com/file/d/15dBgvNCzkNWFf-tPYpWB-QVQsNfIE2Qo/view?usp=sharing", kapak: "https://hizliresim.com/iwvtr3z" },
+            { id: 1003, ad: "05.12.2025 Galatasaray vs Samsunspor | beIN RAW", kategori: "GALATASARAY", tarih: "05.12.2025", link: "https://drive.google.com/drive/folders/1MA5MOXconaFYVr6l1gisG4hqY9wy5tCv?usp=drive_link", kapak: "https://hizliresim.com/5c59jw5" },
+            { id: 1004, ad: "Galatasaray vs Fenerbahçe 24-25 | Bein 4K Samiyen", kategori: "GALATASARAY", tarih: "2024-25", link: "https://drive.google.com/drive/folders/1RGh34RqgKZwmf9o8nVYhx3D__FYAokyM?usp=drive_link", kapak: "https://via.placeholder.com/300x180?text=GS+vs+FB+4K" },
+            { id: 1005, ad: "Galatasaray 3-2 Gençlerbirliği", kategori: "GALATASARAY", tarih: "Arşiv", link: "https://drive.google.com/drive/folders/1kq7HyDBc-_Z0RSaMZiffdNOYcm4wct7o?usp=sharing", prematch: "https://drive.google.com/file/d/1Rbe1H7sOZVKZQthGfHHsBSa-SB7Q4ZmN/view?usp=sharing", kapak: "https://via.placeholder.com/300x180?text=GS+3-2+GB" },
+            { id: 1006, ad: "Galatasaray 7-0 Kastamonuspor", kategori: "GALATASARAY", tarih: "Arşiv", link: "https://drive.google.com/file/d/1UyBB4nM08iBtUf4ceLTUi_UBuqD6s5dJ/view?usp=sharing", kapak: "https://via.placeholder.com/300x180?text=GS+7-0+KAS" },
+            { id: 1007, ad: "Galatasaray vs Tottenham | TNT SPORTS", kategori: "GALATASARAY", tarih: "Avrupa", link: "https://drive.google.com/drive/u/1/folders/1VFw3-IdKg0L6NsNoNOAw3ZM2dg6lHpZc", kapak: "https://via.placeholder.com/300x180?text=GS+vs+SPURS" },
+
+            // FENERBAHÇE
+            { id: 1101, ad: "15.12.2025 Fenerbahçe vs Konyaspor | Match 3", kategori: "FENERBAHÇE", tarih: "15.12.2025", link: "https://drive.google.com/drive/folders/1VErjb4x4MmM6FilK9kXUHC_DQcgtmSvZ?usp=sharing", prematch: "https://drive.google.com/file/d/16ZMjscAWJeyTUkut_Jky8P0SlA8F9Vhb/view?usp=drive_link", kapak: "https://via.placeholder.com/300x180?text=FB+vs+KONYA" },
+            { id: 1102, ad: "06.12.2025 Başakşehir vs Fenerbahçe | beIN RAW 50fps", kategori: "FENERBAHÇE", tarih: "06.12.2025", link: "https://drive.google.com/drive/folders/16dOMHOM2EXVRZJhQJWuLiwRcjdLfkF1b?usp=sharing", kapak: "https://via.placeholder.com/300x180?text=FB+vs+BASAK" },
+            { id: 1103, ad: "Fenerbahçe 1-2 Galatasaray | ZTK Finali Titan Feed", kategori: "FENERBAHÇE", tarih: "Final", link: "https://drive.google.com/drive/folders/1nShUrxBlU_XYwUR0YM8A_dKeqCGaTUOF?usp=sharing", kapak: "https://via.placeholder.com/300x180?text=FB+vs+GS+ZTK" },
+            { id: 1104, ad: "Fenerbahçe vs Ferencvaros | UEL", kategori: "FENERBAHÇE", tarih: "Avrupa", link: "https://drive.google.com/drive/u/5/folders/1GVvgIcha2dQPNEcOiuzjAtcKtidbmeVI", kapak: "https://via.placeholder.com/300x180?text=FB+vs+FERENC" },
+
+            // BEŞİKTAŞ
+            { id: 1201, ad: "08.12.2025 Beşiktaş vs GaziantepFK | beIN RAW", kategori: "BEŞİKTAŞ", tarih: "08.12.2025", link: "https://drive.google.com/file/d/1Vz-pcGFsGU4odZHFDWLUOMC_cmyO2k10/view?usp=drive_link", prematch: "https://drive.google.com/file/d/1a8quB74cDXhyTdmP_N-d3tdXNPQgum2c/view?usp=sharing", kapak: "https://hizliresim.com/d13ueoe" },
+            { id: 1202, ad: "08.12.2025 Beşiktaş vs GaziantepFK | BeIN Usa", kategori: "BEŞİKTAŞ", tarih: "08.12.2025", link: "https://drive.google.com/file/d/12k76x2brKzWeTDo85v4xP_BVpFrJG8B_/view?usp=sharing", prematch: "https://drive.google.com/file/d/1a8quB74cDXhyTdmP_N-d3tdXNPQgum2c/view?usp=sharing", kapak: "https://hizliresim.com/8fjzdqi" },
+            { id: 1203, ad: "08.12.2025 Beşiktaş vs GaziantepFK | Match TV", kategori: "BEŞİKTAŞ", tarih: "08.12.2025", link: "https://drive.google.com/file/d/1yVxGGjhHkavD0FojaVab0_b1xAnh3PkJ/view?usp=sharing", prematch: "https://drive.google.com/file/d/1a8quB74cDXhyTdmP_N-d3tdXNPQgum2c/view?usp=sharing", kapak: "https://hizliresim.com/ks0esav" },
+
+            // TRABZONSPOR
+            { id: 1301, ad: "07.12.2025 Göztepe vs Trabzonspor | Diamant 50fps", kategori: "TRABZONSPOR", tarih: "07.12.2025", link: "https://drive.google.com/drive/folders/1Zjiw5_o_plkUf1-JQbBNdCRRoOilgUxe?usp=drive_link", kapak: "https://hizliresim.com/3uzbd3j" },
+            { id: 1302, ad: "07.12.2025 Göztepe vs Trabzonspor | beIN RAW", kategori: "TRABZONSPOR", tarih: "07.12.2025", link: "https://drive.google.com/drive/folders/16dOMHOM2EXVRZJhQJWuLiwRcjdLfkF1b?usp=sharing", kapak: "https://hizliresim.com/8lnsb04" },
+            { id: 1303, ad: "Trabzonspor 3-2 Konyaspor", kategori: "TRABZONSPOR", tarih: "Arşiv", link: "https://drive.google.com/drive/folders/1gTMlZvuOubi9r8EJZ_6mNbEaBKBH9P2n?usp=sharing", kapak: "https://via.placeholder.com/300x180?text=TS+3-2+KONYA" },
+            { id: 1304, ad: "17.12.2025 Trabzonspor vs Alanyaspor | 4K FEED", kategori: "TRABZONSPOR", tarih: "17.12.2025", link: "https://drive.google.com/drive/folders/1Fmk2W9_-6rdYLXpFeffOKTcBW6hSE3G7?usp=drive_link", kapak: "https://via.placeholder.com/300x180?text=TS+vs+ALANYA+4K" },
+            { id: 1305, ad: "Trabzonspor 2-0 Vanspor | Diamant", kategori: "TRABZONSPOR", tarih: "Kupa", link: "https://drive.google.com/file/d/1aojmEp0en7HfD1kAW5BUfmNCk9oj4hEJ/view?usp=drive_link", kapak: "https://via.placeholder.com/300x180?text=TS+vs+VAN" },
+
+            // DİĞER TSL
+            { id: 1401, ad: "Kocaelispor vs Gençlerbirliği", kategori: "DİĞER TSL", tarih: "1. Lig", link: "https://drive.google.com/drive/u/5/folders/1G9gBt9iAatSkqchNXL7Dr1QIJqgftZci", kapak: "https://via.placeholder.com/300x180?text=KOCAELI+vs+GB" },
+
+            // AVRUPA LİGLERİ
+            { id: 1501, ad: "Real Madrid vs Celta Vigo | Movistar UHD4K", kategori: "İspanya(LaLiga) Ligi", tarih: "07.12.2025", link: "https://drive.google.com/file/d/1KfkyECiN9e7wTijCOoUnl7wn_pO0UjJ0/view?usp=drive_link", kapak: "https://via.placeholder.com/300x180?text=REAL+vs+CELTA+4K" },
+            { id: 1502, ad: "Man United vs West Ham | beIN RAW", kategori: "İngiltere(Premier) Ligi", tarih: "04.12.2025", link: "https://drive.google.com/file/d/1jQnh20jyGOgd8_oON8MjeszqDC3qQQBd/view?usp=drive_link", kapak: "https://via.placeholder.com/300x180?text=MUFC+vs+WHU" },
+            { id: 1503, ad: "Arsenal vs Brentford | GO3 Extra", kategori: "İngiltere(Premier) Ligi", tarih: "03.12.2025", link: "https://drive.google.com/drive/u/5/folders/1u1lvd2TavA5Uqi5JWaqAxiBJwrF5ilX0", kapak: "https://via.placeholder.com/300x180?text=ARSENAL+vs+BRENT" },
+            { id: 1504, ad: "Barcelona vs Atletico Madrid", kategori: "İspanya(LaLiga) Ligi", tarih: "Aralık 2025", link: "https://drive.google.com/drive/folders/1DnaaM9IcXeQ3qEhmCaDy1ecpdzRvuTHh?usp=sharing", kapak: "https://via.placeholder.com/300x180?text=BARCA+vs+ATLETI" },
+            { id: 1505, ad: "Union Berlin 3-1 RB Leipzig | SkySports", kategori: "Almanya(Bundesliga) Ligi", tarih: "12.12.2025", link: "https://drive.google.com/file/d/1SjCgHb14f5pOP3GsLB9J7o0ZMszXi4gy/view?usp=drive_link", kapak: "https://via.placeholder.com/300x180?text=UNION+vs+RBL" },
+            { id: 1506, ad: "Brighton vs West Ham | beIN RAW 25FPS", kategori: "İngiltere(Premier) Ligi", tarih: "07.12.2025", link: "https://drive.google.com/file/d/17863DZdbFKJEnzh_cwcD6yIjGqBgfXLz/view?usp=sharing", kapak: "https://via.placeholder.com/300x180?text=BRIGHTON+vs+WHU" },
+
+            // İTALYA SERİE A
+            { id: 1601, ad: "Pisa vs Parma | S Sport RAW", kategori: "İtalya(Serie A) Ligi", tarih: "08.12.2025", link: "https://drive.google.com/file/d/1cA3NcJDNpl84rcuZgq8GShtYICeme-y-/view?usp=drive_link", kapak: "https://via.placeholder.com/300x180?text=PISA+vs+PARMA" },
+            { id: 1602, ad: "Napoli vs Juventus | GO3", kategori: "İtalya(Serie A) Ligi", tarih: "07.12.2025", link: "https://drive.google.com/file/d/1236KCn5bKdaIbAnnjR5K-_hFF3_zUmzc/view?usp=drive_link", kapak: "https://via.placeholder.com/300x180?text=NAPOLI+vs+JUVE" },
+
+            // ŞAMPİYONLAR LİGİ & KUPA
+            { id: 1701, ad: "Kairat vs Olimpiakos | DAZN", kategori: "Şampiyonlar Ligi Full Maçları", tarih: "09.12.2025", link: "https://drive.google.com/file/d/1O2xiunqsRkSOF3v7kE1dHDSGKUrodGNO/view?usp=drive_link", kapak: "https://via.placeholder.com/300x180?text=KAIRAT+vs+OLY" },
+            { id: 1702, ad: "Olimpiakos vs Real Madrid | GO3", kategori: "Şampiyonlar Ligi Full Maçları", tarih: "Aralık 2025", link: "https://drive.google.com/drive/folders/1E4qS2kJCmAAoshDbigdLpuyAVjHcvp86?usp=drive_link", kapak: "https://via.placeholder.com/300x180?text=OLY+vs+REAL" },
+            { id: 1703, ad: "Çorumspor vs Alanyaspor | FEED", kategori: "Ziraat Türkiye Kupası", tarih: "04.12.2025", link: "https://drive.google.com/file/d/1W9Yu6d86hqrTWrSnsYVAgOjeRcAwcrSO/view?usp=drive_link", kapak: "https://via.placeholder.com/300x180?text=CORUM+vs+ALANYA" },
+            { id: 1704, ad: "Türkiye vs İspanya | Spor TV", kategori: "Milli Maçlar", tarih: "2025", link: "https://drive.google.com/drive/folders/1uqLG0MzegDCwAvx9HtyJ_IMyHr9ycoTY", kapak: "https://via.placeholder.com/300x180?text=TUR+vs+ESP" },
+            { id: 1705, ad: "Portekiz vs Ermenistan 9-1 | Titan Feed", kategori: "Milli Maçlar", tarih: "2025", link: "https://drive.google.com/drive/folders/1La8y3tHAsl0CClhRzz33NNQ4mPDhCqXi?usp=drive_link", kapak: "https://via.placeholder.com/300x180?text=POR+9-1+ARM" },
+
+            // BASKETBOL
+            { id: 1801, ad: "Fenerbahçe vs Panathinaikos | EuroLeague FEED", kategori: "Basketbol Maçları", tarih: "16.12.2025", link: "https://drive.google.com/file/d/1gFZOlTQZEFfpM2y8u1ugqZ4XU-owgnRD/view?usp=drive_link", kapak: "https://via.placeholder.com/300x180?text=FB+vs+PANA" },
+            { id: 1802, ad: "Merkezefendi vs Fenerbahçe Beko | beIN RAW", kategori: "Basketbol Maçları", tarih: "07.12.2025", link: "https://drive.google.com/drive/folders/1igkUxA-tCIExvizzk9fJ4ZcVFHXnYeVp?usp=sharing", kapak: "https://via.placeholder.com/300x180?text=MERKEZ+vs+FB" }
         ];
 
         window.filterMaclar = (cat) => {
@@ -249,6 +291,7 @@
                 card.innerHTML = `<img src="${m.kapak}" class="mac-kapak" onerror="this.src='https://via.placeholder.com/300x180?text=Icerik'"><div class="mac-bilgi"><h3>${m.ad}</h3><p>${m.tarih}</p><a href="${m.link}" target="_blank" class="button indirme-butonu">💾 İzle / İndir</a>${m.prematch ? `<a href="${m.prematch}" target="_blank" class="button indirme-butonu" style="background:#1976D2; box-shadow:0 4px #0d47a1">🎬 PreMatch</a>` : ''}</div>`;
                 list.appendChild(card);
             });
+            if(filtered.length === 0) list.innerHTML = `<p style='grid-column:1/-1; text-align:center;'>Bu kategoride henüz maç bulunmuyor.</p>`;
         };
     </script>
 </body>
