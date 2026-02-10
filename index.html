@@ -33,6 +33,41 @@
       overflow-x: hidden;
     }
 
+    /* Duyuru Paneli Stili */
+    .announcement-bar {
+      background: rgba(169, 4, 50, 0.15);
+      border: 1px solid var(--gs-red);
+      margin: 15px 5% 5px 5%;
+      padding: 12px 20px;
+      border-radius: 15px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(169, 4, 50, 0.4); }
+      70% { box-shadow: 0 0 0 10px rgba(169, 4, 50, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(169, 4, 50, 0); }
+    }
+
+    .announcement-text {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: #fff;
+    }
+
+    .announcement-label {
+      background: var(--gs-gold);
+      color: #000;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-weight: 900;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+    }
+
     /* Giriş Sayfası */
     #login-page {
       flex: 1;
@@ -108,7 +143,7 @@
     .video-section {
       width: 95%;
       max-width: 1000px;
-      margin: 20px auto;
+      margin: 10px auto;
       background: #000;
       border-radius: 24px;
       overflow: hidden;
@@ -190,6 +225,12 @@
       <button onclick="location.reload()" style="background:none; color:white; border:1px solid #444; padding:5px 15px; border-radius:10px; cursor:pointer;">ÇIKIŞ</button>
     </header>
 
+    <div class="announcement-bar">
+      <span class="announcement-label">Duyuru</span>
+      <i data-lucide="megaphone" size="20" style="color: var(--gs-gold)"></i>
+      <span class="announcement-text">Maç Günleri Özel Yayınlarımız Aktif Olmaktadır</span>
+    </div>
+
     <div class="video-section" id="player-container">
       <div id="error-overlay">
         <h2 style="color:white">Kanal Kapalı</h2>
@@ -209,8 +250,11 @@
     };
 
     const CHANNELS = [
-      { id: "theo_1", name: "Z&M SPORTS 1 (Maç Zamanı Aktif)", icon: "play", type: "iframe", url: "" },
-      { id: "trt_m3u8", name: "TRT SPOR HQ", icon: "activity", url: "https://tv-trtspor1.medya.trt.com.tr/master_720.m3u8" },
+      { id: "theo_1", name: "Z&M SPORTS 1", icon: "play", type: "iframe", url: "https://firinmakinesi.lol/static/bs1.m3u8?" },
+      { id: "theo_1", name: "Z&M SPORTS 2", icon: "play", type: "iframe", url: "https://firinmakinesi.lol/static/bs2.m3u8?" },
+      { id: "theo_1", name: "Z&M SPORTS 3", icon: "play", type: "iframe", url: "https://firinmakinesi.lol/static/bs3.m3u8?" },
+      { id: "theo_1", name: "Z&M SPORTS 4", icon: "play", type: "iframe", url: "https://firinmakinesi.lol/static/bs4.m3u8?" },
+      { id: "trt_m3u8", name: "TRT SPOR", icon: "activity", url: "https://tv-trtspor1.medya.trt.com.tr/master_720.m3u8" },
     ];
 
     let hls = null;
@@ -292,4 +336,3 @@
   </script>
 </body>
 </html>
-
