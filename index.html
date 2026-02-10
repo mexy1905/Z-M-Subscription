@@ -1,329 +1,298 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Z&M Subscription | Arşiv</title>
-    <style>
-        /* Ana Stil Ayarları */
-        body { 
-            font-family: 'Inter', sans-serif; 
-            background-color: #121212; 
-            color: #e0e0e0; 
-            margin: 0; 
-            padding: 0; 
-            min-height: 100vh;
-        }
-        
-        .container { 
-            max-width: 1200px; 
-            margin: 0 auto; 
-            padding: 20px; 
-        }
-        h1 { 
-            color: #D32F2F; 
-            text-align: center; 
-            margin-bottom: 30px; 
-            font-size: 2.5em; 
-            letter-spacing: 1px;
-            padding-top: 60px; 
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Z&M Stream | Premium TV</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mpegts.js/1.7.3/mpegts.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+    :root {
+      --gs-red: #A90432;
+      --gs-gold: #FDB912;
+      --bg-dark: #0a0a0a;
+      --font-main: 'Montserrat', sans-serif;
+    }
 
-        /* Giriş Ekranı Tasarımı */
-        #login-screen { 
-            text-align: center; 
-            padding: 50px; 
-            background: linear-gradient(145deg, #1e1e1e, #2a2a2a); 
-            border-radius: 12px; 
-            max-width: 400px; 
-            margin: 100px auto; 
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6); 
-        }
-        #login-screen h2 {
-            color: #D32F2F;
-            margin-bottom: 30px;
-            font-weight: 600;
-        }
-        .input-group { margin-bottom: 20px; }
-        .input-group input { 
-            width: 100%; padding: 12px; border: 1px solid #333; 
-            border-radius: 6px; background-color: #333; color: #e0e0e0; 
-            box-sizing: border-box; transition: border-color 0.3s;
-        }
-        .input-group input:focus { border-color: #D32F2F; outline: none; }
-        
-        .button { 
-            background-color: #D32F2F; color: white; padding: 12px 25px; 
-            border: none; border-radius: 6px; cursor: pointer; font-size: 16px; 
-            font-weight: bold; transition: 0.3s; box-shadow: 0 4px #B71C1C; 
-            text-align: center;
-            display: inline-block;
-        }
-        .button:hover { background-color: #B71C1C; transform: translateY(-2px); }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
-        /* Arşiv ve Liste Görünümü */
-        #arsiv-screen { display: none; } 
-        #mac-listesi { 
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
-            gap: 25px; padding: 10px;
-        }
-        .mac-kart { 
-            background-color: #1e1e1e; border-radius: 10px; overflow: hidden; 
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); text-align: center; 
-            transition: 0.3s; display: flex; flex-direction: column; justify-content: space-between;
-            position: relative;
-        }
-        .mac-kart:hover { transform: translateY(-8px); box-shadow: 0 12px 20px rgba(211, 47, 47, 0.3); }
-        .mac-kapak { width: 100%; height: 180px; object-fit: cover; background-color: #2a2a2a; }
-        .mac-bilgi { padding: 15px; flex-grow: 1; }
-        .mac-bilgi h3 { margin: 5px 0 10px; color: white; font-size: 1.1em; }
-        .mac-bilgi p { color: #aaa; font-size: 0.85em; margin-bottom: 15px; }
-        
-        .indirme-butonu { display: block; margin: 5px auto; text-decoration: none; font-size: 14px; width: 90%; box-sizing: border-box; }
+    body {
+      background: var(--bg-dark);
+      background-image: 
+        radial-gradient(circle at 0% 0%, rgba(169, 4, 50, 0.25) 0%, transparent 50%),
+        radial-gradient(circle at 100% 100%, rgba(253, 185, 18, 0.2) 0%, transparent 50%),
+        linear-gradient(135deg, #050505 0%, #111 100%);
+      color: white;
+      font-family: var(--font-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
 
-        /* Bilgi Kartları (Duyuru & Kurallar) */
-        .info-card {
-            background-color: #1e1e1e; padding: 30px; border-radius: 12px;
-            border-left: 5px solid #D32F2F; line-height: 1.8; color: #ccc;
-            max-width: 800px; margin: 0 auto; box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        }
-        .info-card h2 { color: #D32F2F; margin-top: 0; border-bottom: 1px solid #333; padding-bottom: 15px; margin-bottom: 20px; font-size: 1.8em; }
-        .rule-item { margin-bottom: 15px; padding: 15px; border-bottom: 1px solid #2a2a2a; background: rgba(255,255,255,0.03); border-radius: 8px; }
-        .rule-item strong { color: #D32F2F; display: block; margin-bottom: 5px; font-size: 1.1em; }
+    /* Giriş Sayfası */
+    #login-page {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
 
-        /* Navigasyon ve Yan Menü */
-        #header-bar {
-            position: fixed; top: 0; left: 0; width: 100%; height: 60px;
-            background-color: #1a1a1a; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-            display: flex; align-items: center; padding: 0 15px; z-index: 100;
-        }
-        .menu-button { background: none; border: none; cursor: pointer; color: white; font-size: 24px; margin-right: 15px; }
-        #side-menu {
-            position: fixed; top: 0; left: 0; width: 280px; height: 100%;
-            background-color: #222; z-index: 200; transform: translateX(-100%);
-            transition: 0.3s ease-in-out; box-shadow: 2px 0 10px rgba(0, 0, 0, 0.7);
-            overflow-y: auto;
-        }
-        #side-menu.open { transform: translateX(0); }
-        .menu-header { padding: 20px; background-color: #1a1a1a; color: #D32F2F; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
-        .menu-item { padding: 15px 20px; cursor: pointer; border-bottom: 1px solid #333; transition: 0.2s; display: flex; justify-content: space-between; align-items: center; }
-        .menu-item:hover { background-color: #333; color: #D32F2F; }
-        
-        #menu-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 150; display: none; }
+    .login-card {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(30px);
+      -webkit-backdrop-filter: blur(30px);
+      padding: 3.5rem 2rem;
+      border-radius: 32px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      text-align: center;
+      width: 100%;
+      max-width: 380px;
+      box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.9);
+      border-top: 2px solid var(--gs-red);
+      border-bottom: 2px solid var(--gs-gold);
+    }
 
-        .submenu { max-height: 0; overflow: hidden; transition: 0.3s; background-color: #1a1a1a; }
-        .submenu.open { max-height: 1000px; }
-        .submenu-item { padding-left: 40px; font-size: 0.9em; }
+    .brand-logo {
+      font-size: 2.8rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--gs-gold) 30%, #fff 50%, var(--gs-red) 70%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 2.5rem;
+      display: block;
+      letter-spacing: -2px;
+    }
 
-        @media (max-width: 600px) { #side-menu { width: 85%; } }
-    </style>
+    .login-card input {
+      width: 100%;
+      background: rgba(0,0,0,0.7);
+      border: 1px solid rgba(253, 185, 18, 0.2);
+      padding: 16px;
+      border-radius: 16px;
+      color: white;
+      outline: none;
+      margin-bottom: 1.2rem;
+    }
+
+    .btn-login {
+      width: 100%;
+      background: linear-gradient(135deg, var(--gs-red) 0%, #d4053f 100%);
+      color: white;
+      border: none;
+      padding: 18px;
+      border-radius: 16px;
+      font-weight: 800;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      transition: 0.4s;
+    }
+
+    /* Ana Uygulama */
+    #main-app { display: none; flex-direction: column; flex: 1; }
+
+    header {
+      padding: 1rem 5%;
+      background: #000;
+      border-bottom: 3px solid var(--gs-red);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .video-section {
+      width: 95%;
+      max-width: 1000px;
+      margin: 20px auto;
+      background: #000;
+      border-radius: 24px;
+      overflow: hidden;
+      border: 2px solid #1a1a1a;
+      position: relative;
+      aspect-ratio: 16/9;
+    }
+
+    video, iframe {
+      width: 100%;
+      height: 100%;
+      display: block;
+      border: none;
+    }
+
+    #error-overlay, #loading-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 100;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      background: rgba(0,0,0,0.9);
+      flex-direction: column;
+    }
+
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 5px solid rgba(255,255,255,0.1);
+      border-top-color: var(--gs-gold);
+      border-radius: 50%;
+      animation: spin 0.8s infinite linear;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .grid-channels {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));
+      gap: 15px;
+      padding: 0 5% 60px;
+    }
+
+    .channel-card {
+      background: rgba(255,255,255,0.03);
+      padding: 22px 10px;
+      border-radius: 24px;
+      cursor: pointer;
+      text-align: center;
+      transition: 0.3s;
+      border: 1px solid transparent;
+    }
+
+    .channel-card.active {
+      background: var(--gs-red);
+      border-color: var(--gs-gold);
+    }
+
+    .status-text { text-align: center; color: var(--gs-gold); margin-bottom: 25px; font-weight: 800; letter-spacing: 1px; }
+
+    @media (max-width: 600px) { .grid-channels { grid-template-columns: repeat(2, 1fr); } }
+  </style>
 </head>
 <body>
 
-    <div id="login-screen">
-        <h2>Z&M Subscription</h2>
-        <div class="input-group">
-            <input type="text" id="username" placeholder="Kullanıcı Adı" autocomplete="off">
-        </div>
-        <div class="input-group">
-            <input type="password" id="password" placeholder="Şifre" onkeydown="if(event.key === 'Enter') loginControl()">
-        </div>
-        <button class="button" onclick="loginControl()">Giriş Yap</button>
-        <p id="error-message" style="color: #ff4d4d; margin-top: 15px; display: none;">Hatalı Giriş Bilgileri.</p>
+  <div id="login-page">
+    <div class="login-card">
+      <span class="brand-logo">Z&M STREAM</span>
+      <input type="text" id="username" placeholder="Kullanıcı Adı">
+      <input type="password" id="password" placeholder="Şifre">
+      <button class="btn-login" onclick="attemptLogin()">SİSTEME GİRİŞ</button>
+      <p id="login-error" style="color:red; display:none; margin-top:10px;">Hatalı Giriş!</p>
+    </div>
+  </div>
+
+  <div id="main-app">
+    <header>
+      <span style="font-weight:900; font-size:1.5rem;">Z&M <span style="color:var(--gs-gold)">STREAM</span></span>
+      <button onclick="location.reload()" style="background:none; color:white; border:1px solid #444; padding:5px 15px; border-radius:10px; cursor:pointer;">ÇIKIŞ</button>
+    </header>
+
+    <div class="video-section" id="player-container">
+      <div id="error-overlay">
+        <h2 style="color:white">Kanal Kapalı</h2>
+      </div>
+      <div id="loading-overlay"><div class="spinner"></div></div>
+      <video id="mainPlayer" controls autoplay playsinline></video>
     </div>
 
-    <div id="arsiv-screen">
-        <div id="header-bar">
-            <button class="menu-button" onclick="toggleMenu(true)">☰</button>
-            <span style="font-weight: bold;">Z&M Subscription Arşiv</span>
-        </div>
+    <div id="statusLabel" class="status-text">Kanal Seçiniz</div>
+    <div class="grid-channels" id="channelList"></div>
+  </div>
 
-        <div id="side-menu">
-            <div class="menu-header">Menü <span onclick="toggleMenu(false)" style="cursor:pointer; font-size: 24px;">&times;</span></div>
-            <div class="menu-item" onclick="showSection('duyurular')">📢 Duyuru Panosu</div>
-            <div class="menu-item" onclick="showSection('kurallar')">📜 Kurallar</div>
-            <div class="menu-item" onclick="filterMaclar('Tüm İçerikler')">🏠 Tüm Maçlar / Arşiv</div>
-            
-            <div class="menu-item" onclick="toggleSubMenu('superlig-sub')">🏆 Süper Lig <span>▼</span></div>
-            <div id="superlig-sub" class="submenu">
-                <div class="menu-item submenu-item" onclick="filterMaclar('GALATASARAY')">Galatasaray</div>
-                <div class="menu-item submenu-item" onclick="filterMaclar('FENERBAHÇE')">Fenerbahçe</div>
-                <div class="menu-item submenu-item" onclick="filterMaclar('BEŞİKTAŞ')">Beşiktaş</div>
-                <div class="menu-item submenu-item" onclick="filterMaclar('TRABZONSPOR')">Trabzonspor</div>
-                <div class="menu-item submenu-item" onclick="filterMaclar('DİĞER TSL')">Diğer Takımlar</div>
-            </div>
+  <script>
+    const CONFIG = {
+      auth: { u: "zm", p: "1905" },
+      iptp: { host: "http://4kgood.org:8080", user: "9680723188", pass: "kyft6ks0g7gr7uw0xio6" }
+    };
 
-            <div class="menu-item" onclick="filterMaclar('İngiltere(Premier) Ligi')">🏴󠁧󠁢󠁥󠁮󠁧󠁿 İngiltere Premier Ligi</div>
-            <div class="menu-item" onclick="filterMaclar('İspanya(LaLiga) Ligi')">🇪🇸 İspanya La Liga</div>
-            <div class="menu-item" onclick="filterMaclar('İtalya(Serie A) Ligi')">🇮🇹 İtalya Serie A</div>
-            <div class="menu-item" onclick="filterMaclar('Almanya(Bundesliga) Ligi')">🇩🇪 Almanya Bundesliga</div>
-            <div class="menu-item" onclick="filterMaclar('Şampiyonlar Ligi Full Maçları')">🇪🇺 Şampiyonlar Ligi</div>
-            <div class="menu-item" onclick="filterMaclar('Avrupa Ligi Full Maçları')">🇪🇺 Avrupa Ligi</div>
-            <div class="menu-item" onclick="filterMaclar('Ziraat Türkiye Kupası')">🇹🇷 Ziraat Türkiye Kupası</div>
-            <div class="menu-item" onclick="filterMaclar('Basketbol Maçları')">🏀 Basketbol Maçları</div>
-            <div class="menu-item" onclick="filterMaclar('Milli Maçlar')">🌍 Milli Maçlar</div>
-        </div>
+    const CHANNELS = [
+      { id: "theo_1", name: "Z&M SPORTS 1", icon: "play", type: "iframe", url: "https://firinmakinesi.lol/static/bs1.m3u8?" },
+      { id: "137", name: "beIN SPORTS 2", icon: "award" },
+      { id: "trt_m3u8", name: "TRT SPOR HQ", icon: "activity", url: "https://tv-trtspor1.medya.trt.com.tr/master_720.m3u8" },
+      { id: "400", name: "TV 8.5", icon: "tv" },
+      { id: "200", name: "EXXEN SPORTS 1", icon: "zap" }
+    ];
 
-        <div id="menu-overlay" onclick="toggleMenu(false)"></div>
+    let hls = null;
+    let mpegtsPlayer = null;
 
-        <div id="content-area" class="container">
-            <h1 id="page-title">Duyuru Panosu</h1>
-            
-            <div id="duyuru-bolumu" class="info-card">
-                <h2>📣 Z&M Subscription Arşivine Hoş Geldiniz!</h2>
-                <p>Arşivimizdeki tüm içerikleri sol menüden kategori seçerek filtreleyebilirsiniz. Keyifli seyirler dileriz.</p>
-            </div>
+    function attemptLogin() {
+      const u = document.getElementById('username').value;
+      const p = document.getElementById('password').value;
+      if (u === CONFIG.auth.u && p === CONFIG.auth.p) {
+        document.getElementById('login-page').style.display = 'none';
+        document.getElementById('main-app').style.display = 'flex';
+        initGrid();
+      } else {
+        document.getElementById('login-error').style.display = 'block';
+      }
+    }
 
-            <div id="kurallar-bolumu" class="info-card" style="display:none;">
-                <h2>📜 Kullanım Kuralları</h2>
-                <div class="rule-item"><strong>1. Leak Yasaktır:</strong> İçerik sızdırmak süresiz yasaklanma sebebidir.</div>
-            </div>
+    function initGrid() {
+      const grid = document.getElementById('channelList');
+      grid.innerHTML = '';
+      CHANNELS.forEach(ch => {
+        const card = document.createElement('div');
+        card.className = 'channel-card';
+        card.onclick = () => playStream(ch, card);
+        card.innerHTML = `<i data-lucide="${ch.icon}"></i><span style="display:block; margin-top:10px;">${ch.name}</span>`;
+        grid.appendChild(card);
+      });
+      lucide.createIcons();
+    }
 
-            <div id="mac-listesi" style="display:none;"></div>
-        </div>
-    </div>
+    function resetPlayers() {
+      if (hls) hls.destroy();
+      if (mpegtsPlayer) mpegtsPlayer.destroy();
+      const container = document.getElementById('player-container');
+      const oldIframe = document.getElementById('temp-iframe');
+      if (oldIframe) oldIframe.remove();
+      const video = document.getElementById('mainPlayer');
+      video.style.display = 'block';
+      video.pause();
+      video.src = "";
+      document.getElementById('loading-overlay').style.display = 'none';
+      document.getElementById('error-overlay').style.display = 'none';
+    }
 
-    <script>
-        // KULLANICI LİSTESİ
-        const kullanicilar = {
-            "mexy1905@": "Mexy",
-            "zeus1967@": "Zeus",
-            "krxy1905@zmsub": "5CORQU",
-            "wyrox1905@zmsub": "0CdPC",
-            "kayra1967@zmsub": "r95pH",
-            "gst1905@zmsub": "XOlAC",
-            "icardim1905@zmsub": "F3xW4s",
-            "wiphy1905@zmsub": "E0W7W",
-            "emirhan1905@zmsub": "E0W1W",
-            "marco1907@zmsub": "XB5ce",
-            "süleyman1967@zmsub": "5fTXL"
-        };
+    function playStream(ch, el) {
+      resetPlayers();
+      document.querySelectorAll('.channel-card').forEach(c => c.classList.remove('active'));
+      el.classList.add('active');
+      document.getElementById('statusLabel').innerText = "OYNATILIYOR: " + ch.name;
 
-        function loginControl() {
-            const u = document.getElementById('username').value.trim().toLowerCase();
-            const p = document.getElementById('password').value.trim();
-            if (kullanicilar[u] && kullanicilar[u] === p) {
-                document.getElementById('login-screen').style.display = 'none';
-                document.getElementById('arsiv-screen').style.display = 'block';
-                showSection('duyurular');
-            } else {
-                document.getElementById('error-message').style.display = 'block';
-                setTimeout(() => document.getElementById('error-message').style.display = 'none', 3000);
-            }
+      if (ch.type === "iframe") {
+        document.getElementById('mainPlayer').style.display = 'none';
+        const ifr = document.createElement('iframe');
+        ifr.id = "temp-iframe";
+        ifr.src = ch.url;
+        ifr.allow = "autoplay; fullscreen";
+        document.getElementById('player-container').appendChild(ifr);
+        return;
+      }
+
+      const source = ch.url || `${CONFIG.iptp.host}/live/${CONFIG.iptp.user}/${CONFIG.iptp.pass}/${ch.id}.ts`;
+      const video = document.getElementById('mainPlayer');
+      document.getElementById('loading-overlay').style.display = 'flex';
+
+      if (source.includes('.m3u8')) {
+        if (Hls.isSupported()) {
+          hls = new Hls();
+          hls.loadSource(source);
+          hls.attachMediaElement(video);
+          hls.on(Hls.Events.MANIFEST_PARSED, () => { video.play(); document.getElementById('loading-overlay').style.display = 'none'; });
         }
-
-        function toggleMenu(open) {
-            document.getElementById('side-menu').classList.toggle('open', open);
-            document.getElementById('menu-overlay').style.display = open ? 'block' : 'none';
-        }
-
-        function toggleSubMenu(id) {
-            document.getElementById(id).classList.toggle('open');
-        }
-
-        function showSection(section) {
-            toggleMenu(false);
-            document.getElementById('duyuru-bolumu').style.display = (section === 'duyurular' ? 'block' : 'none');
-            document.getElementById('kurallar-bolumu').style.display = (section === 'kurallar' ? 'block' : 'none');
-            document.getElementById('mac-listesi').style.display = 'none';
-            document.getElementById('page-title').innerText = section === 'duyurular' ? 'Duyuru Panosu' : 'Kullanım Kuralları';
-        }
-
-        const macVerileri = [
-            // --- YENİ MAÇLAR ---
-            { id: 4005, ad: "19.12.2025 Kocaelispor vs Antalyaspor | beIN RAW", kategori: "DİĞER TSL", tarih: "19.12.2025", link: "https://drive.google.com/drive/folders/1AXQUVssFlp7s69E5d7ERbbe9iyrbwDWz?usp=sharing", kapak: "https://lh3.googleusercontent.com/d/1v3FBEyN188pteML66MZHvaKTSDmCph3s" },
-            { id: 4004, ad: "18.12.2025 GS vs Başakşehir | VG+ Full Match", kategori: "GALATASARAY", tarih: "18.12.2025", link: "https://drive.google.com/drive/folders/1PEEmje6EQDiOKIXROe5wCtkFh0iy8jQ6?usp=sharing", kapak: "https://lh3.googleusercontent.com/d/122GacugjhcZv88cZs8sWVOyxIOb5Z90a" },
-            { id: 4003, ad: "18.12.2025 GS vs Başakşehir | ZTK 4K FEED", kategori: "GALATASARAY", tarih: "18.12.2025", link: "https://drive.google.com/drive/folders/1jkbT0jm7GKX1vNJnSCYy7MnudlAaUGKb?usp=drive_link", kapak: "https://lh3.googleusercontent.com/d/1v3FBEyN188pteML66MZHvaKTSDmCph3s", etiketler: ["Ziraat Türkiye Kupası"] },
-            
-            { id: 4001, ad: "20.12.2025 Galatasaray vs Antalyaspor | 4K RAW", kategori: "GALATASARAY", tarih: "20.12.2025", link: "#", kapak: "" },
-            { id: 4002, ad: "19.12.2025 Fenerbahçe vs Trabzonspor | Match 1", kategori: "FENERBAHÇE", tarih: "19.12.2025", link: "#", kapak: "", etiketler: ["TRABZONSPOR"] },
-
-            // --- ÖNCEKİ MAÇLAR ---
-            { id: 3000, ad: "23.05.2024 Beşiktaş 3-2 Trabzonspor | ZTK Finali Feed", kategori: "Ziraat Türkiye Kupası", tarih: "23.05.2024", link: "https://drive.google.com/file/d/11UbexhQnUwMkzDscWiEZMVi9hDzzhEoS/view?usp=drive_link", kapak: "https://lh3.googleusercontent.com/d/1sg4HL2IQLRYIahwAJHTEheQjdosCBRew", etiketler: ["BEŞİKTAŞ", "TRABZONSPOR"] },
-            { id: 1001, ad: "13.12.2025 Antalyaspor vs Galatasaray | beIN RAW", kategori: "GALATASARAY", tarih: "13.12.2025", link: "https://drive.google.com/drive/folders/1y4XTYoeY88P7fzul54ShGPF26bpczrOM?usp=drive_link", prematch: "https://drive.google.com/file/d/15dBgvNCzkNWFf-tPYpWB-QVQsNfIE2Qo/view?usp=sharing", kapak: "https://hizliresim.com/4k3nnbk" },
-            { id: 1002, ad: "13.12.2025 Antalyaspor vs Galatasaray | Match 3", kategori: "GALATASARAY", tarih: "13.12.2025", link: "https://drive.google.com/drive/folders/17Ob3IYGfMQPAF3HS4FsR5oU9KmVc-XKY?usp=drive_link", prematch: "https://drive.google.com/file/d/15dBgvNCzkNWFf-tPYpWB-QVQsNfIE2Qo/view?usp=sharing", kapak: "https://hizliresim.com/iwvtr3z" },
-            { id: 1003, ad: "05.12.2025 Galatasaray vs Samsunspor | beIN RAW", kategori: "GALATASARAY", tarih: "05.12.2025", link: "https://drive.google.com/drive/folders/1MA5MOXconaFYVr6l1gisG4hqY9wy5tCv?usp=drive_link", kapak: "https://hizliresim.com/5c59jw5" },
-            { id: 1004, ad: "FB 1-1 GS | RGFOOTBALL FULL MAÇ", kategori: "GALATASARAY", tarih: "Derbi", link: "https://drive.google.com/file/d/1ue-_HXr8_itbjcN_HKcqLKpEciboxc-0/view?usp=sharing", prematch: "https://drive.google.com/drive/folders/1pbY_IL1N61lrws42P63P9LEAET0ks2gv?usp=drive_link", kapak: "" },
-            { id: 1005, ad: "FB GS | BEİN SPORTS 1 1080P50FPS", kategori: "GALATASARAY", tarih: "Derbi", link: "https://drive.google.com/file/d/1Lm2emGBpG9YVBIuh9bf0BhwY5tjZf9Hn/view?usp=drive_link", prematch: "https://drive.google.com/drive/folders/1pbY_IL1N61lrws42P63P9LEAET0ks2gv?usp=drive_link", kapak: "" },
-            { id: 1006, ad: "Galatasaray vs Fenerbahçe | Samiyen Bein 4K", kategori: "GALATASARAY", tarih: "2024-25", link: "https://drive.google.com/drive/folders/1RGh34RqgKZwmf9o8nVYhx3D__FYAokyM?usp=drive_link", kapak: "" },
-            { id: 1007, ad: "Galatasaray 3-2 Gençlerbirliği", kategori: "GALATASARAY", tarih: "Arşiv", link: "https://drive.google.com/drive/folders/1kq7HyDBc-_Z0RSaMZiffdNOYcm4wct7o?usp=sharing", prematch: "https://drive.google.com/file/d/1Rbe1H7sOZVKZQthGfHHsBSa-SB7Q4ZmN/view?usp=sharing", kapak: "" },
-            { id: 1008, ad: "Galatasaray 7-0 Kastamonuspor", kategori: "GALATASARAY", tarih: "Arşiv", link: "https://drive.google.com/file/d/1UyBB4nM08iBtUf4ceLTUi_UBuqD6s5dJ/view?usp=sharing", kapak: "" },
-            { id: 1009, ad: "Galatasaray vs Tottenham | TNT SPORTS", kategori: "GALATASARAY", tarih: "Avrupa", link: "https://drive.google.com/drive/u/1/folders/1VFw3-IdKg0L6NsNoNOAw3ZM2dg6lHpZc", kapak: "" },
-
-            { id: 1201, ad: "08.12.2025 Beşiktaş vs GaziantepFK | beIN USA", kategori: "BEŞİKTAŞ", tarih: "08.12.2025", link: "https://drive.google.com/file/d/12k76x2brKzWeTDo85v4xP_BVpFrJG8B_/view?usp=sharing", prematch: "https://drive.google.com/file/d/1a8quB74cDXhyTdmP_N-d3tdXNPQgum2c/view?usp=sharing", kapak: "https://hizliresim.com/8fjzdqi" },
-            { id: 1202, ad: "08.12.2025 Beşiktaş vs GaziantepFK | Матч TV", kategori: "BEŞİKTAŞ", tarih: "08.12.2025", link: "https://drive.google.com/file/d/1yVxGGjhHkavD0FojaVab0_b1xAnh3PkJ/view?usp=sharing", prematch: "https://drive.google.com/file/d/1a8quB74cDXhyTdmP_N-d3tdXNPQgum2c/view?usp=sharing", kapak: "https://hizliresim.com/ks0esav" },
-            { id: 1203, ad: "08.12.2025 Beşiktaş vs GaziantepFK | beIN RAW", kategori: "BEŞİKTAŞ", tarih: "08.12.2025", link: "https://drive.google.com/file/d/1Vz-pcGFsGU4odZHFDWLUOMC_cmyO2k10/view?usp=drive_link", prematch: "https://drive.google.com/file/d/1a8quB74cDXhyTdmP_N-d3tdXNPQgum2c/view?usp=sharing", kapak: "https://hizliresim.com/d13ueoe" },
-
-            { id: 1301, ad: "07.12.2025 Göztepe vs Trabzonspor | Diamant 50fps", kategori: "TRABZONSPOR", tarih: "07.12.2025", link: "https://drive.google.com/drive/folders/1Zjiw5_o_plkUf1-JQbBNdCRRoOilgUxe?usp=drive_link", kapak: "https://hizliresim.com/3uzbd3j", prematch: "Klasör İçinde" },
-            { id: 1302, ad: "07.12.2025 Göztepe vs Trabzonspor | beIN RAW", kategori: "TRABZONSPOR", tarih: "07.12.2025", link: "https://drive.google.com/drive/folders/16dOMHOM2EXVRZJhQJWuLiwRcjdLfkF1b?usp=sharing", kapak: "https://hizliresim.com/8lnsb04" },
-            { id: 1303, ad: "Trabzonspor 3-2 Konyaspor", kategori: "TRABZONSPOR", tarih: "Arşiv", link: "https://drive.google.com/drive/folders/1gTMlZvuOubi9r8EJZ_6mNbEaBKBH9P2n?usp=sharing", kapak: "" },
-            { id: 1304, ad: "17.12.2025 Trabzonspor vs Alanyaspor | 4K FEED", kategori: "TRABZONSPOR", tarih: "17.12.2025", link: "https://drive.google.com/drive/folders/1Fmk2W9_-6rdYLXpFeffOKTcBW6hSE3G7?usp=drive_link", kapak: "" },
-            { id: 1305, ad: "Trabzonspor 2-0 Vanspor | Diamant", kategori: "TRABZONSPOR", tarih: "Kupa", link: "https://drive.google.com/file/d/1aojmEp0en7HfD1kAW5BUfmNCk9oj4hEJ/view?usp=drive_link", kapak: "" },
-
-            { id: 1101, ad: "15.12.2025 Fenerbahçe vs Konyaspor | Match 3", kategori: "FENERBAHÇE", tarih: "15.12.2025", link: "https://drive.google.com/drive/folders/1VErjb4x4MmM6FilK9kXUHC_DQcgtmSvZ?usp=sharing", prematch: "https://drive.google.com/file/d/16ZMjscAWJeyTUkut_Jky8P0SlA8F9Vhb/view?usp=drive_link", kapak: "" },
-            { id: 1102, ad: "06.12.2025 Başakşehir vs Fenerbahçe | beIN RAW 50fps", kategori: "FENERBAHÇE", tarih: "06.12.2025", link: "https://drive.google.com/drive/folders/16dOMHOM2EXVRZJhQJWuLiwRcjdLfkF1b?usp=sharing", kapak: "" },
-            { id: 1103, ad: "Fenerbahçe vs Ferençvaroş | UEL", kategori: "FENERBAHÇE", tarih: "Avrupa", link: "https://drive.google.com/drive/u/5/folders/1GVvgIcha2dQPNEcOiuzjAtcKtidbmeVI", kapak: "" },
-
-            { id: 1401, ad: "Kocaelispor vs Gençlerbirliği", kategori: "DİĞER TSL", tarih: "1. Lig", link: "https://drive.google.com/drive/u/5/folders/1G9gBt9iAatSkqchNXL7Dr1QIJqgftZci", kapak: "" },
-
-            { id: 1501, ad: "Real Madrid vs Celta Vigo | Movistar UHD4K", kategori: "İspanya(LaLiga) Ligi", tarih: "07.12.2025", link: "https://drive.google.com/file/d/1KfkyECiN9e7wTijCOoUnl7wn_pO0UjJ0/view?usp=drive_link", kapak: "" },
-            { id: 1502, ad: "Man United vs West Ham | beIN RAW", kategori: "İngiltere(Premier) Ligi", tarih: "04.12.2025", link: "https://drive.google.com/file/d/1jQnh20jyGOgd8_oON8MjeszqDC3qQQBd/view?usp=drive_link", kapak: "" },
-            { id: 1503, ad: "Arsenal vs Brentford | GO3 Extra", kategori: "İngiltere(Premier) Ligi", tarih: "03.12.2025", link: "https://drive.google.com/drive/u/5/folders/1u1lvd2TavA5Uqi5JWaqAxiBJwrF5ilX0", kapak: "" },
-            { id: 1504, ad: "Barcelona vs Atletico Madrid", kategori: "İspanya(LaLiga) Ligi", tarih: "Aralık 2025", link: "https://drive.google.com/drive/folders/1DnaaM9IcXeQ3qEhmCaDy1ecpdzRvuTHh?usp=sharing", kapak: "" },
-            { id: 1505, ad: "Union Berlin 3-1 RB Leipzig | SkySports", kategori: "Almanya(Bundesliga) Ligi", tarih: "12.12.2025", link: "https://drive.google.com/file/d/1SjCgHb14f5pOP3GsLB9J7o0ZMszXi4gy/view?usp=drive_link", kapak: "" },
-            { id: 1506, ad: "Brighton vs West Ham | beIN RAW 25FPS", kategori: "İngiltere(Premier) Ligi", tarih: "07.12.2025", link: "https://drive.google.com/file/d/17863DZdbFKJEnzh_cwcD6yIjGqBgfXLz/view?usp=sharing", kapak: "" },
-            { id: 1601, ad: "Pisa vs Parma | S Sport RAW", kategori: "İtalya(Serie A) Ligi", tarih: "08.12.2025", link: "https://drive.google.com/file/d/1cA3NcJDNpl84rcuZgq8GShtYICeme-y-/view?usp=drive_link", kapak: "" },
-            { id: 1602, ad: "Napoli vs Juventus | GO3", kategori: "İtalya(Serie A) Ligi", tarih: "07.12.2025", link: "https://drive.google.com/file/d/1236KCn5bKdaIbAnnjR5K-_hFF3_zUmzc/view?usp=drive_link", kapak: "" },
-
-            { id: 1701, ad: "Kairat vs Olimpiakos | DAZN", kategori: "Şampiyonlar Ligi Full Maçları", tarih: "09.12.2025", link: "https://drive.google.com/file/d/1O2xiunqsRkSOF3v7kE1dHDSGKUrodGNO/view?usp=drive_link", kapak: "" },
-            { id: 1702, ad: "Olimpiakos vs Real Madrid | GO3", kategori: "Şampiyonlar Ligi Full Maçları", tarih: "Aralık 2025", link: "https://drive.google.com/drive/folders/1E4qS2kJCmAAoshDbigdLpuyAVjHcvp86?usp=drive_link", kapak: "" },
-            { id: 1703, ad: "Çorumspor vs Alanyaspor | FEED", kategori: "Ziraat Türkiye Kupası", tarih: "04.12.2025", link: "https://drive.google.com/file/d/1W9Yu6d86hqrTWrSnsYVAgOjeRcAwcrSO/view?usp=drive_link", kapak: "" },
-            { id: 1704, ad: "Türkiye vs İspanya | Spor TV", kategori: "Milli Maçlar", tarih: "2025", link: "https://drive.google.com/drive/folders/1uqLG0MzegDCwAvx9HtyJ_IMyHr9ycoTY", kapak: "" },
-            { id: 1705, ad: "Portekiz vs Ermenistan 9-1 | Titan Feed", kategori: "Milli Maçlar", tarih: "2025", link: "https://drive.google.com/drive/folders/1La8y3tHAsl0CClhRzz33NNQ4mPDhCqXi?usp=drive_link", kapak: "" },
-
-            { id: 1801, ad: "Fenerbahçe vs Panathinaikos | EuroLeague FEED", kategori: "Basketbol Maçları", tarih: "16.12.2025", link: "https://drive.google.com/file/d/1gFZOlTQZEFfpM2y8u1ugqZ4XU-owgnRD/view?usp=drive_link", kapak: "" },
-            { id: 1802, ad: "Merkezefendi vs Fenerbahçe Beko | beIN RAW", kategori: "Basketbol Maçları", tarih: "07.12.2025", link: "https://drive.google.com/drive/folders/1igkUxA-tCIExvizzk9fJ4ZcVFHXnYeVp?usp=sharing", kapak: "" }
-        ];
-
-        function filterMaclar(cat) {
-            toggleMenu(false);
-            document.getElementById('duyuru-bolumu').style.display = 'none';
-            document.getElementById('kurallar-bolumu').style.display = 'none';
-            const list = document.getElementById('mac-listesi');
-            list.style.display = 'grid';
-            list.innerHTML = '';
-            document.getElementById('page-title').innerText = cat;
-            
-            const filtered = cat === 'Tüm İçerikler' ? macVerileri : macVerileri.filter(m => 
-                m.kategori === cat || (m.etiketler && m.etiketler.includes(cat))
-            );
-
-            if(filtered.length === 0) {
-                list.innerHTML = `<p style='grid-column:1/-1; text-align:center; padding: 50px;'>Bu kategoride henüz maç bulunmuyor.</p>`;
-                return;
-            }
-
-            filtered.sort((a,b) => b.id - a.id).forEach(m => {
-                const card = document.createElement('div');
-                card.className = 'mac-kart';
-                
-                let cardHTML = `
-                    <img src="${m.kapak}" class="mac-kapak" onerror="this.src='https://via.placeholder.com/300x180?text=Gorsel+Yok'">
-                    <div class="mac-bilgi">
-                        <h3>${m.ad}</h3>
-                        <p>${m.tarih}</p>
-                        <a href="${m.link}" target="_blank" class="button indirme-butonu">💾 İzle / İndir</a>
-                `;
-                
-                if(m.prematch) {
-                    cardHTML += `<a href="${m.prematch}" target="_blank" class="button indirme-butonu" style="background:#1976D2; box-shadow:0 4px #0d47a1">🎬 PreMatch</a>`;
-                }
-                
-                cardHTML += `</div>`;
-                card.innerHTML = cardHTML;
-                list.appendChild(card);
-            });
-        }
-    </script>
+      } else {
+        mpegtsPlayer = mpegts.createPlayer({ type: 'mse', isLive: true, url: source });
+        mpegtsPlayer.attachMediaElement(video);
+        mpegtsPlayer.load();
+        mpegtsPlayer.play().then(() => { document.getElementById('loading-overlay').style.display = 'none'; });
+      }
+    }
+  </script>
 </body>
 </html>
+
