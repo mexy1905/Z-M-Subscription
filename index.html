@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Z&M Stream | Premium TV</title>
+  <title>Z&M Stream | </title>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;900&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/mpegts.js/1.7.3/mpegts.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
@@ -155,7 +155,7 @@
     <div class="announcement-bar">
       <span class="announcement-label">Duyuru</span>
       <i data-lucide="megaphone" size="20" style="color: var(--gs-gold)"></i>
-      <span class="announcement-text">Z&M Stream Yayın Platformu Aktif!</span>
+      <span class="announcement-text">Bu site herhangi bir içerik barındırmaz veya yayınlamaz. Tüm yayınlar üçüncü taraf embed bağlantılardır. İçeriklerle ilgili sorumluluk, yayınlayan kişi veya kuruluşlara aittir. Sitemiz ile yayın sahipleri arasında herhangi bir bağlantı yoktur. Tüm içerikler ilgili hak sahiplerine aittir.</span>
     </div>
 
     <div class="video-section" id="player-container">
@@ -172,7 +172,15 @@
     };
 
     const CHANNELS = [
-      
+      { name: "Z&M SPORTS 1", icon: "star", type: "iframe", url: "https://dlhd.link/stream/stream-62.php" },
+      { name: "Z&M SPORTS 3", icon: "tv", type: "iframe", url: "https://dlhd.link/stream/stream-64.php" },
+      { name: "Z&M SPORTS 4", icon: "tv", type: "iframe", url: "https://dlhd.link/stream/stream-67.php" },
+      { name: "TNT Sports 1", icon: "zap", type: "iframe", url: "https://dlhd.link/stream/stream-31.php" },
+      { name: "Dazn FHD", icon: "zap", type: "iframe", url: "https://dlhd.link/stream/stream-426.php" },
+      { name: "M.Laliga", icon: "zap", type: "iframe", url: "https://dlhd.link/stream/stream-5.php" },
+      { name: "Ziggo Sports FHD", icon: "zap", type: "iframe", url: "https://dlhd.link/stream/stream-393.php" },               
+      { name: "TRT 1 FHD", icon: "zap", type: "iframe", url: "https://dlhd.link/stream/stream-1012.php" },
+
     ];
 
     function attemptLogin() {
