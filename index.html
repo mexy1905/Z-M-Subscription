@@ -30,13 +30,14 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      overflow-x: hidden;
     }
 
     .announcement-bar {
       background: rgba(169, 4, 50, 0.15);
       border: 1px solid var(--gs-red);
-      margin: 15px 5% 5px 5%;
+      margin: 15px auto;
+      width: 90%;
+      max-width: 1000px;
       padding: 12px 20px;
       border-radius: 15px;
       display: flex;
@@ -51,21 +52,16 @@
       100% { box-shadow: 0 0 0 0 rgba(169, 4, 50, 0); }
     }
 
-    .announcement-text { font-weight: 600; font-size: 0.95rem; color: #fff; }
-    .announcement-label { background: var(--gs-gold); color: #000; padding: 2px 8px; border-radius: 6px; font-weight: 900; font-size: 0.7rem; text-transform: uppercase; }
-
     #login-page { flex: 1; display: flex; justify-content: center; align-items: center; padding: 20px; }
     .login-card {
       background: rgba(255, 255, 255, 0.03);
       backdrop-filter: blur(30px);
-      -webkit-backdrop-filter: blur(30px);
       padding: 3.5rem 2rem;
       border-radius: 32px;
       border: 1px solid rgba(255, 255, 255, 0.1);
       text-align: center;
       width: 100%;
       max-width: 380px;
-      box-shadow: 0 40px 100px -20px rgba(0, 0, 0, 0.9);
       border-top: 2px solid var(--gs-red);
       border-bottom: 2px solid var(--gs-gold);
     }
@@ -78,19 +74,18 @@
       -webkit-text-fill-color: transparent;
       margin-bottom: 2.5rem;
       display: block;
-      letter-spacing: -2px;
     }
 
-    .login-card input { width: 100%; background: rgba(0,0,0,0.7); border: 1px solid rgba(253, 185, 18, 0.2); padding: 16px; border-radius: 16px; color: white; outline: none; margin-bottom: 1.2rem; }
-    .btn-login { width: 100%; background: linear-gradient(135deg, var(--gs-red) 0%, #d4053f 100%); color: white; border: none; padding: 18px; border-radius: 16px; font-weight: 800; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; transition: 0.4s; }
+    .login-card input { width: 100%; background: rgba(0,0,0,0.7); border: 1px solid rgba(253, 185, 18, 0.2); padding: 16px; border-radius: 16px; color: white; margin-bottom: 1.2rem; outline: none; }
+    .btn-login { width: 100%; background: var(--gs-red); color: white; border: none; padding: 18px; border-radius: 16px; font-weight: 800; cursor: pointer; text-transform: uppercase; }
 
     #main-app { display: none; flex-direction: column; flex: 1; }
     header { padding: 1rem 5%; background: #000; border-bottom: 3px solid var(--gs-red); display: flex; justify-content: space-between; align-items: center; }
 
     .video-section {
-      width: 95%;
+      width: 90%;
       max-width: 1000px;
-      margin: 10px auto;
+      margin: 20px auto;
       background: #000;
       border-radius: 24px;
       overflow: hidden;
@@ -101,19 +96,42 @@
 
     video, iframe { width: 100%; height: 100%; display: block; border: none; }
 
-    #error-overlay, #loading-overlay {
-      position: absolute; inset: 0; z-index: 100; display: none; justify-content: center; align-items: center; background: rgba(0,0,0,0.9); flex-direction: column;
+    /* Kanal Butonları - Tam Ortalanmış */
+    .grid-channels {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 20px;
+      width: 90%;
+      max-width: 1000px;
+      margin: 0 auto 50px auto;
+      justify-content: center;
     }
 
-    .spinner { width: 50px; height: 50px; border: 5px solid rgba(255,255,255,0.1); border-top-color: var(--gs-gold); border-radius: 50%; animation: spin 0.8s infinite linear; }
-    @keyframes spin { to { transform: rotate(360deg); } }
+    .channel-card {
+      background: rgba(255,255,255,0.05);
+      padding: 25px 15px;
+      border-radius: 20px;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(255,255,255,0.1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
 
-    .grid-channels { display: grid; grid-template-columns: repeat(auto-fill, minmax(145px, 1fr)); gap: 15px; padding: 0 5% 60px; }
-    .channel-card { background: rgba(255,255,255,0.03); padding: 22px 10px; border-radius: 24px; cursor: pointer; text-align: center; transition: 0.3s; border: 1px solid transparent; }
-    .channel-card.active { background: var(--gs-red); border-color: var(--gs-gold); }
-    .status-text { text-align: center; color: var(--gs-gold); margin-bottom: 25px; font-weight: 800; letter-spacing: 1px; }
+    .channel-card:hover { transform: translateY(-5px); background: rgba(255,255,255,0.1); border-color: var(--gs-gold); }
+    .channel-card.active { background: var(--gs-red); border-color: var(--gs-gold); box-shadow: 0 0 20px rgba(169, 4, 50, 0.4); }
 
-    @media (max-width: 600px) { .grid-channels { grid-template-columns: repeat(2, 1fr); } }
+    .status-text { text-align: center; color: var(--gs-gold); margin: 20px 0; font-weight: 800; text-transform: uppercase; }
+
+    @media (max-width: 600px) {
+      .grid-channels {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -137,36 +155,32 @@
     <div class="announcement-bar">
       <span class="announcement-label">Duyuru</span>
       <i data-lucide="megaphone" size="20" style="color: var(--gs-gold)"></i>
-      <span class="announcement-text">Z&M Stream Premium Platformuna Hoş Geldiniz!</span>
+      <span class="announcement-text">Z&M Premium Yayın Platformu Aktif!</span>
     </div>
 
     <div class="video-section" id="player-container">
-      <div id="error-overlay"><h2 style="color:white">Kanal Kapalı</h2></div>
-      <div id="loading-overlay"><div class="spinner"></div></div>
       <video id="mainPlayer" controls autoplay playsinline></video>
     </div>
 
-    <div id="statusLabel" class="status-text">Kanal Seçiniz</div>
+    <div id="statusLabel" class="status-text">Lütfen Kanal Seçin</div>
     <div class="grid-channels" id="channelList"></div>
   </div>
 
   <script>
     const CONFIG = {
-      auth: { u: "zm", p: "1905" },
-      iptp: { host: "http://4kgood.org:8080", user: "9680723188", pass: "kyft6ks0g7gr7uw0xio6" }
+      auth: { u: "zm", p: "1905" }
     };
 
     const CHANNELS = [
-      { id: "stream_62", name: "PREMIUM KANAL", icon: "tv", type: "iframe", url: "https://dlhd.link/stream/stream-62.php" },
-      { id: "bs1", name: "Z&M SPORTS 1", icon: "play", type: "iframe", url: "https://firinmakinesi.lol/static/bs1.m3u8?" },
-      { id: "bs2", name: "Z&M SPORTS 2", icon: "play", type: "iframe", url: "https://firinmakinesi.lol/static/bs2.m3u8?" },
-      { id: "bs3", name: "Z&M SPORTS 3", icon: "play", type: "iframe", url: "https://firinmakinesi.lol/static/bs3.m3u8?" },
-      { id: "bs4", name: "Z&M SPORTS 4", icon: "play", type: "iframe", url: "https://firinmakinesi.lol/static/bs4.m3u8?" },
-      { id: "trt_m3u8", name: "TRT SPOR", icon: "activity", type: "m3u8", url: "https://tv-trtspor1.medya.trt.com.tr/master_720.m3u8" },
+      { name: "B'!N Sports 1", icon: "star", type: "iframe", url: "https://dlhd.link/stream/stream-62.php" },
+      { name: "B'!N Sports 3", icon: "tv", type: "iframe", url: "https://dlhd.link/stream/stream-64.php" },
+      { name: "B'!N Sports 4", icon: "tv", type: "iframe", url: "https://dlhd.link/stream/stream-67.php" },
+      { name: "TNT Sports", icon: "zap", type: "iframe", url: "https://dlhd.link/stream/stream-31.php" },
+      { name: "Z&M SPORTS 1", icon: "play-circle", type: "iframe", url: "https://firinmakinesi.lol/static/bs1.m3u8?" },
+      { name: "Z&M SPORTS 2", icon: "play-circle", type: "iframe", url: "https://firinmakinesi.lol/static/bs2.m3u8?" },
+      { name: "Z&M SPORTS 3", icon: "play-circle", type: "iframe", url: "https://firinmakinesi.lol/static/bs3.m3u8?" },
+      { name: "Z&M SPORTS 4", icon: "play-circle", type: "iframe", url: "https://firinmakinesi.lol/static/bs4.m3u8?" }
     ];
-
-    let hls = null;
-    let mpegtsPlayer = null;
 
     function attemptLogin() {
       const u = document.getElementById('username').value;
@@ -187,62 +201,35 @@
         const card = document.createElement('div');
         card.className = 'channel-card';
         card.onclick = () => playStream(ch, card);
-        card.innerHTML = `<i data-lucide="${ch.icon}"></i><span style="display:block; margin-top:10px;">${ch.name}</span>`;
+        card.innerHTML = `<i data-lucide="${ch.icon}"></i><span style="margin-top:12px; font-weight:700; font-size:0.85rem;">${ch.name}</span>`;
         grid.appendChild(card);
       });
       lucide.createIcons();
     }
 
-    function resetPlayers() {
-      if (hls) hls.destroy();
-      if (mpegtsPlayer) mpegtsPlayer.destroy();
-      const oldIframe = document.getElementById('temp-iframe');
-      if (oldIframe) oldIframe.remove();
-      const video = document.getElementById('mainPlayer');
-      video.style.display = 'block';
-      video.pause();
-      video.src = "";
-      document.getElementById('loading-overlay').style.display = 'none';
-      document.getElementById('error-overlay').style.display = 'none';
-    }
-
     function playStream(ch, el) {
-      resetPlayers();
+      const container = document.getElementById('player-container');
+      const video = document.getElementById('mainPlayer');
+      const oldIfr = document.getElementById('temp-iframe');
+      if (oldIfr) oldIfr.remove();
+      
       document.querySelectorAll('.channel-card').forEach(c => c.classList.remove('active'));
       el.classList.add('active');
       document.getElementById('statusLabel').innerText = "OYNATILIYOR: " + ch.name;
 
       if (ch.type === "iframe") {
-        document.getElementById('mainPlayer').style.display = 'none';
+        video.style.display = 'none';
+        video.pause();
         const ifr = document.createElement('iframe');
         ifr.id = "temp-iframe";
         ifr.src = ch.url;
-        ifr.allow = "autoplay; fullscreen; picture-in-picture; encrypted-media;";
+        ifr.allow = "autoplay; fullscreen; picture-in-picture";
         ifr.setAttribute("allowfullscreen", "true");
-        document.getElementById('player-container').appendChild(ifr);
-        return;
-      }
-
-      const source = ch.url || `${CONFIG.iptp.host}/live/${CONFIG.iptp.user}/${CONFIG.iptp.pass}/${ch.id}.ts`;
-      const video = document.getElementById('mainPlayer');
-      document.getElementById('loading-overlay').style.display = 'flex';
-
-      if (source.includes('.m3u8')) {
-        if (Hls.isSupported()) {
-          hls = new Hls();
-          hls.loadSource(source);
-          hls.attachMediaElement(video);
-          hls.on(Hls.Events.MANIFEST_PARSED, () => { video.play(); document.getElementById('loading-overlay').style.display = 'none'; });
-        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-          video.src = source;
-          video.play();
-          document.getElementById('loading-overlay').style.display = 'none';
-        }
+        container.appendChild(ifr);
       } else {
-        mpegtsPlayer = mpegts.createPlayer({ type: 'mse', isLive: true, url: source });
-        mpegtsPlayer.attachMediaElement(video);
-        mpegtsPlayer.load();
-        mpegtsPlayer.play().then(() => { document.getElementById('loading-overlay').style.display = 'none'; });
+        video.style.display = 'block';
+        video.src = ch.url;
+        video.play();
       }
     }
   </script>
