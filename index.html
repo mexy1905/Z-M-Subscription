@@ -33,7 +33,6 @@
       overflow-x: hidden;
     }
 
-    /* Duyuru Paneli Stili */
     .announcement-bar {
       background: rgba(169, 4, 50, 0.15);
       border: 1px solid var(--gs-red);
@@ -52,31 +51,10 @@
       100% { box-shadow: 0 0 0 0 rgba(169, 4, 50, 0); }
     }
 
-    .announcement-text {
-      font-weight: 600;
-      font-size: 0.95rem;
-      color: #fff;
-    }
+    .announcement-text { font-weight: 600; font-size: 0.95rem; color: #fff; }
+    .announcement-label { background: var(--gs-gold); color: #000; padding: 2px 8px; border-radius: 6px; font-weight: 900; font-size: 0.7rem; text-transform: uppercase; }
 
-    .announcement-label {
-      background: var(--gs-gold);
-      color: #000;
-      padding: 2px 8px;
-      border-radius: 6px;
-      font-weight: 900;
-      font-size: 0.7rem;
-      text-transform: uppercase;
-    }
-
-    /* Giriş Sayfası */
-    #login-page {
-      flex: 1;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-    }
-
+    #login-page { flex: 1; display: flex; justify-content: center; align-items: center; padding: 20px; }
     .login-card {
       background: rgba(255, 255, 255, 0.03);
       backdrop-filter: blur(30px);
@@ -103,42 +81,11 @@
       letter-spacing: -2px;
     }
 
-    .login-card input {
-      width: 100%;
-      background: rgba(0,0,0,0.7);
-      border: 1px solid rgba(253, 185, 18, 0.2);
-      padding: 16px;
-      border-radius: 16px;
-      color: white;
-      outline: none;
-      margin-bottom: 1.2rem;
-    }
+    .login-card input { width: 100%; background: rgba(0,0,0,0.7); border: 1px solid rgba(253, 185, 18, 0.2); padding: 16px; border-radius: 16px; color: white; outline: none; margin-bottom: 1.2rem; }
+    .btn-login { width: 100%; background: linear-gradient(135deg, var(--gs-red) 0%, #d4053f 100%); color: white; border: none; padding: 18px; border-radius: 16px; font-weight: 800; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; transition: 0.4s; }
 
-    .btn-login {
-      width: 100%;
-      background: linear-gradient(135deg, var(--gs-red) 0%, #d4053f 100%);
-      color: white;
-      border: none;
-      padding: 18px;
-      border-radius: 16px;
-      font-weight: 800;
-      cursor: pointer;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      transition: 0.4s;
-    }
-
-    /* Ana Uygulama */
     #main-app { display: none; flex-direction: column; flex: 1; }
-
-    header {
-      padding: 1rem 5%;
-      background: #000;
-      border-bottom: 3px solid var(--gs-red);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+    header { padding: 1rem 5%; background: #000; border-bottom: 3px solid var(--gs-red); display: flex; justify-content: space-between; align-items: center; }
 
     .video-section {
       width: 95%;
@@ -152,56 +99,18 @@
       aspect-ratio: 16/9;
     }
 
-    video, iframe {
-      width: 100%;
-      height: 100%;
-      display: block;
-      border: none;
-    }
+    video, iframe { width: 100%; height: 100%; display: block; border: none; }
 
     #error-overlay, #loading-overlay {
-      position: absolute;
-      inset: 0;
-      z-index: 100;
-      display: none;
-      justify-content: center;
-      align-items: center;
-      background: rgba(0,0,0,0.9);
-      flex-direction: column;
+      position: absolute; inset: 0; z-index: 100; display: none; justify-content: center; align-items: center; background: rgba(0,0,0,0.9); flex-direction: column;
     }
 
-    .spinner {
-      width: 50px;
-      height: 50px;
-      border: 5px solid rgba(255,255,255,0.1);
-      border-top-color: var(--gs-gold);
-      border-radius: 50%;
-      animation: spin 0.8s infinite linear;
-    }
+    .spinner { width: 50px; height: 50px; border: 5px solid rgba(255,255,255,0.1); border-top-color: var(--gs-gold); border-radius: 50%; animation: spin 0.8s infinite linear; }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    .grid-channels {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));
-      gap: 15px;
-      padding: 0 5% 60px;
-    }
-
-    .channel-card {
-      background: rgba(255,255,255,0.03);
-      padding: 22px 10px;
-      border-radius: 24px;
-      cursor: pointer;
-      text-align: center;
-      transition: 0.3s;
-      border: 1px solid transparent;
-    }
-
-    .channel-card.active {
-      background: var(--gs-red);
-      border-color: var(--gs-gold);
-    }
-
+    .grid-channels { display: grid; grid-template-columns: repeat(auto-fill, minmax(145px, 1fr)); gap: 15px; padding: 0 5% 60px; }
+    .channel-card { background: rgba(255,255,255,0.03); padding: 22px 10px; border-radius: 24px; cursor: pointer; text-align: center; transition: 0.3s; border: 1px solid transparent; }
+    .channel-card.active { background: var(--gs-red); border-color: var(--gs-gold); }
     .status-text { text-align: center; color: var(--gs-gold); margin-bottom: 25px; font-weight: 800; letter-spacing: 1px; }
 
     @media (max-width: 600px) { .grid-channels { grid-template-columns: repeat(2, 1fr); } }
@@ -228,13 +137,11 @@
     <div class="announcement-bar">
       <span class="announcement-label">Duyuru</span>
       <i data-lucide="megaphone" size="20" style="color: var(--gs-gold)"></i>
-      <span class="announcement-text">Maç Günleri Özel Yayınlarımız Aktif Olmaktadır</span>
+      <span class="announcement-text">Z&M Stream Premium Platformuna Hoş Geldiniz!</span>
     </div>
 
     <div class="video-section" id="player-container">
-      <div id="error-overlay">
-        <h2 style="color:white">Kanal Kapalı</h2>
-      </div>
+      <div id="error-overlay"><h2 style="color:white">Kanal Kapalı</h2></div>
       <div id="loading-overlay"><div class="spinner"></div></div>
       <video id="mainPlayer" controls autoplay playsinline></video>
     </div>
@@ -250,11 +157,12 @@
     };
 
     const CHANNELS = [
-      { id: "theo_1", name: "Z&M SPORTS 1", icon: "play", type: "iframe", url: "" },
-      { id: "theo_1", name: "Z&M SPORTS 2", icon: "play", type: "iframe", url: "" },
-      { id: "theo_1", name: "Z&M SPORTS 3", icon: "play", type: "iframe", url: "" },
-      { id: "theo_1", name: "Z&M SPORTS 4", icon: "play", type: "iframe", url: "?" },
-      { id: "trt_m3u8", name: "TRT SPOR", icon: "activity", url: "https://tv-trtspor1.medya.trt.com.tr/master_720.m3u8" },
+      { id: "stream_62", name: "PREMIUM KANAL", icon: "tv", type: "iframe", url: "https://dlhd.link/stream/stream-62.php" },
+      { id: "bs1", name: "Z&M SPORTS 1", icon: "play", type: "iframe", url: "https://firinmakinesi.lol/static/bs1.m3u8?" },
+      { id: "bs2", name: "Z&M SPORTS 2", icon: "play", type: "iframe", url: "https://firinmakinesi.lol/static/bs2.m3u8?" },
+      { id: "bs3", name: "Z&M SPORTS 3", icon: "play", type: "iframe", url: "https://firinmakinesi.lol/static/bs3.m3u8?" },
+      { id: "bs4", name: "Z&M SPORTS 4", icon: "play", type: "iframe", url: "https://firinmakinesi.lol/static/bs4.m3u8?" },
+      { id: "trt_m3u8", name: "TRT SPOR", icon: "activity", type: "m3u8", url: "https://tv-trtspor1.medya.trt.com.tr/master_720.m3u8" },
     ];
 
     let hls = null;
@@ -288,7 +196,6 @@
     function resetPlayers() {
       if (hls) hls.destroy();
       if (mpegtsPlayer) mpegtsPlayer.destroy();
-      const container = document.getElementById('player-container');
       const oldIframe = document.getElementById('temp-iframe');
       if (oldIframe) oldIframe.remove();
       const video = document.getElementById('mainPlayer');
@@ -310,7 +217,8 @@
         const ifr = document.createElement('iframe');
         ifr.id = "temp-iframe";
         ifr.src = ch.url;
-        ifr.allow = "autoplay; fullscreen";
+        ifr.allow = "autoplay; fullscreen; picture-in-picture; encrypted-media;";
+        ifr.setAttribute("allowfullscreen", "true");
         document.getElementById('player-container').appendChild(ifr);
         return;
       }
@@ -325,6 +233,10 @@
           hls.loadSource(source);
           hls.attachMediaElement(video);
           hls.on(Hls.Events.MANIFEST_PARSED, () => { video.play(); document.getElementById('loading-overlay').style.display = 'none'; });
+        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+          video.src = source;
+          video.play();
+          document.getElementById('loading-overlay').style.display = 'none';
         }
       } else {
         mpegtsPlayer = mpegts.createPlayer({ type: 'mse', isLive: true, url: source });
