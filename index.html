@@ -1,1 +1,236 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Z&M Stream | Galatasaray Edition</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+    :root {
+      --gs-red: #A90432;
+      --gs-gold: #FDB912;
+      --bg-dark: #0a0a0a;
+      --font-main: 'Montserrat', sans-serif;
+    }
 
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg-dark);
+      background-image: 
+        radial-gradient(circle at 0% 0%, rgba(169, 4, 50, 0.25) 0%, transparent 50%),
+        radial-gradient(circle at 100% 100%, rgba(253, 185, 18, 0.2) 0%, transparent 50%),
+        linear-gradient(135deg, #050505 0%, #111 100%);
+      color: white; font-family: var(--font-main); min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden;
+    }
+
+    /* --- INTRO & DUYURU --- */
+    #intro-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000;
+      display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 10000;
+    }
+    .intro-logo { font-size: 3.2rem; font-weight: 900; background: linear-gradient(to right, var(--gs-gold), #fff, var(--gs-red)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .spinner { width: 45px; height: 45px; border: 3px solid rgba(255,255,255,0.1); border-top: 3px solid var(--gs-gold); border-radius: 50%; animation: spin 1s linear infinite; margin-top: 20px; }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+    .top-announcement { background: linear-gradient(90deg, #000, var(--gs-red), #000); border-bottom: 1px solid var(--gs-gold); color: white; padding: 12px 0; font-size: 0.85rem; overflow: hidden; white-space: nowrap; }
+    .announcement-content { display: inline-block; padding-left: 100%; animation: marquee 25s linear infinite; }
+    @keyframes marquee { 0% { transform: translate(0, 0); } 100% { transform: translate(-100%, 0); } }
+
+    /* --- LOGIN --- */
+    #login-page { flex: 1; display: flex; justify-content: center; align-items: center; }
+    .login-card { background: rgba(255,255,255,0.03); backdrop-filter: blur(30px); padding: 3rem; border-radius: 32px; border-top: 2px solid var(--gs-red); text-align: center; width: 380px; }
+    .login-card input { width: 100%; background: #000; border: 1px solid #333; padding: 15px; border-radius: 12px; color: #fff; margin-bottom: 15px; outline: none; }
+    .btn-login { width: 100%; background: var(--gs-red); color: #fff; border: none; padding: 15px; border-radius: 12px; font-weight: 800; cursor: pointer; }
+
+    /* --- APP INTERFACE --- */
+    #main-app { display: none; flex-direction: column; flex: 1; }
+    header { padding: 1rem 5%; background: #000; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; }
+    
+    .category-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; width: 90%; max-width: 1000px; margin: 40px auto; }
+    .cat-card { background: rgba(255,255,255,0.05); padding: 50px 20px; border-radius: 20px; border: 1px solid var(--gs-red); text-align: center; cursor: pointer; transition: 0.3s; }
+    .cat-card:hover { background: var(--gs-red); transform: translateY(-5px); }
+
+    .video-section { width: 90%; max-width: 1000px; margin: 10px auto; background: #000; border-radius: 20px; overflow: hidden; aspect-ratio: 16/9; border: 2px solid #1a1a1a; }
+    .grid-channels { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; width: 90%; max-width: 1000px; margin: 20px auto; }
+    .channel-card { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 15px; text-align: center; cursor: pointer; border: 1px solid transparent; transition: 0.2s; }
+    .channel-card:hover { border-color: var(--gs-gold); background: rgba(255,255,255,0.1); }
+    .channel-card.active { background: var(--gs-red); }
+
+    .back-btn { background: none; color: var(--gs-gold); border: 1px solid var(--gs-gold); padding: 8px 15px; border-radius: 10px; margin: 10px 5%; cursor: pointer; font-weight: 700; }
+  </style>
+</head>
+<body>
+
+
+  <div id="login-page">
+    <div class="login-card">
+      <h1 class="intro-logo" style="font-size:2rem; margin-bottom:30px;">Z&M STREAM</h1>
+      <input type="text" id="username" placeholder="Kullanıcı Adı">
+      <input type="password" id="password" placeholder="Şifre">
+      <button class="btn-login" onclick="attemptLogin()">GİRİŞ YAP</button>
+    </div>
+  </div>
+
+  
+  <div id="intro-overlay">
+      <h1 class="intro-logo">Z&M STREAM</h1>
+      <p style="color:#888; letter-spacing:5px;">İYİ SEYİRLER DİLER</p>
+      <div class="spinner"></div>
+  </div>
+
+
+  <div id="main-app">
+    <div class="top-announcement">
+        <div class="announcement-content">
+            <span style="color:var(--gs-gold)">DUYURU:</span> Galatasaray Portalımıza Hoş Geldiniz! Keyifli Seyirler Dileriz. &nbsp;&nbsp;&nbsp; <span style="color:var(--gs-gold)">BİLGİ:</span> Tüm kanallar HLS ve Embed teknolojisiyle güncellenmiştir.
+        </div>
+    </div>
+
+    <header>
+      <span style="font-weight:900;">Z&M <span style="color:var(--gs-gold)">STREAM</span></span>
+      <button onclick="location.reload()" style="background:none; color:#fff; border:1px solid #444; padding:5px 10px; border-radius:8px; cursor:pointer;">ÇIKIŞ</button>
+    </header>
+
+    <div id="category-screen">
+        <div class="category-grid" id="categoryList"></div>
+    </div>
+
+    <div id="channel-view" style="display:none;">
+        <button class="back-btn" onclick="backToCategories()">← KATEGORİLER</button>
+        <div class="video-section" id="player-container">
+            <video id="mainPlayer" controls autoplay playsinline style="width:100%; height:100%;"></video>
+        </div>
+        <div id="statusLabel" style="text-align:center; color:var(--gs-gold); margin:15px; font-weight:800;">KANAL SEÇİNİZ</div>
+        <div class="grid-channels" id="channelList"></div>
+    </div>
+  </div>
+
+  <script>
+    const CONFIG = { auth: { u: "zm", p: "1905" } };
+    let hls = null;
+
+    const CHANNELS = [
+      // SPOR KANALLARI
+      { name: "TRT SPOR", url: "https://tv-trtspor1-dai.medya.trt.com.tr/master.m3u8", category: "SPOR", icon: "play" },
+      { name: "TRT SPOR YILDIZ", url: "https://tv-trtspor2-dai.medya.trt.com.tr/master.m3u8", category: "SPOR", icon: "play" },
+      { name: "Z&M SPORTS 1", type: "iframe", url: "https://dlhd.link/stream/stream-62.php", category: "SPOR", icon: "star" },
+      
+      // ULUSAL KANALLAR
+      { name: "TRT 1", url: "http://tv-trt1-dai.medya.trt.com.tr/master.m3u8", category: "ULUSAL" },
+      { name: "TRT 1 YEDEK", url: "http://116.202.238.88/TRT1_TR/index.m3u8", category: "ULUSAL" },
+      { name: "ATV", url: "https://rnttwmjcin.turknet.ercdn.net/atv/atv.m3u8", category: "ULUSAL" },
+      { name: "A2 TV", url: "https://rnttwmjcin.turknet.ercdn.net/a2tv/a2tv.m3u8", category: "ULUSAL" },
+      { name: "NOW TV", url: "http://uycyyuuzyh.turknet.ercdn.net/nowtv/nowtv.m3u8", category: "ULUSAL" },
+      { name: "STAR TV HD", url: "http://95.174.71.114/TR-STAR/index.m3u8", category: "ULUSAL" },
+      { name: "SHOW TV HD", url: "http://ciner.daioncdn.net/showtv/showtv.m3u8", category: "ULUSAL" },
+      { name: "KANAL D HD", url: "https://demiroren.daioncdn.net/kanald/kanald.m3u8", category: "ULUSAL" },
+      { name: "TV8 HD", url: "https://tv8.daioncdn.net/tv8/tv8.m3u8", category: "ULUSAL" },
+      { name: "BEYAZ TV", url: "https://beyaztv-live.daioncdn.net/beyaztv/beyaztv.m3u8", category: "ULUSAL" },
+      { name: "KANAL 7 FHD", url: "https://kanal7-live.daioncdn.net/kanal7/kanal7_1080p.m3u8", category: "ULUSAL" },
+      { name: "TEVE 2 HD", url: "http://demiroren.daioncdn.net/teve2/teve2_720p.m3u8", category: "ULUSAL" },
+      { name: "SHOWMAX HD", url: "http://rmtftbjlne.turknet.ercdn.net/showmax/showmax.m3u8", category: "ULUSAL" },
+      { name: "360 TV HD", url: "http://turkmedya-live.ercdn.net/tv360/tv360_720p.m3u8", category: "ULUSAL" },
+      { name: "TV4 HD", url: "http://turkmedya-live.ercdn.net/tv4/tv4_720p.m3u8", category: "ULUSAL" },
+      { name: "D MAX", url: "http://dygvideo.dygdigital.com/live/hls/dmaxdai", category: "ULUSAL" },
+      { name: "TLC", url: "http://dygvideo.dygdigital.com/live/hls/tlctvdai", category: "ULUSAL" },
+      { name: "CNBC-E", url: "http://hnpsechtsc.turknet.ercdn.net/cnbc-e/cnbc-e.m3u8", category: "ULUSAL" },
+      { name: "TRT BELGESEL", url: "https://tv-trtbelgesel-dai.medya.trt.com.tr/master.m3u8", category: "ULUSAL" },
+      { name: "TGRT BELGESEL", url: "http://tgrt-live.ercdn.net/tgrtbelgesel/tgrtbelgesel.m3u8", category: "ULUSAL" },
+      { name: "TRT COCUK HD", url: "http://tv-trtcocuk.medya.trt.com.tr/master_720.m3u8", category: "ULUSAL" },
+      { name: "TRT DİYANET COCUK", url: "http://tv-trtdiyanetcocuk.medya.trt.com.tr/master.m3u8", category: "ULUSAL" },
+      { name: "TRT WORLD", url: "http://tv-trtworld.medya.trt.com.tr/master_720.m3u8", category: "ULUSAL" },
+      { name: "TRT ARABi", url: "http://tv-trtarabi.medya.trt.com.tr/master_720.m3u8", category: "ULUSAL" },
+      { name: "TRT KURDi", url: "http://tv-trtkurdi.medya.trt.com.tr/master_720.m3u8", category: "ULUSAL" },
+      { name: "MiNiKA GO", url: "http://rnttwmjcin.turknet.ercdn.net/minikago/minikago_720p.m3u8", category: "ULUSAL" },
+      { name: "MiNiKA COCUK", url: "http://rnttwmjcin.turknet.ercdn.net/minikachocuk/minikachocuk_720p.m3u8", category: "ULUSAL" },
+      { name: "EURO STAR", url: "https://raw.githubusercontent.com/iptv-org/iptv/master/streams/tr/estar.m3u8", category: "ULUSAL" },
+      { name: "EURO D HD", url: "https://live.duhnet.tv/S2/HLS_LIVE/eurod/playlist.m3u8", category: "ULUSAL" },
+      { name: "KANAL 7 AVRUPA", url: "http://livetv.radyotvonline.net/kanal7avrupa/playlist.m3u8", category: "ULUSAL" },
+      { name: "SHOW TURK HD", url: "https://raw.githubusercontent.com/iptv-org/iptv/master/streams/tr/shturk.m3u8", category: "ULUSAL" },
+      { name: "TGRT EU", url: "http://tgrt-live.ercdn.net/tgrteu/tgrteu_576p.m3u8", category: "ULUSAL" },
+      { name: "TRT TURK HD", url: "http://tv-trtturk.medya.trt.com.tr/master_720.m3u8", category: "ULUSAL" }
+    ];
+
+    function attemptLogin() {
+      if (document.getElementById('username').value === CONFIG.auth.u && document.getElementById('password').value === CONFIG.auth.p) {
+        document.getElementById('login-page').style.display = 'none';
+        const intro = document.getElementById('intro-overlay');
+        intro.style.display = 'flex';
+        setTimeout(() => {
+          intro.style.opacity = '0';
+          intro.style.transition = '0.6s';
+          setTimeout(() => { intro.style.display = 'none'; document.getElementById('main-app').style.display = 'flex'; initCategories(); }, 600);
+        }, 2500);
+      }
+    }
+
+    function initCategories() {
+      const catList = document.getElementById('categoryList');
+      catList.innerHTML = '';
+      [...new Set(CHANNELS.map(c => c.category))].forEach(cat => {
+        const card = document.createElement('div');
+        card.className = 'cat-card';
+        card.innerHTML = `<h3>${cat}</h3>`;
+        card.onclick = () => showChannels(cat);
+        catList.appendChild(card);
+      });
+    }
+
+    function showChannels(category) {
+      document.getElementById('category-screen').style.display = 'none';
+      document.getElementById('channel-view').style.display = 'block';
+      const grid = document.getElementById('channelList');
+      grid.innerHTML = '';
+      CHANNELS.filter(c => c.category === category).forEach(ch => {
+        const card = document.createElement('div');
+        card.className = 'channel-card';
+        card.innerText = ch.name;
+        card.onclick = () => playStream(ch, card);
+        grid.appendChild(card);
+      });
+    }
+
+    function backToCategories() {
+      document.getElementById('channel-view').style.display = 'none';
+      document.getElementById('category-screen').style.display = 'flex';
+      stopVideo();
+    }
+
+    function stopVideo() {
+      const video = document.getElementById('mainPlayer');
+      video.pause();
+      if (hls) { hls.destroy(); hls = null; }
+      const oldIfr = document.getElementById('temp-iframe');
+      if (oldIfr) oldIfr.remove();
+    }
+
+    function playStream(ch, el) {
+      stopVideo();
+      const container = document.getElementById('player-container');
+      const video = document.getElementById('mainPlayer');
+      document.querySelectorAll('.channel-card').forEach(c => c.classList.remove('active'));
+      el.classList.add('active');
+      document.getElementById('statusLabel').innerText = "OYNATILIYOR: " + ch.name;
+
+      if (ch.type === "iframe") {
+        video.style.display = 'none';
+        const ifr = document.createElement('iframe');
+        ifr.id = "temp-iframe"; ifr.src = ch.url; ifr.allow = "autoplay; fullscreen"; ifr.style.width="100%"; ifr.style.height="100%";
+        container.appendChild(ifr);
+      } else {
+        video.style.display = 'block';
+        if (Hls.isSupported()) {
+          hls = new Hls(); hls.loadSource(ch.url); hls.attachMedia(video);
+          hls.on(Hls.Events.MANIFEST_PARSED, () => video.play());
+        } else {
+          video.src = ch.url; video.play();
+        }
+      }
+    }
+  </script>
+</body>
+</html>
