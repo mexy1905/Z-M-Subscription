@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Z&M Stream |</title>
+  <title>Z&M Stream | Galatasaray Edition</title>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;900&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
@@ -44,7 +44,8 @@
     #login-page { flex: 1; display: flex; justify-content: center; align-items: center; }
     .login-card { background: rgba(255,255,255,0.03); backdrop-filter: blur(30px); padding: 3rem; border-radius: 32px; border-top: 2px solid var(--gs-red); text-align: center; width: 380px; }
     .login-card input { width: 100%; background: #000; border: 1px solid #333; padding: 15px; border-radius: 12px; color: #fff; margin-bottom: 15px; outline: none; }
-    .btn-login { width: 100%; background: var(--gs-red); color: #fff; border: none; padding: 15px; border-radius: 12px; font-weight: 800; cursor: pointer; }
+    .btn-login { width: 100%; background: var(--gs-red); color: #fff; border: none; padding: 15px; border-radius: 12px; font-weight: 800; cursor: pointer; transition: 0.3s; }
+    .btn-login:hover { background: #ce063e; box-shadow: 0 0 15px var(--gs-red); }
 
     /* --- APP INTERFACE --- */
     #main-app { display: none; flex-direction: column; flex: 1; }
@@ -54,17 +55,16 @@
     .cat-card { background: rgba(255,255,255,0.05); padding: 50px 20px; border-radius: 20px; border: 1px solid var(--gs-red); text-align: center; cursor: pointer; transition: 0.3s; }
     .cat-card:hover { background: var(--gs-red); transform: translateY(-5px); }
 
-    .video-section { width: 90%; max-width: 1000px; margin: 10px auto; background: #000; border-radius: 20px; overflow: hidden; aspect-ratio: 16/9; border: 2px solid #1a1a1a; }
+    .video-section { width: 90%; max-width: 1000px; margin: 10px auto; background: #000; border-radius: 20px; overflow: hidden; aspect-ratio: 16/9; border: 2px solid #1a1a1a; position: relative; }
     .grid-channels { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; width: 90%; max-width: 1000px; margin: 20px auto; }
     .channel-card { background: rgba(255,255,255,0.05); padding: 15px; border-radius: 15px; text-align: center; cursor: pointer; border: 1px solid transparent; transition: 0.2s; }
     .channel-card:hover { border-color: var(--gs-gold); background: rgba(255,255,255,0.1); }
-    .channel-card.active { background: var(--gs-red); }
+    .channel-card.active { background: var(--gs-red); border-color: var(--gs-gold); }
 
     .back-btn { background: none; color: var(--gs-gold); border: 1px solid var(--gs-gold); padding: 8px 15px; border-radius: 10px; margin: 10px 5%; cursor: pointer; font-weight: 700; }
   </style>
 </head>
 <body>
-
 
   <div id="login-page">
     <div class="login-card">
@@ -72,16 +72,15 @@
       <input type="text" id="username" placeholder="Kullanıcı Adı">
       <input type="password" id="password" placeholder="Şifre">
       <button class="btn-login" onclick="attemptLogin()">GİRİŞ YAP</button>
+      <p id="error-text" style="color:red; margin-top:10px; display:none; font-size:0.8rem;">Hatalı Giriş!</p>
     </div>
   </div>
 
-  
   <div id="intro-overlay">
       <h1 class="intro-logo">Z&M STREAM</h1>
       <p style="color:#888; letter-spacing:5px;">İYİ SEYİRLER DİLER</p>
       <div class="spinner"></div>
   </div>
-
 
   <div id="main-app">
     <div class="top-announcement">
@@ -110,23 +109,34 @@
   </div>
 
   <script>
-    const CONFIG = { auth: { u: "zm", p: "1905" } };
+    // 10 KULLANICI LİSTESİ
+    const USERS = [
+      { u: "zm", p: "1905" },
+      { u: "admin", p: "12345" },
+      { u: "gs", p: "1905" },
+      { u: "Krxy", p: "1905" },
+      { u: "user2", p: "pass2" },
+      { u: "user3", p: "pass3" },
+      { u: "user4", p: "pass4" },
+      { u: "user5", p: "pass5" },
+      { u: "user6", p: "pass6" },
+      { u: "user7", p: "pass7" }
+    ];
+
     let hls = null;
 
     const CHANNELS = [
       // SPOR KANALLARI
-      { name: "TRT SPOR", url: "https://tv-trtspor1-dai.medya.trt.com.tr/master.m3u8", category: "SPOR", icon: "play" },
-      { name: "TRT SPOR YILDIZ", url: "https://tv-trtspor2-dai.medya.trt.com.tr/master.m3u8", category: "SPOR", icon: "play" },
-      { name: "Z&M SPORTS 1", type: "iframe", url: "https://dlhd.link/stream/stream-426.php", category: "SPOR", icon: "star" },
+      { name: "TRT SPOR", url: "https://tv-trtspor1-dai.medya.trt.com.tr/master.m3u8", category: "SPOR" },
+      { name: "TRT SPOR YILDIZ", url: "https://tv-trtspor2-dai.medya.trt.com.tr/master.m3u8", category: "SPOR" },
+      { name: "Z&M SPORTS 1", type: "iframe", url: "https://dlhd.link/stream/stream-426.php", category: "SPOR" },
+      { name: "Dazn", type: "iframe", url: "https://dlhd.link/stream/stream-426.php", category: "SPOR" },
+      { name: "TNT Sports 1", type: "iframe", url: "https://dlhd.link/stream/stream-31.php", category: "SPOR" },
+      { name: "M.Laliga", type: "iframe", url: "https://dlhd.link/stream/stream-5.php", category: "SPOR" },
+      { name: "Ziggo Sports", type: "iframe", url: "https://dlhd.link/stream/stream-393.php", category: "SPOR" },
+      { name: "Canal+ Sport", type: "iframe", url: "https://dlhd.link/stream/stream-122.php", category: "SPOR" },
       
-      // YABANCI SPOR KANALLARI
-       { : "Dazn", type: "iframe", url: "https://dlhd.link/stream/stream-426.php", category: "YABANCI SPOR", icon: "star" },
-       { name: "TNT Sports 1", type: "iframe", url: "https://dlhd.link/stream/stream-31.php", category: "SPOR", icon: "play" },
-       { name: "M.Laliga", type: "iframe", url: "https://dlhd.link/stream/stream-5.php", category: "SPOR", icon: "star" },
-       { name: "Ziggo Sports", type: "iframe", url: "https://dlhd.link/stream/stream-393.php", category: "SPOR", icon: "world" },
-       { name: "Canal+ Sport", icon: "zap", type: "iframe", url: "https://dlhd.link/stream/stream-122.php" },
-      
-       // ULUSAL KANALLAR
+      // ULUSAL KANALLAR
       { name: "TRT 1", url: "http://tv-trt1-dai.medya.trt.com.tr/master.m3u8", category: "ULUSAL" },
       { name: "TRT 1 YEDEK", url: "http://116.202.238.88/TRT1_TR/index.m3u8", category: "ULUSAL" },
       { name: "ATV", url: "https://rnttwmjcin.turknet.ercdn.net/atv/atv.m3u8", category: "ULUSAL" },
@@ -163,22 +173,38 @@
     ];
 
     function attemptLogin() {
-      if (document.getElementById('username').value === CONFIG.auth.u && document.getElementById('password').value === CONFIG.auth.p) {
+      const uInput = document.getElementById('username').value;
+      const pInput = document.getElementById('password').value;
+      const errorText = document.getElementById('error-text');
+
+      // Kullanıcı listesini kontrol et
+      const foundUser = USERS.find(user => user.u === uInput && user.p === pInput);
+
+      if (foundUser) {
         document.getElementById('login-page').style.display = 'none';
         const intro = document.getElementById('intro-overlay');
         intro.style.display = 'flex';
         setTimeout(() => {
           intro.style.opacity = '0';
           intro.style.transition = '0.6s';
-          setTimeout(() => { intro.style.display = 'none'; document.getElementById('main-app').style.display = 'flex'; initCategories(); }, 600);
+          setTimeout(() => { 
+            intro.style.display = 'none'; 
+            document.getElementById('main-app').style.display = 'flex'; 
+            initCategories(); 
+          }, 600);
         }, 2500);
+      } else {
+        errorText.style.display = 'block';
+        alert("Kullanıcı adı veya şifre hatalı kanka!");
       }
     }
 
     function initCategories() {
       const catList = document.getElementById('categoryList');
       catList.innerHTML = '';
-      [...new Set(CHANNELS.map(c => c.category))].forEach(cat => {
+      const uniqueCategories = [...new Set(CHANNELS.filter(c => c.category).map(c => c.category))];
+      
+      uniqueCategories.forEach(cat => {
         const card = document.createElement('div');
         card.className = 'cat-card';
         card.innerHTML = `<h3>${cat}</h3>`;
@@ -226,7 +252,7 @@
       if (ch.type === "iframe") {
         video.style.display = 'none';
         const ifr = document.createElement('iframe');
-        ifr.id = "temp-iframe"; ifr.src = ch.url; ifr.allow = "autoplay; fullscreen"; ifr.style.width="100%"; ifr.style.height="100%";
+        ifr.id = "temp-iframe"; ifr.src = ch.url; ifr.allow = "autoplay; fullscreen"; ifr.style.width="100%"; ifr.style.height="100%"; ifr.style.border="none";
         container.appendChild(ifr);
       } else {
         video.style.display = 'block';
