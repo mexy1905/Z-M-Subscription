@@ -1,1 +1,216 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Z&M Stream | Premium Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  
+  <style>
+    :root {
+      --gs-red: #A90432;
+      --gs-gold: #FDB912;
+      --bg-dark: #0a0a0a;
+    }
 
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg-dark);
+      background-image: radial-gradient(circle at 0% 0%, rgba(169, 4, 50, 0.2) 0%, transparent 50%);
+      color: white; font-family: 'Montserrat', sans-serif; min-height: 100vh; overflow-x: hidden;
+    }
+
+    /* Duyuru Barı */
+    .top-announcement { background: linear-gradient(90deg, #000, var(--gs-red), #000); border-bottom: 1px solid var(--gs-gold); padding: 10px 0; overflow: hidden; white-space: nowrap; }
+    .announcement-content { display: inline-block; padding-left: 100%; animation: marquee 20s linear infinite; font-weight: bold; font-size: 0.9rem; }
+    @keyframes marquee { 0% { transform: translate(0, 0); } 100% { transform: translate(-100%, 0); } }
+
+    /* Login */
+    #login-page { height: 100vh; display: flex; justify-content: center; align-items: center; }
+    .login-card { background: rgba(255,255,255,0.05); padding: 3rem; border-radius: 20px; border-top: 3px solid var(--gs-red); text-align: center; width: 350px; }
+    .login-card input { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 8px; border: 1px solid #333; background: #000; color: #fff; outline: none; }
+    .btn-login { width: 100%; padding: 12px; background: var(--gs-red); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; }
+
+    /* Main App */
+    #main-app { display: none; }
+    header { padding: 1rem 5%; background: #000; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; }
+    
+    .category-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; padding: 20px 5%; }
+    .cat-card { background: #1a1a1a; padding: 40px 20px; border-radius: 15px; border: 1px solid var(--gs-red); text-align: center; cursor: pointer; transition: 0.3s; }
+    .cat-card:hover { background: var(--gs-red); transform: translateY(-5px); }
+
+    /* Video & Player */
+    .video-container { width: 90%; max-width: 1000px; margin: 20px auto; background: #000; border-radius: 15px; overflow: hidden; position: relative; aspect-ratio: 16/9; border: 2px solid #222; }
+    iframe, video { width: 100%; height: 100%; border: none; }
+
+    /* SANSÜR KUTUSU */
+    #logo-censor {
+      position: absolute;
+      background: rgba(0, 0, 0, 0.98);
+      backdrop-filter: blur(20px);
+      z-index: 999;
+      pointer-events: none;
+      border-radius: 4px;
+      display: none;
+      transform: translate(-50%, -50%); /* Kordinatın tam merkezlenmesi için */
+    }
+
+    .grid-channels { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; padding: 20px 5%; }
+    .channel-card { background: #111; padding: 15px; border-radius: 10px; text-align: center; cursor: pointer; border: 1px solid transparent; }
+    .channel-card:hover { border-color: var(--gs-gold); }
+    .channel-card.active { background: var(--gs-red); }
+
+    .back-btn { background: none; color: var(--gs-gold); border: 1px solid var(--gs-gold); padding: 8px 15px; border-radius: 8px; margin: 10px 5%; cursor: pointer; font-weight: bold; }
+  </style>
+</head>
+<body>
+
+  <div id="login-page">
+    <div class="login-card">
+      <h2 style="color:var(--gs-gold); margin-bottom:20px;">Z&M STREAM</h2>
+      <input type="text" id="username" placeholder="Kullanıcı Adı">
+      <input type="password" id="password" placeholder="Şifre">
+      <button class="btn-login" onclick="attemptLogin()">GİRİŞ YAP</button>
+    </div>
+  </div>
+
+  <div id="main-app">
+    <div class="top-announcement">
+        <div class="announcement-content">
+            <span style="color:var(--gs-gold)">DUYURU:</span> Galatasaray Portalımıza Hoş Geldiniz! Keyifli Seyirler Dileriz. &nbsp;&nbsp;&nbsp; <span style="color:var(--gs-gold)">BİLGİ:</span> Tüm kanallar HLS ve Embed teknolojisiyle güncellenmiştir.
+        </div>
+    </div>
+
+    <header>
+      <span style="font-weight:900;">Z&M <span style="color:var(--gs-gold)">STREAM</span></span>
+      <button onclick="location.reload()" style="background:none; color:#fff; border:1px solid #444; padding:5px 10px; border-radius:8px; cursor:pointer;">ÇIKIŞ</button>
+    </header>
+
+    <div id="category-screen">
+        <div class="category-grid" id="categoryList"></div>
+    </div>
+
+    <div id="channel-view" style="display:none;">
+        <button class="back-btn" onclick="backToCategories()">← KATEGORİLER</button>
+        <div class="video-container" id="player-wrapper">
+            <div id="logo-censor"></div>
+            <video id="mainPlayer" controls autoplay playsinline style="display:none;"></video>
+            <div id="iframe-holder" style="width:100%; height:100%;"></div>
+        </div>
+        <div id="statusLabel" style="text-align:center; color:var(--gs-gold); margin:10px; font-weight:800;">KANAL SEÇİNİZ</div>
+        <div class="grid-channels" id="channelList"></div>
+    </div>
+  </div>
+
+  <script>
+    const USERS = [
+        { u: "zm", p: "1905" }, { u: "admin", p: "12345" }, { u: "gs", p: "1905" },
+        { u: "user1", p: "pass1" }, { u: "user2", p: "pass2" }, { u: "user3", p: "pass3" },
+        { u: "user4", p: "pass4" }, { u: "user5", p: "pass5" }, { u: "user6", p: "pass6" },
+        { u: "user7", p: "pass7" }
+    ];
+
+    const CHANNELS = [
+      { name: "Z&M SPORTS 1", type: "iframe", url: "https://dlhd.link/stream/stream-62.php", category: "SPOR", x: 1554, y: 901 },
+      { name: "Z&M SPORTS 3", type: "iframe", url: "https://dlhd.link/stream/stream-64.php", category: "SPOR", x: 1554, y: 901 },
+      { name: "Z&M SPORTS 4", type: "iframe", url: "https://dlhd.link/stream/stream-67.php", category: "SPOR", x: 1554, y: 901 },
+      { name: "TNT Sports 1", type: "iframe", url: "https://dlhd.link/stream/stream-31.php", category: "SPOR", x: 1554, y: 901 },
+      { name: "Dazn FHD", type: "iframe", url: "https://dlhd.link/stream/stream-426.php", category: "SPOR", x: 1554, y: 901 },
+      { name: "M.Laliga", type: "iframe", url: "https://dlhd.link/stream/stream-5.php", category: "SPOR", x: 1554, y: 901 },
+      { name: "Ziggo Sports FHD", type: "iframe", url: "https://dlhd.link/stream/stream-393.php", category: "SPOR", x: 1554, y: 901 },
+      { name: "TRT 1 FHD", type: "iframe", url: "https://dlhd.link/stream/stream-1012.php", category: "ULUSAL", x: 1554, y: 901 },
+      { name: "Canal+ Sport", type: "iframe", url: "https://dlhd.link/stream/stream-122.php", category: "SPOR", x: 1554, y: 901 },
+      { name: "Bein Sports Xtra", type: "iframe", url: "https://dlhd.link/stream/stream-100.php", category: "SPOR", x: 1554, y: 901 },
+      { name: "RTL", type: "iframe", url: "https://dlhd.link/stream/stream-740.php", category: "YABANCI", x: 1554, y: 901 },
+      { name: "Sport tv 1", type: "iframe", url: "https://dlhd.link/stream/stream-49.php", category: "SPOR", x: 1554, y: 901 },
+      { name: "Sport tv 2", type: "iframe", url: "https://dlhd.link/stream/stream-74.php", category: "SPOR", x: 1554, y: 901 },
+      { name: "Sport tv 3", type: "iframe", url: "https://dlhd.link/stream/stream-454.php", category: "SPOR", x: 1554, y: 901 },
+      { name: "Sport tv 5", type: "iframe", url: "https://dlhd.link/stream/stream-290.php", category: "SPOR", x: 1554, y: 901 },
+      { name: "Sport tv 6", type: "iframe", url: "https://dlhd.link/stream/stream-291.php", category: "SPOR", x: 1554, y: 901 }
+    ];
+
+    let hls = null;
+
+    function attemptLogin() {
+      const u = document.getElementById('username').value;
+      const p = document.getElementById('password').value;
+      if (USERS.find(user => user.u === u && user.p === p)) {
+        document.getElementById('login-page').style.display = 'none';
+        document.getElementById('main-app').style.display = 'block';
+        initCategories();
+      } else { alert("Hatalı Giriş!"); }
+    }
+
+    function initCategories() {
+      const catList = document.getElementById('categoryList');
+      catList.innerHTML = '';
+      [...new Set(CHANNELS.map(c => c.category))].forEach(cat => {
+        const card = document.createElement('div');
+        card.className = 'cat-card';
+        card.innerHTML = `<h3>${cat}</h3>`;
+        card.onclick = () => showChannels(cat);
+        catList.appendChild(card);
+      });
+    }
+
+    function showChannels(category) {
+      document.getElementById('category-screen').style.display = 'none';
+      document.getElementById('channel-view').style.display = 'block';
+      const grid = document.getElementById('channelList');
+      grid.innerHTML = '';
+      CHANNELS.filter(c => c.category === category).forEach(ch => {
+        const card = document.createElement('div');
+        card.className = 'channel-card';
+        card.innerText = ch.name;
+        card.onclick = () => playStream(ch, card);
+        grid.appendChild(card);
+      });
+    }
+
+    function backToCategories() {
+      document.getElementById('channel-view').style.display = 'none';
+      document.getElementById('category-screen').style.display = 'block';
+      const ifrHolder = document.getElementById('iframe-holder');
+      ifrHolder.innerHTML = '';
+      document.getElementById('logo-censor').style.display = 'none';
+    }
+
+    function playStream(ch, el) {
+      const ifrHolder = document.getElementById('iframe-holder');
+      const video = document.getElementById('mainPlayer');
+      const censor = document.getElementById('logo-censor');
+      
+      ifrHolder.innerHTML = '';
+      video.style.display = 'none';
+      document.querySelectorAll('.channel-card').forEach(c => c.classList.remove('active'));
+      el.classList.add('active');
+      document.getElementById('statusLabel').innerText = "OYNATILIYOR: " + ch.name;
+
+      // SANSÜR AYARI (1920x1080 baz alınarak yüzdeye çevrilir)
+      if(ch.x && ch.y) {
+          censor.style.display = 'block';
+          censor.style.left = (ch.x / 1920 * 100) + "%";
+          censor.style.top = (ch.y / 1080 * 100) + "%";
+          censor.style.width = "180px"; // beIN logosu genişliği
+          censor.style.height = "70px"; // beIN logosu yüksekliği
+      }
+
+      if (ch.type === "iframe") {
+        const ifr = document.createElement('iframe');
+        ifr.src = ch.url;
+        ifr.allow = "autoplay; fullscreen";
+        ifrHolder.appendChild(ifr);
+      } else {
+        video.style.display = 'block';
+        if (Hls.isSupported()) {
+          if (hls) hls.destroy();
+          hls = new Hls(); hls.loadSource(ch.url); hls.attachMedia(video);
+          hls.on(Hls.Events.MANIFEST_PARSED, () => video.play());
+        } else { video.src = ch.url; video.play(); }
+      }
+    }
+  </script>
+</body>
+</html>
