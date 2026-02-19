@@ -8,54 +8,45 @@
   <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
   
   <style>
-    :root { --accent-red: #A90432; --accent-gold: #FDB912; --bg-dark: #0a0a0a; --special-blue: #00d2ff; }
+    :root { --accent-red: #A90432; --accent-gold: #FDB912; --bg-dark: #0a0a0a; --special: #0084ff; }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { background: var(--bg-dark); color: white; font-family: 'Montserrat', sans-serif; min-height: 100vh; overflow-x: hidden; }
 
-    /* --- GİRİŞ EKRANI --- */
+    /* --- LOGIN & INTRO --- */
     #login-page { height: 100vh; display: flex; justify-content: center; align-items: center; background: radial-gradient(circle at center, #222 0%, #000 100%); }
     .login-card { background: rgba(255,255,255,0.05); padding: 3rem; border-radius: 25px; border-top: 4px solid var(--accent-red); text-align: center; width: 360px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
-    .login-card input { width: 100%; padding: 15px; margin-bottom: 15px; border-radius: 10px; border: 1px solid #333; background: #111; color: #fff; outline: none; }
+    .login-card input { width: 100%; padding: 15px; margin-bottom: 15px; border-radius: 10px; border: 1px solid #333; background: #111; color: #fff; outline: none; text-align: center; }
     .btn-login { width: 100%; padding: 15px; background: var(--accent-red); color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; }
 
     #intro-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 10000; }
     .spinner { width: 50px; height: 50px; border: 4px solid rgba(255,255,255,0.1); border-top: 4px solid var(--accent-gold); border-radius: 50%; animation: spin 1s linear infinite; margin-top: 20px; }
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-    /* --- ANA UYGULAMA --- */
     #main-app { display: none; }
     .top-announcement { background: linear-gradient(90deg, #000, var(--accent-red), #000); border-bottom: 1px solid var(--accent-gold); padding: 12px 0; overflow: hidden; white-space: nowrap; }
-    .announcement-content { display: inline-block; padding-left: 100%; animation: marquee 25s linear infinite; font-weight: bold; font-size: 0.85rem; }
+    .announcement-content { display: inline-block; padding-left: 100%; animation: marquee 20s linear infinite; font-weight: bold; font-size: 0.85rem; color: #fff; }
     @keyframes marquee { 0% { transform: translate(0, 0); } 100% { transform: translate(-100%, 0); } }
 
     header { padding: 1.5rem 5%; background: #000; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; }
 
     /* --- PLAYER & SANSÜR --- */
     .video-section { 
-      width: 85%; max-width: 1000px; margin: 15px auto; background: #000; border-radius: 12px; 
+      width: 90%; max-width: 1000px; margin: 15px auto; background: #000; border-radius: 12px; 
       overflow: hidden; position: relative; aspect-ratio: 16/9; border: 2px solid #2a2a2a;
     }
     #video-display, iframe, video { width: 100% !important; height: 100% !important; border: none; display: block; }
+    #logo-censor { position: absolute; top: 0; right: 0; left: 82.50%; bottom: 82.91%; background: #000; z-index: 99; display: none; pointer-events: none; }
 
-    /* Sansür Alanı (Sola kaydırılmış ayar) */
-    #logo-censor {
-      position: absolute;
-      top: 0; right: 0; left: 82.50%; bottom: 82.91%;
-      background: #000; z-index: 999999; display: none; pointer-events: none; box-shadow: 0 0 15px #000;
-    }
-
-    /* --- KATEGORİ VE KANALLAR --- */
+    /* --- LISTELER --- */
     .category-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; padding: 30px 5%; }
     .cat-card { background: #111; padding: 50px 20px; border-radius: 20px; border: 1px solid var(--accent-red); text-align: center; cursor: pointer; transition: 0.3s; font-size: 1.4rem; font-weight: bold; }
     .cat-card:hover { background: var(--accent-red); transform: scale(1.03); }
-    
-    /* Özel Yayın Kategorisi */
-    .cat-card.special { border-color: var(--special-blue); box-shadow: 0 0 15px rgba(0, 210, 255, 0.3); color: var(--special-blue); }
-    .cat-card.special:hover { background: var(--special-blue); color: #000; }
+    .cat-card.special { border-color: var(--special); color: var(--special); }
 
-    .grid-channels { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; padding: 20px 5%; }
-    .channel-card { background: #1a1a1a; padding: 20px; border-radius: 12px; text-align: center; cursor: pointer; border: 1px solid transparent; transition: 0.2s; font-size: 0.85rem; }
-    .channel-card.active { background: var(--accent-red); font-weight: bold; }
+    .grid-channels { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; padding: 20px 5%; }
+    .channel-card { background: #1a1a1a; padding: 20px; border-radius: 12px; text-align: center; cursor: pointer; border: 1px solid transparent; transition: 0.2s; font-size: 0.85rem; font-weight: 600; }
+    .channel-card:hover { border-color: var(--accent-gold); background: #222; }
+    .channel-card.active { background: var(--accent-red); border-color: var(--accent-gold); }
 
     .back-btn { background: none; color: var(--accent-gold); border: 1px solid var(--accent-gold); padding: 10px 20px; border-radius: 8px; margin: 20px 5%; cursor: pointer; font-weight: bold; }
   </style>
@@ -65,20 +56,20 @@
   <div id="login-page">
     <div class="login-card">
       <h1 style="color:var(--accent-gold); margin-bottom:30px; font-weight:900;">Z&M <span style="color:var(--accent-red)">STREAM</span></h1>
-      <input type="text" id="username" placeholder="Kullanıcı Adı">
-      <input type="password" id="password" placeholder="Şifre">
+      <input type="password" id="entryPass" placeholder="Giriş Şifresi">
       <button class="btn-login" onclick="attemptLogin()">GİRİŞ YAP</button>
     </div>
   </div>
 
   <div id="intro-overlay">
       <h1 style="color:var(--accent-gold); font-size:3rem; font-weight:900;">Z&M STREAM</h1>
+      <p style="color:#666; letter-spacing:4px; margin-top:10px;">KEYİFLİ SEYİRLER DİLER</p>
       <div class="spinner"></div>
   </div>
 
   <div id="main-app">
     <div class="top-announcement">
-        <div class="announcement-content">Z&M STREAM PORTALINA HOŞ GELDİNİZ! YAYINLARIMIZI TELEGRAM ÜZERİNDEN TAKİP EDEBİLİRSİNİZ.</div>
+        <div class="announcement-content">Z&M STREAM PORTALINA HOŞ GELDİNİZ! MAÇ SAATİ DONMA YAŞARSANIZ SAYFAYI YENİLEYİNİZ.</div>
     </div>
 
     <header>
@@ -96,63 +87,55 @@
             <div id="logo-censor"></div>
             <div id="video-display"></div>
         </div>
-        <div id="statusLabel" style="text-align:center; color:var(--accent-gold); margin:15px; font-weight:900;">KANAL SEÇİNİZ</div>
+        <div id="statusLabel" style="text-align:center; color:var(--accent-gold); margin:15px; font-weight:900; text-transform:uppercase;">KANAL SEÇİNİZ</div>
         <div class="grid-channels" id="channelList"></div>
     </div>
   </div>
 
   <script>
-    const USERS = [{ u: "zm", p: "1905" }, { u: "gs", p: "1905" }];
-
+    // KANAL LİSTESİ
     const CHANNELS = [
-      // ÖZEL KATEGORİ
-      { name: "FB - NOTTINGHAM FOREST", url: "https://trt.daioncdn.net/trt-1/master_1440p.m3u8?&sid=86k2teva8zfh&app=ed3904e8-737b-4a5e-856a-1b0d7a0a94e2&ce=2", category: "ÖZEL YAYIN", type: "m3u8" }, 
-      
-      // SPOR KANALLARI
-      { name: "Z&M SPORTS 1", url: "https://dlhd.link/stream/stream-62.php", category: "SPOR", type: "iframe" },
-      { name: "Z&M SPORTS 3", url: "https://dlhd.link/stream/stream-64.php", category: "SPOR", type: "iframe" },
-      { name: "Z&M SPORTS 4", url: "https://dlhd.link/stream/stream-67.php", category: "SPOR", type: "iframe" },
-      { name: "TNT Sports 1", url: "https://dlhd.link/stream/stream-31.php", category: "SPOR", type: "iframe" },
-      { name: "Dazn FHD", url: "https://dlhd.link/stream/stream-426.php", category: "SPOR", type: "iframe" },
-      { name: "M.Laliga", url: "https://dlhd.link/stream/stream-5.php", category: "SPOR", type: "iframe" },
-      { name: "Ziggo Sports FHD", url: "https://dlhd.link/stream/stream-393.php", category: "SPOR", type: "iframe" },
-      { name: "Canal+ Sport", url: "https://dlhd.link/stream/stream-122.php", category: "SPOR", type: "iframe" },
-      { name: "Bein Sports Xtra", url: "https://dlhd.link/stream/stream-100.php", category: "SPOR", type: "iframe" },
-      { name: "Sport tv 1", url: "https://dlhd.link/stream/stream-49.php", category: "SPOR", type: "iframe" },
-      { name: "Sport tv 2", url: "https://dlhd.link/stream/stream-74.php", category: "SPOR", type: "iframe" },
-      { name: "Sport tv 3", url: "https://dlhd.link/stream/stream-454.php", category: "SPOR", type: "iframe" },
-      { name: "Sport tv 5", url: "https://dlhd.link/stream/stream-290.php", category: "SPOR", type: "iframe" },
-      { name: "Sport tv 6", url: "https://dlhd.link/stream/stream-291.php", category: "SPOR", type: "iframe" },
-
-      // ULUSAL KANALLAR
-      { name: "TRT 1 TÜRKİYE HD", url: "https://trt.daioncdn.net/trt-1/master_1440p.m3u8?&sid=86k2teva8zfh&app=ed3904e8-737b-4a5e-856a-1b0d7a0a94e2&ce=2", category: "ULUSAL", type: "m3u8" },
-      { name: "RTL", url: "https://dlhd.link/stream/stream-740.php", category: "ULUSAL", type: "iframe" }
+      { name: "TRT 1 HD (MAÇ ÖZEL)", type: "iframe", url: "https://www.trtizle.com/canli/tv/trt-1/embed", category: "MAÇ ÖZEL" },
+      { name: "Z&M SPORTS 1", type: "iframe", url: "https://dlhd.link/stream/stream-62.php", category: "SPOR" },
+      { name: "Z&M SPORTS 3", type: "iframe", url: "https://dlhd.link/stream/stream-64.php", category: "SPOR" },
+      { name: "Z&M SPORTS 4", type: "iframe", url: "https://dlhd.link/stream/stream-67.php", category: "SPOR" },
+      { name: "TNT Sports 1", type: "iframe", url: "https://dlhd.link/stream/stream-31.php", category: "SPOR" },
+      { name: "Dazn FHD", type: "iframe", url: "https://dlhd.link/stream/stream-426.php", category: "SPOR" },
+      { name: "M.Laliga", type: "iframe", url: "https://dlhd.link/stream/stream-5.php", category: "SPOR" },
+      { name: "Ziggo Sports FHD", type: "iframe", url: "https://dlhd.link/stream/stream-393.php", category: "SPOR" },
+      { name: "Canal+ Sport", type: "iframe", url: "https://dlhd.link/stream/stream-122.php", category: "SPOR" },
+      { name: "Bein Sports Xtra", type: "iframe", url: "https://dlhd.link/stream/stream-100.php", category: "SPOR" },
+      { name: "Sport tv 1", type: "iframe", url: "https://dlhd.link/stream/stream-49.php", category: "SPOR" },
+      { name: "Sport tv 2", type: "iframe", url: "https://dlhd.link/stream/stream-74.php", category: "SPOR" },
+      { name: "Sport tv 3", type: "iframe", url: "https://dlhd.link/stream/stream-454.php", category: "SPOR" },
+      { name: "Sport tv 5", type: "iframe", url: "https://dlhd.link/stream/stream-290.php", category: "SPOR" },
+      { name: "Sport tv 6", type: "iframe", url: "https://dlhd.link/stream/stream-291.php", category: "SPOR" },
+      { name: "TRT 1 FHD (ALTERNATİF)", type: "iframe", url: "https://dlhd.link/stream/stream-1012.php", category: "ULUSAL" },
+      { name: "RTL", type: "iframe", url: "https://dlhd.link/stream/stream-740.php", category: "ULUSAL" }
     ];
 
     function attemptLogin() {
-      const u = document.getElementById('username').value;
-      const p = document.getElementById('password').value;
-      if (USERS.find(user => user.u === u && user.p === p)) {
+      if (document.getElementById('entryPass').value === "1905") {
         document.getElementById('login-page').style.display = 'none';
-        document.getElementById('intro-overlay').style.display = 'flex';
+        const intro = document.getElementById('intro-overlay');
+        intro.style.display = 'flex';
         setTimeout(() => {
-          document.getElementById('intro-overlay').style.display = 'none';
+          intro.style.display = 'none';
           document.getElementById('main-app').style.display = 'block';
           initCategories();
-        }, 1500);
-      } else { alert("Kullanıcı adı veya şifre hatalı!"); }
+        }, 2000);
+      } else { alert("Şifre Hatalı Kanka!"); }
     }
 
     function initCategories() {
       const catList = document.getElementById('categoryList');
       catList.innerHTML = '';
-      [...new Set(CHANNELS.map(c => c.category))].forEach(cat => {
+      const uniqueCats = [...new Set(CHANNELS.map(c => c.category))];
+      uniqueCats.forEach(cat => {
         const card = document.createElement('div');
-        card.className = 'cat-card';
-        if(cat === "ÖZEL YAYIN") card.classList.add('special');
+        card.className = 'cat-card' + (cat === 'MAÇ ÖZEL' ? ' special' : '');
         card.innerHTML = `<span>${cat}</span>`;
-        card.onclick = () => showChannels(cat);
-        catList.appendChild(card);
+        card.onclick = () => showChannels(cat); catList.appendChild(card);
       });
     }
 
@@ -164,8 +147,7 @@
       CHANNELS.filter(c => c.category === category).forEach(ch => {
         const card = document.createElement('div');
         card.className = 'channel-card'; card.innerText = ch.name;
-        card.onclick = () => playStream(ch, card);
-        grid.appendChild(card);
+        card.onclick = () => playStream(ch, card); grid.appendChild(card);
       });
     }
 
@@ -177,32 +159,19 @@
       document.getElementById('statusLabel').innerText = "OYNATILIYOR: " + ch.name;
       
       display.innerHTML = ""; 
-
       if (ch.type === "m3u8") {
         const video = document.createElement('video');
         video.controls = true; video.autoplay = true;
-        // Sol alttaki o kalabalığı (varsa) video seviyesinde de engellemek için
-        video.setAttribute('webkit-playsinline', 'true');
-        video.setAttribute('playsinline', 'true');
         display.appendChild(video);
-
-        // Proxy ekleyerek CORS aşmayı deniyoruz
-        const proxyUrl = "https://corsproxy.io/?" + encodeURIComponent(ch.url);
-
+        const proxy = "https://corsproxy.io/?" + encodeURIComponent(ch.url);
         if (Hls.isSupported()) {
-          const hls = new Hls();
-          hls.loadSource(proxyUrl);
-          hls.attachMedia(video);
-          hls.on(Hls.Events.ERROR, function (event, data) {
-            if (data.fatal) hls.loadSource(ch.url); // Proxy başarısızsa orijinali dene
-          });
-        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-          video.src = proxyUrl;
+          const hls = new Hls(); hls.loadSource(proxy); hls.attachMedia(video);
         }
         censor.style.display = 'none';
       } else {
         display.innerHTML = `<iframe src="${ch.url}" allow="autoplay; fullscreen"></iframe>`;
-        censor.style.display = 'block';
+        // Spor kanalında logo varsa sansürü aç
+        censor.style.display = ch.category === "SPOR" ? 'block' : 'none';
       }
     }
 
@@ -210,7 +179,6 @@
       document.getElementById('channel-view').style.display = 'none';
       document.getElementById('category-screen').style.display = 'block';
       document.getElementById('video-display').innerHTML = '';
-      document.getElementById('logo-censor').style.display = 'none';
     }
   </script>
 </body>
