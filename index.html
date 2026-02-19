@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Z&M Stream | Galatasaray Edition</title>
+  <title>Z&M Stream |</title>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
   
   <style>
@@ -32,24 +32,16 @@
     /* --- PLAYER & SANSÜR --- */
     .video-section { 
       width: 85%; max-width: 1000px; margin: 15px auto; background: #000; border-radius: 12px; 
-      overflow: hidden; position: relative; aspect-ratio: 16/9; border: 2px solid #2a2a2a; transition: 0.3s;
-    }
-    .video-section.fullscreen-mode {
-      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; max-width: none; margin: 0; border: none; border-radius: 0; z-index: 100000;
+      overflow: hidden; position: relative; aspect-ratio: 16/9; border: 2px solid #2a2a2a;
     }
     #video-display, iframe { width: 100% !important; height: 100% !important; border: none; display: block; }
 
     #logo-censor {
       position: absolute;
       top: 0; right: 0; 
-      left: 82.50%; /* Biraz daha sola kaydırıldı */
+      left: 82.50%; /* Sola kaydırılmış ayar */
       bottom: 82.91%;
       background: #000; z-index: 999999; display: none; pointer-events: none; box-shadow: 0 0 15px #000;
-    }
-
-    .fs-toggle {
-      position: absolute; bottom: 15px; left: 15px; z-index: 1000001;
-      background: var(--gs-red); color: white; border: none; padding: 8px 12px; border-radius: 5px; cursor: pointer; font-size: 11px; display: none; font-weight: bold;
     }
 
     /* --- LISTELER --- */
@@ -85,7 +77,7 @@
   <div id="main-app">
     <div class="top-announcement">
         <div class="announcement-content">
-            HOŞ GELDİNİZ! Galatasaray PORTALINDA KEYİFLİ SEYİRLER... SANSÜR VE FULLSCREEN MODU AKTİFTİR.
+            HOŞ GELDİNİZ! Galatasaray PORTALINDA KEYİFLİ SEYİRLER... SANSÜR AKTİFTİR.
         </div>
     </div>
 
@@ -100,9 +92,8 @@
 
     <div id="channel-view" style="display:none;">
         <button class="back-btn" onclick="backToCategories()">← KATEGORİLER</button>
-        <div class="video-section" id="player-box">
+        <div class="video-section">
             <div id="logo-censor"></div>
-            <button class="fs-toggle" id="fs-btn" onclick="toggleFS()">TAM EKRAN (SANSÜRLÜ)</button>
             <div id="video-display"></div>
         </div>
         <div id="statusLabel" style="text-align:center; color:var(--gs-gold); margin:15px; font-weight:900;">KANAL SEÇİNİZ</div>
@@ -112,8 +103,7 @@
 
   <script>
     const USERS = [
-      { u: "zm", p: "1905" }, { u: "gs", p: "1905" }, { u: "admin", p: "12345" },
-      { u: "k1", p: "s1" }, { u: "k2", p: "s2" }, { u: "k3", p: "s3" }
+      { u: "zm", p: "1905" }, { u: "gs", p: "1905" }, { u: "admin", p: "12345" }
     ];
 
     const CHANNELS = [
@@ -174,29 +164,13 @@
       document.getElementById('statusLabel').innerText = "OYNATILIYOR: " + ch.name;
       document.getElementById('video-display').innerHTML = `<iframe src="${ch.url}" allow="autoplay; fullscreen"></iframe>`;
       document.getElementById('logo-censor').style.display = 'block';
-      document.getElementById('fs-btn').style.display = 'block';
     }
-
-    function toggleFS() {
-      const player = document.getElementById('player-box');
-      player.classList.toggle('fullscreen-mode');
-      const btn = document.getElementById('fs-btn');
-      btn.innerText = player.classList.contains('fullscreen-mode') ? "KÜÇÜLT (ESC)" : "TAM EKRAN (SANSÜRLÜ)";
-    }
-
-    document.addEventListener('keydown', (e) => {
-      if (e.key === "Escape") {
-        document.getElementById('player-box').classList.remove('fullscreen-mode');
-        document.getElementById('fs-btn').innerText = "TAM EKRAN (SANSÜRLÜ)";
-      }
-    });
 
     function backToCategories() {
       document.getElementById('channel-view').style.display = 'none';
       document.getElementById('category-screen').style.display = 'block';
       document.getElementById('video-display').innerHTML = '';
       document.getElementById('logo-censor').style.display = 'none';
-      document.getElementById('fs-btn').style.display = 'none';
     }
   </script>
 </body>
