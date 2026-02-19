@@ -3,27 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Z&M Stream |</title>
+  <title>Z&M Stream</title>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
   
   <style>
-    :root { --gs-red: #A90432; --gs-gold: #FDB912; --bg-dark: #0a0a0a; }
+    :root { --accent-red: #A90432; --accent-gold: #FDB912; --bg-dark: #0a0a0a; }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { background: var(--bg-dark); color: white; font-family: 'Montserrat', sans-serif; min-height: 100vh; overflow-x: hidden; }
 
-    /* --- LOGIN & INTRO --- */
+    /* --- LOGIN --- */
     #login-page { height: 100vh; display: flex; justify-content: center; align-items: center; background: radial-gradient(circle at center, #222 0%, #000 100%); }
-    .login-card { background: rgba(255,255,255,0.05); padding: 3rem; border-radius: 25px; border-top: 4px solid var(--gs-red); text-align: center; width: 360px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+    .login-card { background: rgba(255,255,255,0.05); padding: 3rem; border-radius: 25px; border-top: 4px solid var(--accent-red); text-align: center; width: 360px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
     .login-card input { width: 100%; padding: 15px; margin-bottom: 15px; border-radius: 10px; border: 1px solid #333; background: #111; color: #fff; outline: none; }
-    .btn-login { width: 100%; padding: 15px; background: var(--gs-red); color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; }
+    .btn-login { width: 100%; padding: 15px; background: var(--accent-red); color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; }
 
     #intro-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 10000; }
-    .spinner { width: 50px; height: 50px; border: 4px solid rgba(255,255,255,0.1); border-top: 4px solid var(--gs-gold); border-radius: 50%; animation: spin 1s linear infinite; margin-top: 20px; }
+    .spinner { width: 50px; height: 50px; border: 4px solid rgba(255,255,255,0.1); border-top: 4px solid var(--accent-gold); border-radius: 50%; animation: spin 1s linear infinite; margin-top: 20px; }
     @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-    /* --- APP --- */
     #main-app { display: none; }
-    .top-announcement { background: linear-gradient(90deg, #000, var(--gs-red), #000); border-bottom: 1px solid var(--gs-gold); padding: 12px 0; overflow: hidden; white-space: nowrap; }
+    .top-announcement { background: linear-gradient(90deg, #000, var(--accent-red), #000); border-bottom: 1px solid var(--accent-gold); padding: 12px 0; overflow: hidden; white-space: nowrap; }
     .announcement-content { display: inline-block; padding-left: 100%; animation: marquee 25s linear infinite; font-weight: bold; font-size: 0.85rem; }
     @keyframes marquee { 0% { transform: translate(0, 0); } 100% { transform: translate(-100%, 0); } }
 
@@ -39,29 +38,29 @@
     #logo-censor {
       position: absolute;
       top: 0; right: 0; 
-      left: 82.50%; /* Sola kaydırılmış ayar */
+      left: 82.50%; 
       bottom: 82.91%;
       background: #000; z-index: 999999; display: none; pointer-events: none; box-shadow: 0 0 15px #000;
     }
 
     /* --- LISTELER --- */
     .category-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; padding: 30px 5%; }
-    .cat-card { background: #111; padding: 50px 20px; border-radius: 20px; border: 1px solid var(--gs-red); text-align: center; cursor: pointer; transition: 0.3s; font-size: 1.4rem; font-weight: bold; }
-    .cat-card:hover { background: var(--gs-red); transform: scale(1.03); }
+    .cat-card { background: #111; padding: 50px 20px; border-radius: 20px; border: 1px solid var(--accent-red); text-align: center; cursor: pointer; transition: 0.3s; font-size: 1.4rem; font-weight: bold; }
+    .cat-card:hover { background: var(--accent-red); transform: scale(1.03); }
 
     .grid-channels { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; padding: 20px 5%; }
     .channel-card { background: #1a1a1a; padding: 20px; border-radius: 12px; text-align: center; cursor: pointer; border: 1px solid transparent; transition: 0.2s; }
-    .channel-card:hover { border-color: var(--gs-gold); }
-    .channel-card.active { background: var(--gs-red); font-weight: bold; }
+    .channel-card:hover { border-color: var(--accent-gold); }
+    .channel-card.active { background: var(--accent-red); font-weight: bold; }
 
-    .back-btn { background: none; color: var(--gs-gold); border: 1px solid var(--gs-gold); padding: 10px 20px; border-radius: 8px; margin: 20px 5%; cursor: pointer; font-weight: bold; }
+    .back-btn { background: none; color: var(--accent-gold); border: 1px solid var(--accent-gold); padding: 10px 20px; border-radius: 8px; margin: 20px 5%; cursor: pointer; font-weight: bold; }
   </style>
 </head>
 <body>
 
   <div id="login-page">
     <div class="login-card">
-      <h1 style="color:var(--gs-gold); margin-bottom:30px; font-weight:900;">Z&M <span style="color:var(--gs-red)">STREAM</span></h1>
+      <h1 style="color:var(--accent-gold); margin-bottom:30px; font-weight:900;">Z&M <span style="color:var(--accent-red)">STREAM</span></h1>
       <input type="text" id="username" placeholder="Kullanıcı Adı">
       <input type="password" id="password" placeholder="Şifre">
       <button class="btn-login" onclick="attemptLogin()">GİRİŞ YAP</button>
@@ -69,7 +68,7 @@
   </div>
 
   <div id="intro-overlay">
-      <h1 style="color:var(--gs-gold); font-size:3rem; font-weight:900;">Z&M STREAM</h1>
+      <h1 style="color:var(--accent-gold); font-size:3rem; font-weight:900;">Z&M STREAM</h1>
       <p style="color:#666; letter-spacing:4px; margin-top:10px;">İYİ SEYİRLER DİLER</p>
       <div class="spinner"></div>
   </div>
@@ -77,12 +76,12 @@
   <div id="main-app">
     <div class="top-announcement">
         <div class="announcement-content">
-            HOŞ GELDİNİZ! Z&M STREAM KEYİFLİ SEYİRLER DİLER...
+            Z&M STREAM PORTALINA HOŞ GELDİNİZ! KEYİFLİ SEYİRLER...
         </div>
     </div>
 
     <header>
-      <span style="font-weight:900; font-size:1.4rem;">Z&M <span style="color:var(--gs-gold)">STREAM</span></span>
+      <span style="font-weight:900; font-size:1.4rem;">Z&M <span style="color:var(--accent-gold)">STREAM</span></span>
       <button onclick="location.reload()" style="background:none; color:#fff; border:1px solid #444; padding:8px 15px; border-radius:8px; cursor:pointer;">ÇIKIŞ</button>
     </header>
 
@@ -96,7 +95,7 @@
             <div id="logo-censor"></div>
             <div id="video-display"></div>
         </div>
-        <div id="statusLabel" style="text-align:center; color:var(--gs-gold); margin:15px; font-weight:900;">KANAL SEÇİNİZ</div>
+        <div id="statusLabel" style="text-align:center; color:var(--accent-gold); margin:15px; font-weight:900;">KANAL SEÇİNİZ</div>
         <div class="grid-channels" id="channelList"></div>
     </div>
   </div>
@@ -174,4 +173,5 @@
     }
   </script>
 </body>
-</html>
+        </html>
+      
