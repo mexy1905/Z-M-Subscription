@@ -23,34 +23,34 @@
 
     /* --- DUYURU VE HEADER --- */
     #main-app { display: none; }
-    .top-announcement { background: linear-gradient(90deg, #000, var(--gs-red), #000); border-bottom: 1px solid var(--gs-gold); padding: 12px 0; overflow: hidden; white-space: nowrap; }
-    .announcement-content { display: inline-block; padding-left: 100%; animation: marquee 25s linear infinite; font-weight: bold; }
+    .top-announcement { background: linear-gradient(90deg, #000, var(--gs-red), #000); border-bottom: 1px solid var(--gs-gold); padding: 10px 0; overflow: hidden; white-space: nowrap; }
+    .announcement-content { display: inline-block; padding-left: 100%; animation: marquee 25s linear infinite; font-weight: bold; font-size: 0.85rem; }
     @keyframes marquee { 0% { transform: translate(0, 0); } 100% { transform: translate(-100%, 0); } }
 
-    header { padding: 1.5rem 5%; background: #000; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; }
+    header { padding: 1rem 5%; background: #000; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; }
 
-    /* --- PLAYER AYARI (BURAYI DÜZELTTİM) --- */
+    /* --- PLAYER AYARI --- */
     .video-section { 
-      width: 95%; 
-      max-width: 1200px; 
-      margin: 20px auto; 
+      width: 85%; 
+      max-width: 1000px; 
+      margin: 15px auto; 
       background: #000; 
-      border-radius: 15px; 
+      border-radius: 12px; 
       overflow: hidden; 
       position: relative; 
-      aspect-ratio: 16/9; /* Oran sabitlendi */
-      border: 2px solid #333;
-      box-shadow: 0 0 30px rgba(0,0,0,0.8);
+      aspect-ratio: 16/9; 
+      border: 2px solid #2a2a2a;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.8);
     }
     #video-display, iframe, video { width: 100% !important; height: 100% !important; border: none; display: block; }
 
-    /* SANSÜR KUTUSU */
+    /* SANSÜR KUTUSU - SENİN AYARLARIN */
     #logo-censor {
       position: absolute;
-      top: 3%;
-      right: 2%;
-      width: 12%;
-      height: 7%;
+      top: 0;             /* top 0 */
+      right: 0;           /* right 0 */
+      left: 84.20%;       /* left 84.20 */
+      bottom: 82.91%;     /* bottom 82.91 */
       background: #000;
       z-index: 99999;
       display: none;
@@ -59,16 +59,16 @@
     }
 
     /* --- KATEGORİ VE KANALLAR --- */
-    .category-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; padding: 40px 5%; }
-    .cat-card { background: #111; padding: 60px 20px; border-radius: 20px; border: 1px solid var(--gs-red); text-align: center; cursor: pointer; transition: 0.3s; font-size: 1.5rem; font-weight: bold; }
+    .category-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; padding: 30px 5%; }
+    .cat-card { background: #111; padding: 45px 20px; border-radius: 15px; border: 1px solid var(--gs-red); text-align: center; cursor: pointer; transition: 0.3s; font-size: 1.3rem; font-weight: bold; }
     .cat-card:hover { background: var(--gs-red); transform: scale(1.02); }
 
-    .grid-channels { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 15px; padding: 20px 5%; }
-    .channel-card { background: #1a1a1a; padding: 20px; border-radius: 12px; text-align: center; cursor: pointer; border: 1px solid transparent; transition: 0.2s; }
+    .grid-channels { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; padding: 15px 5%; }
+    .channel-card { background: #1a1a1a; padding: 15px; border-radius: 10px; text-align: center; cursor: pointer; border: 1px solid transparent; transition: 0.2s; font-size: 0.9rem; }
     .channel-card:hover { border-color: var(--gs-gold); }
     .channel-card.active { background: var(--gs-red); font-weight: bold; }
 
-    .back-btn { background: none; color: var(--gs-gold); border: 1px solid var(--gs-gold); padding: 10px 20px; border-radius: 8px; margin: 20px 5%; cursor: pointer; font-weight: bold; }
+    .back-btn { background: none; color: var(--gs-gold); border: 1px solid var(--gs-gold); padding: 8px 16px; border-radius: 8px; margin: 15px 5%; cursor: pointer; font-weight: bold; }
   </style>
 </head>
 <body>
@@ -83,7 +83,7 @@
   </div>
 
   <div id="intro-overlay">
-      <h1 style="color:var(--gs-gold); font-size:3rem; font-weight:900;">Z&M STREAM</h1>
+      <h1 style="color:var(--gs-gold); font-size:2.5rem; font-weight:900;">Z&M STREAM</h1>
       <p style="color:#666; letter-spacing:4px; margin-top:10px;">İYİ SEYİRLER DİLER</p>
       <div class="spinner"></div>
   </div>
@@ -91,13 +91,13 @@
   <div id="main-app">
     <div class="top-announcement">
         <div class="announcement-content">
-            <span style="color:var(--gs-gold)">DUYURU:</span> Z&M Stream'e Hoş Geldiniz! Keyifli Seyirler Dileriz. &nbsp;&nbsp;&nbsp; <span style="color:var(--gs-gold)">BİLGİ:</span> Logolar Otomatik Olarak Sansürlenmiştir
+            <span style="color:var(--gs-gold)">DUYURU:</span> Galatasaray Portalımıza Hoş Geldiniz! &nbsp;&nbsp;&nbsp; <span style="color:var(--gs-gold)">BİLGİ:</span> beIN Sports sansürü aktiftir.
         </div>
     </div>
 
     <header>
-      <span style="font-weight:900; font-size:1.5rem;">Z&M <span style="color:var(--gs-gold)">STREAM</span></span>
-      <button onclick="location.reload()" style="background:none; color:#fff; border:1px solid #444; padding:8px 15px; border-radius:8px; cursor:pointer;">ÇIKIŞ YAP</button>
+      <span style="font-weight:900; font-size:1.3rem;">Z&M <span style="color:var(--gs-gold)">STREAM</span></span>
+      <button onclick="location.reload()" style="background:none; color:#fff; border:1px solid #444; padding:6px 12px; border-radius:8px; cursor:pointer;">ÇIKIŞ</button>
     </header>
 
     <div id="category-screen">
@@ -110,18 +110,14 @@
             <div id="logo-censor"></div>
             <div id="video-display"></div>
         </div>
-        <div id="statusLabel" style="text-align:center; color:var(--gs-gold); margin:20px; font-weight:900; font-size:1.2rem;">KANAL SEÇİNİZ</div>
+        <div id="statusLabel" style="text-align:center; color:var(--gs-gold); margin:15px; font-weight:900;">KANAL SEÇİNİZ</div>
         <div class="grid-channels" id="channelList"></div>
     </div>
   </div>
 
   <script>
-    const USERS = [
-      { u: "zm", p: "1905" }, { u: "gs", p: "1905" }, { u: "admin", p: "12345" },
-      { u: "u1", p: "p1" }, { u: "u2", p: "p2" }, { u: "u3", p: "p3" },
-      { u: "u4", p: "p4" }, { u: "u5", p: "p5" }, { u: "u6", p: "p6" }, { u: "u7", p: "p7" }
-    ];
-
+    // JS Kodları (USERS, CHANNELS, attemptLogin, playStream vs.) yukarıdaki HTML ile aynı şekilde çalışacaktır.
+    const USERS = [{ u: "zm", p: "1905" }, { u: "gs", p: "1905" }];
     const CHANNELS = [
       { name: "Z&M SPORTS 1", url: "https://dlhd.link/stream/stream-62.php", category: "SPOR" },
       { name: "Z&M SPORTS 3", url: "https://dlhd.link/stream/stream-64.php", category: "SPOR" },
@@ -148,8 +144,8 @@
           intro.style.display = 'none';
           document.getElementById('main-app').style.display = 'block';
           initCategories();
-        }, 2500);
-      } else { alert("Hatalı Giriş!"); }
+        }, 1500);
+      } else { alert("Hata!"); }
     }
 
     function initCategories() {
@@ -188,11 +184,8 @@
     function playStream(ch, el) {
       const display = document.getElementById('video-display');
       const censor = document.getElementById('logo-censor');
-      
       document.querySelectorAll('.channel-card').forEach(c => c.classList.remove('active'));
       el.classList.add('active');
-      document.getElementById('statusLabel').innerText = "OYNATILIYOR: " + ch.name;
-
       display.innerHTML = `<iframe src="${ch.url}" allow="autoplay; fullscreen" style="width:100%; height:100%;"></iframe>`;
       censor.style.display = 'block';
     }
