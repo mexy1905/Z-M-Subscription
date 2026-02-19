@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Z&M Stream</title>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
   
   <style>
     :root { --accent-red: #A90432; --accent-gold: #FDB912; --bg-dark: #0a0a0a; }
@@ -33,7 +34,7 @@
       width: 85%; max-width: 1000px; margin: 15px auto; background: #000; border-radius: 12px; 
       overflow: hidden; position: relative; aspect-ratio: 16/9; border: 2px solid #2a2a2a;
     }
-    #video-display, iframe { width: 100% !important; height: 100% !important; border: none; display: block; }
+    #video-display, iframe, video { width: 100% !important; height: 100% !important; border: none; display: block; }
 
     #logo-censor {
       position: absolute;
@@ -50,7 +51,6 @@
 
     .grid-channels { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; padding: 20px 5%; }
     .channel-card { background: #1a1a1a; padding: 20px; border-radius: 12px; text-align: center; cursor: pointer; border: 1px solid transparent; transition: 0.2s; font-size: 0.85rem; }
-    .channel-card:hover { border-color: var(--accent-gold); }
     .channel-card.active { background: var(--accent-red); font-weight: bold; }
 
     .back-btn { background: none; color: var(--accent-gold); border: 1px solid var(--accent-gold); padding: 10px 20px; border-radius: 8px; margin: 20px 5%; cursor: pointer; font-weight: bold; }
@@ -69,15 +69,12 @@
 
   <div id="intro-overlay">
       <h1 style="color:var(--accent-gold); font-size:3rem; font-weight:900;">Z&M STREAM</h1>
-      <p style="color:#666; letter-spacing:4px; margin-top:10px;">İYİ SEYİRLER DİLER</p>
       <div class="spinner"></div>
   </div>
 
   <div id="main-app">
     <div class="top-announcement">
-        <div class="announcement-content">
-            Z&M STREAM'e HOŞ GELDİNİZ! KEYİFLİ SEYİRLER... Bir Sorun İle Karşılaşırsanız Yöneticiler ile konuşun.
-        </div>
+        <div class="announcement-content">Z&M STREAM PORTALINA HOŞ GELDİNİZ! KEYİFLİ SEYİRLER...</div>
     </div>
 
     <header>
@@ -103,24 +100,16 @@
   <script>
     const USERS = [{ u: "zm", p: "1905" }, { u: "gs", p: "1905" }];
 
-    // YENİ KANAL LİSTESİ BURADA
     const CHANNELS = [
-      { name: "Z&M SPORTS 1", url: "https://dlhd.link/stream/stream-62.php", category: "SPOR" },
-      { name: "Z&M SPORTS 3", url: "https://dlhd.link/stream/stream-64.php", category: "SPOR" },
-      { name: "Z&M SPORTS 4", url: "https://dlhd.link/stream/stream-67.php", category: "SPOR" },
-      { name: "TNT Sports 1", url: "https://dlhd.link/stream/stream-31.php", category: "SPOR" },
-      { name: "Dazn FHD", url: "https://dlhd.link/stream/stream-426.php", category: "SPOR" },
-      { name: "M.Laliga", url: "https://dlhd.link/stream/stream-5.php", category: "SPOR" },
-      { name: "Ziggo Sports FHD", url: "https://dlhd.link/stream/stream-393.php", category: "SPOR" },
-      { name: "Canal+ Sport", url: "https://dlhd.link/stream/stream-122.php", category: "SPOR" },
-      { name: "Bein Sports Xtra", url: "https://dlhd.link/stream/stream-100.php", category: "SPOR" },
-      { name: "Sport tv 1", url: "https://dlhd.link/stream/stream-49.php", category: "SPOR" },
-      { name: "Sport tv 2", url: "https://dlhd.link/stream/stream-74.php", category: "SPOR" },
-      { name: "Sport tv 3", url: "https://dlhd.link/stream/stream-454.php", category: "SPOR" },
-      { name: "Sport tv 5", url: "https://dlhd.link/stream/stream-290.php", category: "SPOR" },
-      { name: "Sport tv 6", url: "https://dlhd.link/stream/stream-291.php", category: "SPOR" },
-      { name: "TRT 1 FHD", url: "https://dlhd.link/stream/stream-1012.php", category: "ULUSAL" },
-      { name: "RTL", url: "https://dlhd.link/stream/stream-740.php", category: "SPOR" }
+      { name: "TRT 1 TÜRKİYE HD", url: "https://trt.daioncdn.net/trt-1/master_1440p.m3u8?&sid=86k2aai9g7nk&app=ed3904e8-737b-4a5e-856a-1b0d7a0a94e2&ce=2", category: "ULUSAL", type: "m3u8" },
+      { name: "Z&M SPORTS 1", url: "https://dlhd.link/stream/stream-62.php", category: "SPOR", type: "iframe" },
+      { name: "Z&M SPORTS 3", url: "https://dlhd.link/stream/stream-64.php", category: "SPOR", type: "iframe" },
+      { name: "TNT Sports 1", url: "https://dlhd.link/stream/stream-31.php", category: "SPOR", type: "iframe" },
+      { name: "Dazn FHD", url: "https://dlhd.link/stream/stream-426.php", category: "SPOR", type: "iframe" },
+      { name: "M.Laliga", url: "https://dlhd.link/stream/stream-5.php", category: "SPOR", type: "iframe" },
+      { name: "Canal+ Sport", url: "https://dlhd.link/stream/stream-122.php", category: "SPOR", type: "iframe" },
+      { name: "Sport tv 1", url: "https://dlhd.link/stream/stream-49.php", category: "SPOR", type: "iframe" }
+      // Diğer kanalları buraya type: "iframe" ekleyerek yazabilirsin...
     ];
 
     function attemptLogin() {
@@ -128,13 +117,12 @@
       const p = document.getElementById('password').value;
       if (USERS.find(user => user.u === u && user.p === p)) {
         document.getElementById('login-page').style.display = 'none';
-        const intro = document.getElementById('intro-overlay');
-        intro.style.display = 'flex';
+        document.getElementById('intro-overlay').style.display = 'flex';
         setTimeout(() => {
-          intro.style.display = 'none';
+          document.getElementById('intro-overlay').style.display = 'none';
           document.getElementById('main-app').style.display = 'block';
           initCategories();
-        }, 2200);
+        }, 1500);
       } else { alert("Hata!"); }
     }
 
@@ -144,7 +132,8 @@
       [...new Set(CHANNELS.map(c => c.category))].forEach(cat => {
         const card = document.createElement('div');
         card.className = 'cat-card'; card.innerHTML = `<span>${cat}</span>`;
-        card.onclick = () => showChannels(cat); catList.appendChild(card);
+        card.onclick = () => showChannels(cat);
+        catList.appendChild(card);
       });
     }
 
@@ -156,16 +145,38 @@
       CHANNELS.filter(c => c.category === category).forEach(ch => {
         const card = document.createElement('div');
         card.className = 'channel-card'; card.innerText = ch.name;
-        card.onclick = () => playStream(ch, card); grid.appendChild(card);
+        card.onclick = () => playStream(ch, card);
+        grid.appendChild(card);
       });
     }
 
     function playStream(ch, el) {
+      const display = document.getElementById('video-display');
+      const censor = document.getElementById('logo-censor');
       document.querySelectorAll('.channel-card').forEach(c => c.classList.remove('active'));
       el.classList.add('active');
       document.getElementById('statusLabel').innerText = "OYNATILIYOR: " + ch.name;
-      document.getElementById('video-display').innerHTML = `<iframe src="${ch.url}" allow="autoplay; fullscreen"></iframe>`;
-      document.getElementById('logo-censor').style.display = 'block';
+      
+      display.innerHTML = ""; // Temizle
+
+      if (ch.type === "m3u8") {
+        const video = document.createElement('video');
+        video.controls = true;
+        video.autoplay = true;
+        display.appendChild(video);
+
+        if (Hls.isSupported()) {
+          const hls = new Hls();
+          hls.loadSource(ch.url);
+          hls.attachMedia(video);
+        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+          video.src = ch.url;
+        }
+        censor.style.display = 'none'; // TRT'de sansüre gerek yok
+      } else {
+        display.innerHTML = `<iframe src="${ch.url}" allow="autoplay; fullscreen"></iframe>`;
+        censor.style.display = 'block';
+      }
     }
 
     function backToCategories() {
