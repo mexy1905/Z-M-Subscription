@@ -11,7 +11,7 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { background: var(--bg-dark); color: white; font-family: 'Montserrat', sans-serif; min-height: 100vh; overflow-x: hidden; }
 
-    /* --- LOGIN --- */
+    /* --- LOGIN & INTRO --- */
     #login-page { height: 100vh; display: flex; justify-content: center; align-items: center; background: radial-gradient(circle at center, #222 0%, #000 100%); }
     .login-card { background: rgba(255,255,255,0.05); padding: 3rem; border-radius: 25px; border-top: 4px solid var(--accent-red); text-align: center; width: 360px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
     .login-card input { width: 100%; padding: 15px; margin-bottom: 15px; border-radius: 10px; border: 1px solid #333; background: #111; color: #fff; outline: none; }
@@ -49,7 +49,7 @@
     .cat-card:hover { background: var(--accent-red); transform: scale(1.03); }
 
     .grid-channels { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; padding: 20px 5%; }
-    .channel-card { background: #1a1a1a; padding: 20px; border-radius: 12px; text-align: center; cursor: pointer; border: 1px solid transparent; transition: 0.2s; }
+    .channel-card { background: #1a1a1a; padding: 20px; border-radius: 12px; text-align: center; cursor: pointer; border: 1px solid transparent; transition: 0.2s; font-size: 0.85rem; }
     .channel-card:hover { border-color: var(--accent-gold); }
     .channel-card.active { background: var(--accent-red); font-weight: bold; }
 
@@ -76,7 +76,7 @@
   <div id="main-app">
     <div class="top-announcement">
         <div class="announcement-content">
-            Z&M STREAM PORTALINA HOŞ GELDİNİZ! KEYİFLİ SEYİRLER...
+            Z&M STREAM PORTALINA HOŞ GELDİNİZ! KEYİFLİ SEYİRLER... SANSÜR SİSTEMİ AKTİFTİR.
         </div>
     </div>
 
@@ -101,23 +101,26 @@
   </div>
 
   <script>
-    const USERS = [
-      { u: "zm", p: "1905" }, { u: "gs", p: "1905" }, { u: "admin", p: "12345" }
-    ];
+    const USERS = [{ u: "zm", p: "1905" }, { u: "gs", p: "1905" }];
 
+    // YENİ KANAL LİSTESİ BURADA
     const CHANNELS = [
       { name: "Z&M SPORTS 1", url: "https://dlhd.link/stream/stream-62.php", category: "SPOR" },
       { name: "Z&M SPORTS 3", url: "https://dlhd.link/stream/stream-64.php", category: "SPOR" },
       { name: "Z&M SPORTS 4", url: "https://dlhd.link/stream/stream-67.php", category: "SPOR" },
-      { name: "TRT 1 FHD", url: "https://dlhd.link/stream/stream-1012.php", category: "ULUSAL" },
       { name: "TNT Sports 1", url: "https://dlhd.link/stream/stream-31.php", category: "SPOR" },
       { name: "Dazn FHD", url: "https://dlhd.link/stream/stream-426.php", category: "SPOR" },
       { name: "M.Laliga", url: "https://dlhd.link/stream/stream-5.php", category: "SPOR" },
-      { name: "Ziggo Sports", url: "https://dlhd.link/stream/stream-393.php", category: "SPOR" },
+      { name: "Ziggo Sports FHD", url: "https://dlhd.link/stream/stream-393.php", category: "SPOR" },
       { name: "Canal+ Sport", url: "https://dlhd.link/stream/stream-122.php", category: "SPOR" },
-      { name: "Bein Xtra", url: "https://dlhd.link/stream/stream-100.php", category: "SPOR" },
+      { name: "Bein Sports Xtra", url: "https://dlhd.link/stream/stream-100.php", category: "SPOR" },
       { name: "Sport tv 1", url: "https://dlhd.link/stream/stream-49.php", category: "SPOR" },
-      { name: "Sport tv 2", url: "https://dlhd.link/stream/stream-74.php", category: "SPOR" }
+      { name: "Sport tv 2", url: "https://dlhd.link/stream/stream-74.php", category: "SPOR" },
+      { name: "Sport tv 3", url: "https://dlhd.link/stream/stream-454.php", category: "SPOR" },
+      { name: "Sport tv 5", url: "https://dlhd.link/stream/stream-290.php", category: "SPOR" },
+      { name: "Sport tv 6", url: "https://dlhd.link/stream/stream-291.php", category: "SPOR" },
+      { name: "TRT 1 FHD", url: "https://dlhd.link/stream/stream-1012.php", category: "ULUSAL" },
+      { name: "RTL", url: "https://dlhd.link/stream/stream-740.php", category: "SPOR" }
     ];
 
     function attemptLogin() {
@@ -173,5 +176,4 @@
     }
   </script>
 </body>
-        </html>
-      
+</html>
