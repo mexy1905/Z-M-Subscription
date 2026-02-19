@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Z&M Stream</title>
+  <title>Z&M Stream | VIP</title>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
   
   <style>
-    :root { --accent-red: #A90432; --accent-gold: #FDB912; --bg-dark: #0a0a0a; }
+    :root { --accent-red: #A90432; --accent-gold: #FDB912; --bg-dark: #0a0a0a; --special-blue: #00d2ff; }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { background: var(--bg-dark); color: white; font-family: 'Montserrat', sans-serif; min-height: 100vh; overflow-x: hidden; }
 
@@ -38,9 +38,7 @@
 
     #logo-censor {
       position: absolute;
-      top: 0; right: 0; 
-      left: 82.50%; 
-      bottom: 82.91%;
+      top: 0; right: 0; left: 82.50%; bottom: 82.91%;
       background: #000; z-index: 999999; display: none; pointer-events: none; box-shadow: 0 0 15px #000;
     }
 
@@ -48,6 +46,10 @@
     .category-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; padding: 30px 5%; }
     .cat-card { background: #111; padding: 50px 20px; border-radius: 20px; border: 1px solid var(--accent-red); text-align: center; cursor: pointer; transition: 0.3s; font-size: 1.4rem; font-weight: bold; }
     .cat-card:hover { background: var(--accent-red); transform: scale(1.03); }
+    
+    /* Özel kategori kartı tasarımı */
+    .cat-card.special { border-color: var(--special-blue); box-shadow: 0 0 15px rgba(0, 210, 255, 0.3); color: var(--special-blue); }
+    .cat-card.special:hover { background: var(--special-blue); color: #000; }
 
     .grid-channels { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; padding: 20px 5%; }
     .channel-card { background: #1a1a1a; padding: 20px; border-radius: 12px; text-align: center; cursor: pointer; border: 1px solid transparent; transition: 0.2s; font-size: 0.85rem; }
@@ -74,7 +76,7 @@
 
   <div id="main-app">
     <div class="top-announcement">
-        <div class="announcement-content">Z&M STREAM PORTALINA HOŞ GELDİNİZ! KEYİFLİ SEYİRLER...</div>
+        <div class="announcement-content">Z&M STREAM PORTALINA HOŞ GELDİNİZ! ÖZEL YAYINLAR AKTİF EDİLDİ.</div>
     </div>
 
     <header>
@@ -101,6 +103,9 @@
     const USERS = [{ u: "zm", p: "1905" }, { u: "gs", p: "1905" }];
 
     const CHANNELS = [
+      // ÖZEL KATEGORİ BURADA
+      { name: "MAÇ ÖZEL YAYIN", url: "BURAYA_OZEL_LINKI_KOY", category: "ÖZEL YAYIN", type: "m3u8" }, 
+      
       { name: "TRT 1 TÜRKİYE HD", url: "https://trt.daioncdn.net/trt-1/master_1440p.m3u8?&sid=86k2aai9g7nk&app=ed3904e8-737b-4a5e-856a-1b0d7a0a94e2&ce=2", category: "ULUSAL", type: "m3u8" },
       { name: "Z&M SPORTS 1", url: "https://dlhd.link/stream/stream-62.php", category: "SPOR", type: "iframe" },
       { name: "Z&M SPORTS 3", url: "https://dlhd.link/stream/stream-64.php", category: "SPOR", type: "iframe" },
@@ -108,8 +113,8 @@
       { name: "Dazn FHD", url: "https://dlhd.link/stream/stream-426.php", category: "SPOR", type: "iframe" },
       { name: "M.Laliga", url: "https://dlhd.link/stream/stream-5.php", category: "SPOR", type: "iframe" },
       { name: "Canal+ Sport", url: "https://dlhd.link/stream/stream-122.php", category: "SPOR", type: "iframe" },
+      { name: "Bein Sports Xtra", url: "https://dlhd.link/stream/stream-100.php", category: "SPOR", type: "iframe" },
       { name: "Sport tv 1", url: "https://dlhd.link/stream/stream-49.php", category: "SPOR", type: "iframe" }
-      // Diğer kanalları buraya type: "iframe" ekleyerek yazabilirsin...
     ];
 
     function attemptLogin() {
@@ -131,7 +136,9 @@
       catList.innerHTML = '';
       [...new Set(CHANNELS.map(c => c.category))].forEach(cat => {
         const card = document.createElement('div');
-        card.className = 'cat-card'; card.innerHTML = `<span>${cat}</span>`;
+        card.className = 'cat-card';
+        if(cat === "ÖZEL YAYIN") card.classList.add('special');
+        card.innerHTML = `<span>${cat}</span>`;
         card.onclick = () => showChannels(cat);
         catList.appendChild(card);
       });
@@ -157,12 +164,11 @@
       el.classList.add('active');
       document.getElementById('statusLabel').innerText = "OYNATILIYOR: " + ch.name;
       
-      display.innerHTML = ""; // Temizle
+      display.innerHTML = ""; 
 
       if (ch.type === "m3u8") {
         const video = document.createElement('video');
-        video.controls = true;
-        video.autoplay = true;
+        video.controls = true; video.autoplay = true;
         display.appendChild(video);
 
         if (Hls.isSupported()) {
@@ -172,7 +178,7 @@
         } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
           video.src = ch.url;
         }
-        censor.style.display = 'none'; // TRT'de sansüre gerek yok
+        censor.style.display = 'none';
       } else {
         display.innerHTML = `<iframe src="${ch.url}" allow="autoplay; fullscreen"></iframe>`;
         censor.style.display = 'block';
