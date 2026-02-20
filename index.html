@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Z&M STREAM</title>
+    <title>Z&M STREAM | SFVIP STYLE</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdn.tutorialjinni.com/hls.js/1.2.1/hls.min.js"></script>
     
     <style>
-        :root { --sf-blue: #0056b3; --main-gold: #FDB912; --main-red: #A90432; }
+        :root { --sf-blue: #0056b3; --sf-bg: #0a0a0a; --main-gold: #FDB912; --main-red: #A90432; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body { 
@@ -16,92 +16,91 @@
             height: 100vh; overflow: hidden;
         }
 
-        /* --- RADYAL GRADYAN GİRİŞ EKRANI --- */
+        /* --- GİRİŞ EKRANI (RADYAL GRADYAN) --- */
         #login-page {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at center, #1a1a1a, #000);
+            position: fixed; inset: 0; background: radial-gradient(circle at center, #1a1a1a, #000);
             display: flex; justify-content: center; align-items: center; z-index: 10000;
         }
         .login-card {
-            background: rgba(15, 15, 15, 0.98); padding: 45px; border-radius: 20px;
-            border: 1px solid #333; text-align: center; width: 350px;
-            box-shadow: 0 0 50px rgba(0, 0, 0, 1);
+            background: rgba(15, 15, 15, 0.95); padding: 40px; border-radius: 15px;
+            border: 1px solid #333; text-align: center; width: 320px;
         }
-        .login-card h2 { margin-bottom: 30px; font-weight: 700; color: #fff; letter-spacing: 2px; }
         .login-card input {
-            width: 100%; padding: 14px; background: #000; border: 1px solid #444;
-            color: #fff; border-radius: 8px; margin-bottom: 15px; text-align: center; font-size: 1rem;
+            width: 100%; padding: 12px; background: #000; border: 1px solid #444;
+            color: #fff; border-radius: 5px; margin-bottom: 10px; text-align: center;
         }
         .login-card button {
-            width: 100%; padding: 15px; background: var(--main-red); border: none;
-            color: #fff; font-weight: 700; border-radius: 8px; cursor: pointer; transition: 0.3s;
-            text-transform: uppercase;
+            width: 100%; padding: 12px; background: var(--main-red); border: none;
+            color: #fff; font-weight: 700; border-radius: 5px; cursor: pointer;
         }
 
-        /* --- INTRO EKRANI --- */
-        #intro-page {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #000; display: none; flex-direction: column;
-            justify-content: center; align-items: center; z-index: 9999;
-        }
-        .intro-content { text-align: center; }
-        .intro-content h1 { font-size: 3rem; color: var(--main-gold); margin-bottom: 25px; letter-spacing: 10px; }
-        .progress-container { width: 320px; height: 3px; background: #222; border-radius: 5px; overflow: hidden; }
-        .progress-bar { width: 0%; height: 100%; background: var(--main-red); }
+        /* --- SFVIP ANA YAPI --- */
+        #app { display: none; height: 100vh; width: 100vw; overflow: hidden; }
+        .wrapper { display: flex; height: 100%; width: 100%; }
 
-        /* --- ANA ARAYÜZ --- */
-        #app { display: none; height: 100vh; width: 100vw; }
-        .wrapper { display: flex; height: 100%; width: 100%; position: relative; }
-
-        /* PLAYER (TAM EKRAN ARKADA) */
-        .main-content { flex: 1; position: relative; background: #000; overflow: hidden; }
-        .player-container { width: 100%; height: 100%; z-index: 1; }
-        #player-target iframe, #player-target video { width: 100%; height: 100%; border: none; }
-
-        /* BLUR'LU ÜST BAR */
-        .channel-title-bar { 
-            position: absolute; top: 0; left: 0; width: 100%; height: 40px;
-            background: rgba(0, 0, 0, 0.5); 
-            backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-            color: var(--main-gold); display: flex; align-items: center; padding: 0 20px;
-            font-size: 0.9rem; font-weight: 700; z-index: 10; border-bottom: 1px solid rgba(255,255,255,0.1);
+        /* SOL TARAF: PLAYER */
+        .player-section { flex: 1; position: relative; background: #000; }
+        #player-target video, #player-target iframe { width: 100%; height: 100%; border: none; }
+        
+        .top-info-bar { 
+            position: absolute; top: 0; left: 0; width: 100%; height: 35px;
+            background: rgba(0,0,0,0.5); backdrop-filter: blur(15px);
+            z-index: 10; display: flex; align-items: center; padding: 0 15px;
+            color: var(--main-gold); font-weight: 700; font-size: 0.85rem;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
         }
 
-        /* BLUR'LU SAĞ LİSTE */
-        .sidebar { 
-            width: 330px; height: 100%;
-            background: rgba(10, 10, 10, 0.6); 
+        /* SAĞ TARAF: KATEGORİ VE LİSTE (SFVIP DÜZENİ) */
+        .sidebar-container { 
+            display: flex; width: 450px; height: 100%; 
+            background: rgba(15, 15, 15, 0.6); 
             backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
-            display: flex; flex-direction: column; 
-            z-index: 10; border-left: 1px solid rgba(255,255,255,0.1);
+            border-left: 1px solid rgba(255,255,255,0.1);
         }
 
-        .sidebar-header { padding: 20px; border-bottom: 2px solid var(--sf-blue); }
-        #channelSearch { 
-            width: 100%; padding: 10px; background: rgba(0,0,0,0.4); 
-            border: 1px solid #444; color: #fff; border-radius: 5px; margin-top: 10px; outline: none;
+        /* KATEGORİ SÜTUNU (EN SAĞ) */
+        .category-sidebar {
+            width: 120px; background: rgba(0,0,0,0.4);
+            border-left: 1px solid rgba(255,255,255,0.05);
+            display: flex; flex-direction: column; overflow-y: auto;
         }
+        .cat-item {
+            padding: 20px 10px; text-align: center; font-size: 0.75rem; font-weight: 700;
+            color: #888; cursor: pointer; border-bottom: 1px solid rgba(255,255,255,0.05);
+            transition: 0.2s; text-transform: uppercase;
+        }
+        .cat-item:hover { color: #fff; background: rgba(255,255,255,0.05); }
+        .cat-item.active { color: var(--sf-blue); background: rgba(0, 86, 179, 0.1); border-right: 3px solid var(--sf-blue); }
 
-        .cat-selector { padding: 10px; display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; background: rgba(0,0,0,0.2); }
-        .cat-btn { padding: 6px 12px; background: rgba(255,255,255,0.1); border: none; color: #ccc; border-radius: 4px; cursor: pointer; font-size: 0.75rem; font-weight: 700; white-space: nowrap; }
-        .cat-btn.active { background: var(--sf-blue); color: #fff; }
+        /* KANAL LİSTESİ SÜTUNU */
+        .channel-sidebar { flex: 1; display: flex; flex-direction: column; background: transparent; }
+        .search-box { padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .search-box input {
+            width: 100%; padding: 10px; background: rgba(0,0,0,0.5); 
+            border: 1px solid #444; color: #fff; border-radius: 4px; outline: none;
+        }
 
         .channel-list { flex: 1; overflow-y: auto; }
-        .ch-item { padding: 15px 20px; border-bottom: 1px solid rgba(255,255,255,0.05); cursor: pointer; display: flex; align-items: center; gap: 12px; color: #bbb; font-size: 0.9rem; }
-        .ch-item:hover { background: rgba(255,255,255,0.08); color: #fff; }
-        .ch-item.active { background: rgba(0, 86, 179, 0.2); color: #fff; border-right: 4px solid var(--sf-blue); font-weight: 700; }
+        .ch-item {
+            padding: 12px 15px; border-bottom: 1px solid rgba(255,255,255,0.03);
+            cursor: pointer; color: #bbb; font-size: 0.85rem; transition: 0.2s;
+            display: flex; align-items: center;
+        }
+        .ch-item:hover { background: rgba(255,255,255,0.05); color: #fff; }
+        .ch-item.active { background: var(--sf-blue); color: #fff; }
 
         /* ALT DUYURU */
-        .info-bar { position: absolute; bottom: 0; left: 0; width: calc(100% - 330px); height: 35px; background: rgba(0,0,0,0.5); backdrop-filter: blur(10px); z-index: 5; color: #fff; display: flex; align-items: center; }
+        .bottom-marquee {
+            position: absolute; bottom: 0; left: 0; width: calc(100% - 450px);
+            height: 30px; background: rgba(0,0,0,0.6); backdrop-filter: blur(10px);
+            display: flex; align-items: center; color: #fff; font-size: 0.8rem;
+        }
 
-        #loader { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 20; display: none; justify-content: center; align-items: center; }
-        .spinner { width: 40px; height: 40px; border: 3px solid #222; border-top-color: var(--sf-blue); border-radius: 50%; animation: spin 0.8s infinite linear; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        @media (max-width: 900px) {
+        /* MOBİL AYARI */
+        @media (max-width: 1000px) {
+            .sidebar-container { width: 100%; height: 50%; }
             .wrapper { flex-direction: column; }
-            .sidebar { width: 100%; height: 40%; border-left: none; border-top: 1px solid #333; }
-            .info-bar { width: 100%; }
+            .bottom-marquee { width: 100%; }
         }
     </style>
 </head>
@@ -109,140 +108,113 @@
 
     <div id="login-page">
         <div class="login-card">
-            <h2>Z&M STREAM</h2>
+            <h2 style="color:white; margin-bottom:20px;">Z&M STREAM</h2>
             <input type="text" id="userInput" placeholder="Kullanıcı Adı">
             <input type="password" id="passInput" placeholder="Şifre">
-            <button onclick="handleLogin()">Giriş Yap</button>
-        </div>
-    </div>
-
-    <div id="intro-page">
-        <div class="intro-content">
-            <h1>Z&M STREAM</h1>
-            <div class="progress-container"><div class="progress-bar" id="pBar"></div></div>
-            <p style="margin-top:15px; font-size:0.8rem; color:#555; letter-spacing:2px;" id="introStatus">Sistem Hazırlanıyor...</p>
+            <button onclick="handleLogin()">GİRİŞ</button>
         </div>
     </div>
 
     <div id="app">
         <div class="wrapper">
-            <main class="main-content">
-                <div class="channel-title-bar" id="ch-title">YAYIN SEÇİN</div>
-                <div id="loader"><div class="spinner"></div></div>
-                <div class="player-container" id="player-target"></div>
-                <div class="info-bar">
-                    <marquee scrollamount="5">⚠️ DUYURU: Galatasaray maçlarında sistem yoğun olabilir — İyi seyirler dileriz! ⚠️</marquee>
+            <section class="player-section">
+                <div class="top-info-bar" id="ch-title">YAYIN SEÇİNİZ</div>
+                <div id="player-target" style="height:100%;"></div>
+                <div class="bottom-marquee">
+                    <marquee>⚠️ Donma olursa sayfayı yenileyiniz. İyi seyirler dileriz.</marquee>
                 </div>
-            </main>
+            </section>
 
-            <aside class="sidebar">
-                <div class="sidebar-header">
-                    <h2 style="text-align: center; font-size: 1.1rem; letter-spacing: 2px;">GALATASARAY PORTAL</h2>
-                    <input type="text" id="channelSearch" placeholder="Kanal ara..." onkeyup="searchChannels()">
+            <div class="sidebar-container">
+                <div class="channel-sidebar">
+                    <div class="search-box">
+                        <input type="text" id="search" placeholder="Kanal ara..." onkeyup="search()">
+                    </div>
+                    <div class="channel-list" id="ch-list"></div>
                 </div>
-                <div class="cat-selector" id="cats"></div>
-                <div class="channel-list" id="chList"></div>
-            </aside>
+
+                <div class="category-sidebar" id="cat-list"></div>
+            </div>
         </div>
     </div>
 
     <script>
-        // Logoları tamamen uçurdum kanka, sadece isim ve link kaldı
         const CHANNELS = [
             { name: "TRT 1", cat: "ULUSAL", url: "https://tv-trt1-dai.medya.trt.com.tr/master.m3u8" },
-            { name: "Star TV", cat: "ULUSAL", url: "https://dogus-live.daioncdn.net/startv/startv.m3u8" },
+            { name: "STAR TV", cat: "ULUSAL", url: "https://dogus-live.daioncdn.net/startv/startv.m3u8" },
             { name: "ATV", cat: "ULUSAL", url: "https://trkvz.daioncdn.net/atv/atv_1080p.m3u8" },
-            { name: "Kanal D", cat: "ULUSAL", url: "https://demiroren-live.daioncdn.net/kanald/kanald.m3u8" },
-            { name: "Show TV", cat: "ULUSAL", url: "https://ciner-live.daioncdn.net/showtv/showtv.m3u8" },
-            { name: "TV 8", cat: "ULUSAL", url: "https://tv8-live.daioncdn.net/tv8/tv8.m3u8" },
-            { name: "TRT Spor", cat: "SPOR", url: "https://tv-trtspor1.medya.trt.com.tr/master_720.m3u8" },
+            { name: "Z&M SPORTS 1", cat: "SPOR", url: "https://dlhd.link/stream/stream-62.php" },
+            { name: "Z&M SPORTS 3", cat: "SPOR", url: "https://dlhd.link/stream/stream-64.php" },
+            { name: "TRT SPOR", cat: "SPOR", url: "https://tv-trtspor1.medya.trt.com.tr/master_720.m3u8" },
             { name: "DMAX", cat: "BELGESEL", url: "https://dogus-live.daioncdn.net/dmax/dmax.m3u8" },
             { name: "NTV", cat: "HABER", url: "https://dogus-live.daioncdn.net/ntv/ntv.m3u8" },
-            { name: "TRT Çocuk", cat: "ÇOCUK", url: "http://tv-trtcocuk.live.trt.com.tr/master_720.m3u8" },
-            { name: "Z&M SPORTS 1", cat: "SPOR", url: "https://dlhd.link/stream/stream-62.php" },
-            { name: "Ziggo Sports", cat: "SPOR", url: "https://dlhd.link/stream/stream-393.php" }
+            { name: "CNN TÜRK", cat: "HABER", url: "https://live.duhnet.tv/S2/HLS_LIVE/cnnturknp/playlist.m3u8" },
+            { name: "TRT ÇOCUK", cat: "ÇOCUK", url: "http://tv-trtcocuk.live.trt.com.tr/master_720.m3u8" }
         ];
 
-        let hlsPlayer;
-        let currentCategory = "";
+        let hls = null;
+        let currentCat = "ULUSAL";
 
         function handleLogin() {
-            if (document.getElementById('passInput').value === "1905") {
+            if(document.getElementById('passInput').value === "1905") {
                 document.getElementById('login-page').style.display = 'none';
-                startIntro();
-            } else { alert("Hatalı Giriş!"); }
+                document.getElementById('app').style.display = 'block';
+                renderCats();
+                renderChannels("ULUSAL");
+            } else { alert("Şifre Hatalı!"); }
         }
 
-        function startIntro() {
-            const intro = document.getElementById('intro-page');
-            const bar = document.getElementById('pBar');
-            intro.style.display = 'flex';
-            let width = 0;
-            const interval = setInterval(() => {
-                if (width >= 100) {
-                    clearInterval(interval);
-                    intro.style.display = 'none';
-                    document.getElementById('app').style.display = 'block';
-                    init();
-                } else {
-                    width++;
-                    bar.style.width = width + '%';
-                }
-            }, 25);
+        function renderCats() {
+            const cats = [...new Set(CHANNELS.map(c => c.cat))];
+            const container = document.getElementById('cat-list');
+            container.innerHTML = cats.map(c => `
+                <div class="cat-item ${c === currentCat ? 'active' : ''}" onclick="selectCat('${c}')">${c}</div>
+            `).join('');
         }
 
-        function init() {
-            const catNav = document.getElementById('cats');
-            const uniqueCats = [...new Set(CHANNELS.map(c => c.cat))];
-            currentCategory = uniqueCats[0];
-            catNav.innerHTML = uniqueCats.map((c, i) => `<button class="cat-btn ${i===0?'active':''}" onclick="filter('${c}', this)">${c}</button>`).join('');
-            renderList(CHANNELS.filter(c => c.cat === currentCategory));
+        function selectCat(cat) {
+            currentCat = cat;
+            renderCats();
+            renderChannels(cat);
         }
 
-        function filter(cat, el) {
-            document.getElementById('channelSearch').value = "";
-            currentCategory = cat;
-            document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
-            el.classList.add('active');
-            renderList(CHANNELS.filter(c => c.cat === cat));
+        function renderChannels(cat) {
+            const list = CHANNELS.filter(c => c.cat === cat);
+            const container = document.getElementById('ch-list');
+            container.innerHTML = list.map(ch => `
+                <div class="ch-item" onclick="play('${ch.name}', this)">▶ ${ch.name}</div>
+            `).join('');
         }
 
-        function searchChannels() {
-            const term = document.getElementById('channelSearch').value.toLowerCase();
-            renderList(term.length > 0 ? CHANNELS.filter(c => c.name.toLowerCase().includes(term)) : CHANNELS.filter(c => c.cat === currentCategory));
-        }
-
-        function renderList(listData) {
-            const list = document.getElementById('chList');
-            list.innerHTML = listData.map(ch => `<div class="ch-item" onclick="play('${ch.name}', this)">▶ ${ch.name}</div>`).join('');
+        function search() {
+            const val = document.getElementById('search').value.toLowerCase();
+            const list = CHANNELS.filter(c => c.name.toLowerCase().includes(val));
+            const container = document.getElementById('ch-list');
+            container.innerHTML = list.map(ch => `
+                <div class="ch-item" onclick="play('${ch.name}', this)">▶ ${ch.name}</div>
+            `).join('');
         }
 
         function play(name, el) {
             const ch = CHANNELS.find(c => c.name === name);
             const target = document.getElementById('player-target');
-            const loader = document.getElementById('loader');
-            
             document.querySelectorAll('.ch-item').forEach(i => i.classList.remove('active'));
             el.classList.add('active');
-            document.getElementById('ch-title').innerText = "YAYINDA: " + name;
+            document.getElementById('ch-title').innerText = "YAYIN: " + name;
 
-            loader.style.display = 'flex';
             target.innerHTML = "";
-
-            if (ch.url.includes('.m3u8')) {
+            if(ch.url.includes('.m3u8')) {
                 const video = document.createElement('video');
                 video.controls = true; video.autoplay = true;
                 target.appendChild(video);
-                if (Hls.isSupported()) {
-                    if (hlsPlayer) hlsPlayer.destroy();
-                    hlsPlayer = new Hls();
-                    hlsPlayer.loadSource(ch.url);
-                    hlsPlayer.attachMedia(video);
-                    hlsPlayer.on(Hls.Events.MANIFEST_PARSED, () => { loader.style.display = 'none'; });
+                if(Hls.isSupported()) {
+                    if(hls) hls.destroy();
+                    hls = new Hls();
+                    hls.loadSource(ch.url);
+                    hls.attachMedia(video);
                 }
             } else {
                 target.innerHTML = `<iframe src="${ch.url}" allow="autoplay; fullscreen"></iframe>`;
-                setTimeout(() => { loader.style.display = 'none'; }, 1500);
             }
         }
     </script>
