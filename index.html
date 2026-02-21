@@ -10,179 +10,125 @@
   <style>
     :root { --accent-red: #A90432; --accent-gold: #FDB912; --bg-dark: #0a0a0a; }
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: var(--bg-dark); color: white; font-family: 'Montserrat', sans-serif; min-height: 100vh; overflow-x: hidden; }
-
+    body { background: var(--bg-dark); color: white; font-family: 'Montserrat', sans-serif; min-height: 100vh; }
+    
     .gradient-text {
       background: linear-gradient(90deg, var(--accent-gold), var(--accent-red), var(--accent-gold));
-      background-size: 200% auto;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      animation: shine 3s linear infinite;
-      font-weight: 900;
+      background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      animation: shine 3s linear infinite; font-weight: 900;
     }
     @keyframes shine { to { background-position: 200% center; } }
 
-    /* --- LOGIN & INTRO --- */
-    #login-page { height: 100vh; display: flex; justify-content: center; align-items: center; background: radial-gradient(circle at center, #222 0%, #000 100%); }
-    .login-card { background: rgba(255,255,255,0.05); padding: 3rem; border-radius: 25px; border-top: 4px solid var(--accent-red); text-align: center; width: 360px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
-    .login-card input { width: 100%; padding: 15px; margin-bottom: 15px; border-radius: 10px; border: 1px solid #333; background: #111; color: #fff; outline: none; text-align: center; }
-    .btn-login { width: 100%; padding: 15px; background: var(--accent-red); color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; }
-
-    #intro-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 10000; }
-    .spinner { width: 50px; height: 50px; border: 4px solid rgba(255,255,255,0.1); border-top: 4px solid var(--accent-gold); border-radius: 50%; animation: spin 1s linear infinite; margin-top: 20px; }
-    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-    #main-app { display: none; }
-    header { padding: 1.5rem 5%; background: #000; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; }
-
-    /* --- PLAYER --- */
+    /* --- PLAYER AREA --- */
     .video-section { 
       width: 90%; max-width: 1000px; margin: 20px auto; background: #000; border-radius: 15px; 
       overflow: hidden; position: relative; aspect-ratio: 16/9; border: 2px solid #2a2a2a;
     }
     #video-display { width: 100%; height: 100%; background: #000; }
-    iframe, video { width: 100%; height: 100%; border: none; }
+    video, iframe { width: 100%; height: 100%; border: none; }
 
     #logo-censor {
       position: absolute; top: 0; right: 0; left: 82%; bottom: 82%;
-      background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(25px);
+      background: rgba(0, 0, 0, 0.4); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
       z-index: 10; display: none; border-bottom-left-radius: 15px;
     }
 
-    /* --- LİSTELER --- */
-    .category-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; padding: 40px 10%; }
-    .cat-card { background: #111; padding: 50px; border-radius: 20px; border: 1px solid var(--accent-red); text-align: center; cursor: pointer; font-size: 1.5rem; font-weight: 900; }
+    /* --- GRID --- */
     .grid-channels { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; padding: 20px 5%; }
-    .channel-card { background: #1a1a1a; padding: 20px; border-radius: 10px; text-align: center; cursor: pointer; border: 1px solid transparent; }
+    .channel-card { background: #1a1a1a; padding: 20px; border-radius: 10px; text-align: center; cursor: pointer; border: 1px solid transparent; transition: 0.3s; }
+    .channel-card:hover { border-color: var(--accent-gold); }
     .channel-card.active { background: var(--accent-red); font-weight: bold; border-color: var(--accent-gold); }
-    .back-btn { background: none; color: var(--accent-gold); border: 2px solid var(--accent-gold); padding: 10px 20px; border-radius: 8px; margin: 20px 5%; cursor: pointer; font-weight: bold; }
+    
+    .back-btn { background: none; color: var(--accent-gold); border: 1px solid var(--accent-gold); padding: 10px 20px; border-radius: 8px; margin: 20px 5%; cursor: pointer; }
+    #main-app { display: none; }
   </style>
 </head>
 <body>
 
-  <div id="login-page">
-    <div class="login-card">
-      <h1 class="gradient-text" style="font-size: 2.5rem; margin-bottom: 30px;">Z&M STREAM</h1>
-      <input type="text" id="username" placeholder="Kullanıcı Adı">
-      <input type="password" id="password" placeholder="Şifre">
-      <button class="btn-login" onclick="attemptLogin()">GİRİŞ YAP</button>
-    </div>
-  </div>
+<div id="main-app" style="display:block;"> <header style="padding: 1.5rem 5%; background: #000; text-align: center;">
+        <span class="gradient-text" style="font-size:1.6rem;">Z&M Galatasaray EDITION</span>
+    </header>
 
-  <div id="intro-overlay">
-      <h1 class="gradient-text" style="font-size:3.5rem;">Z&M STREAM</h1>
-      <div class="spinner"></div>
-  </div>
-
-  <div id="main-app">
-    <header><span class="gradient-text" style="font-size:1.6rem;">Z&M STREAM</span></header>
-
-    <div id="category-screen"><div class="category-grid" id="categoryList"></div></div>
-
-    <div id="channel-view" style="display:none;">
-        <button class="back-btn" onclick="backToCategories()">← GERİ</button>
+    <div id="channel-view">
         <div class="video-section">
             <div id="logo-censor"></div>
             <div id="video-display"></div>
         </div>
-        <div id="statusLabel" style="text-align:center; color:var(--accent-gold); margin:10px; font-weight:bold;"></div>
+        <div id="statusLabel" style="text-align:center; color:var(--accent-gold); margin:10px; font-weight:bold;">KANAL SEÇİNİZ</div>
         <div class="grid-channels" id="channelList"></div>
     </div>
-  </div>
+</div>
 
-  <script>
-    const USERS = [{ u: "zm", p: "1905" }, { u: "gs", p: "1905" }];
-
+<script>
+    // Sizin taze TRT Spor linkiniz
     const CHANNELS = [
       { 
-        name: "TRT 1 1440p (KESİNTİSİZ)", 
-        url: "https://trt.daioncdn.net/trt-1/master_1440p.m3u8?&sid=86osswohlscm&app=ed3904e8-737b-4a5e-856a-1b0d7a0a94e2&ce=2", 
-        category: "ULUSAL",
+        name: "TRT SPOR 1440p", 
+        url: "https://trt.daioncdn.net/trtspor/master_1440p.m3u8?&sid=86otygln098p&app=71ff325a-50b6-48f4-8a67-3daa89386c24&ce=2", 
+        category: "SPOR",
         isHLS: true 
       },
-      { name: "Z&M SPORTS 1", url: "https://dlhd.link/stream/stream-62.php", category: "SPOR", isHLS: false },
-      { name: "Z&M SPORTS 3", url: "https://dlhd.link/stream/stream-64.php", category: "SPOR", isHLS: false },
-      // ... diğer kanalları buraya ekleyebilirsin
+      { name: "Z&M SPORTS 1", url: "https://dlhd.link/stream/stream-62.php", category: "SPOR", isHLS: false }
     ];
 
     let currentHls = null;
 
-    function attemptLogin() {
-      const u = document.getElementById('username').value;
-      const p = document.getElementById('password').value;
-      if (USERS.find(user => user.u === u && user.p === p)) {
-        document.getElementById('login-page').style.display = 'none';
-        document.getElementById('intro-overlay').style.display = 'flex';
-        setTimeout(() => {
-          document.getElementById('intro-overlay').style.display = 'none';
-          document.getElementById('main-app').style.display = 'block';
-          initCategories();
-        }, 2000);
-      }
-    }
-
-    function initCategories() {
-      const catList = document.getElementById('categoryList');
-      catList.innerHTML = '';
-      [...new Set(CHANNELS.map(c => c.category))].forEach(cat => {
+    // Kanalları listele
+    const list = document.getElementById('channelList');
+    CHANNELS.forEach(ch => {
         const card = document.createElement('div');
-        card.className = 'cat-card'; card.innerText = cat;
-        card.onclick = () => showChannels(cat); catList.appendChild(card);
-      });
-    }
-
-    function showChannels(category) {
-      document.getElementById('category-screen').style.display = 'none';
-      document.getElementById('channel-view').style.display = 'block';
-      const grid = document.getElementById('channelList');
-      grid.innerHTML = '';
-      CHANNELS.filter(c => c.category === category).forEach(ch => {
-        const card = document.createElement('div');
-        card.className = 'channel-card'; card.innerText = ch.name;
-        card.onclick = () => playStream(ch, card); grid.appendChild(card);
-      });
-    }
+        card.className = 'channel-card';
+        card.innerText = ch.name;
+        card.onclick = () => playStream(ch, card);
+        list.appendChild(card);
+    });
 
     function playStream(ch, el) {
-      document.querySelectorAll('.channel-card').forEach(c => c.classList.remove('active'));
-      el.classList.add('active');
-      document.getElementById('statusLabel').innerText = ch.name;
-      const display = document.getElementById('video-display');
-      
-      // Önceki yayını temizle
-      if (currentHls) { currentHls.destroy(); currentHls = null; }
-      display.innerHTML = '';
+        document.querySelectorAll('.channel-card').forEach(c => c.classList.remove('active'));
+        el.classList.add('active');
+        document.getElementById('statusLabel').innerText = "YÜKLENİYOR: " + ch.name;
+        const display = document.getElementById('video-display');
+        
+        if (currentHls) { currentHls.destroy(); currentHls = null; }
+        display.innerHTML = '';
 
-      if (ch.isHLS) {
-        // --- CORS AŞMA VE HLS OYNATMA MANTIĞI ---
-        const video = document.createElement('video');
-        video.controls = true; video.autoplay = true;
-        display.appendChild(video);
+        if (ch.isHLS) {
+            const video = document.createElement('video');
+            video.controls = true;
+            video.autoplay = true;
+            display.appendChild(video);
 
-        // AllOrigins Proxy kullanarak CORS'u aşıyoruz
-        const proxyUrl = "https://api.allorigins.win/raw?url=" + encodeURIComponent(ch.url);
+            // ÖNEMLİ: TRT linkini CORS engeline takılmadan tünelleyen en sağlam proxy
+            const proxyUrl = "https://corsproxy.io/?" + encodeURIComponent(ch.url);
 
-        if (Hls.isSupported()) {
-          currentHls = new Hls();
-          currentHls.loadSource(proxyUrl);
-          currentHls.attachMedia(video);
-          currentHls.on(Hls.Events.MANIFEST_PARSED, () => video.play());
-        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-          video.src = proxyUrl;
+            if (Hls.isSupported()) {
+                currentHls = new Hls({
+                    xhrSetup: function(xhr) {
+                        xhr.withCredentials = false;
+                    }
+                });
+                currentHls.loadSource(proxyUrl);
+                currentHls.attachMedia(video);
+                currentHls.on(Hls.Events.MANIFEST_PARSED, () => {
+                    video.play();
+                    document.getElementById('statusLabel').innerText = "CANLI: " + ch.name;
+                });
+                
+                // Hata yakalama (Eğer hala oynamazsa sebebi burada yazar)
+                currentHls.on(Hls.Events.ERROR, function (event, data) {
+                    if (data.fatal) {
+                        document.getElementById('statusLabel').innerText = "HATA: LİNKİN SÜRESİ DOLMUŞ OLABİLİR";
+                        console.error("HLS Hatası:", data);
+                    }
+                });
+            }
+        } else {
+            // Iframe linkleri için
+            display.innerHTML = `<iframe src="${ch.url}" allow="autoplay; fullscreen"></iframe>`;
+            document.getElementById('statusLabel').innerText = "CANLI: " + ch.name;
         }
-      } else {
-        // Standart Iframe yayını
-        display.innerHTML = `<iframe src="${ch.url}" allow="autoplay; fullscreen"></iframe>`;
-      }
-      document.getElementById('logo-censor').style.display = 'block';
+        document.getElementById('logo-censor').style.display = 'block';
     }
-
-    function backToCategories() {
-      if (currentHls) { currentHls.destroy(); currentHls = null; }
-      document.getElementById('channel-view').style.display = 'none';
-      document.getElementById('category-screen').style.display = 'block';
-      document.getElementById('video-display').innerHTML = '';
-    }
-  </script>
+</script>
 </body>
 </html>
