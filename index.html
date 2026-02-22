@@ -3,177 +3,119 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Z&M Stream</title>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
-  
+  <title>Z&M Stream | Bakımdayız</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;900&display=swap" rel="stylesheet">
   <style>
-    :root { --accent-red: #A90432; --accent-gold: #FDB912; --bg-dark: #0a0a0a; }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: var(--bg-dark); color: white; font-family: 'Montserrat', sans-serif; min-height: 100vh; overflow-x: hidden; }
-
-    /* --- LOGIN & INTRO --- */
-    #login-page { height: 100vh; display: flex; justify-content: center; align-items: center; background: radial-gradient(circle at center, #222 0%, #000 100%); }
-    .login-card { background: rgba(255,255,255,0.05); padding: 3rem; border-radius: 25px; border-top: 4px solid var(--accent-red); text-align: center; width: 360px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
-    .login-card input { width: 100%; padding: 15px; margin-bottom: 15px; border-radius: 10px; border: 1px solid #333; background: #111; color: #fff; outline: none; }
-    .btn-login { width: 100%; padding: 15px; background: var(--accent-red); color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; }
-
-    #intro-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 10000; }
-    .spinner { width: 50px; height: 50px; border: 4px solid rgba(255,255,255,0.1); border-top: 4px solid var(--accent-gold); border-radius: 50%; animation: spin 1s linear infinite; margin-top: 20px; }
-    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-    #main-app { display: none; }
-    .top-announcement { background: linear-gradient(90deg, #000, var(--accent-red), #000); border-bottom: 1px solid var(--accent-gold); padding: 12px 0; overflow: hidden; white-space: nowrap; }
-    .announcement-content { display: inline-block; padding-left: 100%; animation: marquee 25s linear infinite; font-weight: bold; font-size: 0.85rem; }
-    @keyframes marquee { 0% { transform: translate(0, 0); } 100% { transform: translate(-100%, 0); } }
-
-    header { padding: 1.5rem 5%; background: #000; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; }
-
-    /* --- PLAYER & SANSÜR --- */
-    .video-section { 
-      width: 85%; max-width: 1000px; margin: 15px auto; background: #000; border-radius: 12px; 
-      overflow: hidden; position: relative; aspect-ratio: 16/9; border: 2px solid #2a2a2a;
+    :root { --gs-red: #A90432; --gs-gold: #FDB912; }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      background: #0a0a0a;
+      color: white;
+      font-family: 'Montserrat', sans-serif;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
     }
-    #video-display, iframe { width: 100% !important; height: 100% !important; border: none; display: block; }
 
-    #logo-censor {
+    .container {
+      text-align: center;
+      padding: 20px;
+      z-index: 2;
+    }
+
+    /* Arka Plan Efekti */
+    .bg-glow {
       position: absolute;
-      top: 0; right: 0; 
-      left: 82.50%; 
-      bottom: 82.91%;
-      background: #000; z-index: 999999; display: none; pointer-events: none; box-shadow: 0 0 15px #000;
+      width: 300px;
+      height: 300px;
+      background: var(--gs-red);
+      filter: blur(150px);
+      border-radius: 50%;
+      opacity: 0.3;
+      animation: pulse 4s infinite alternate;
     }
 
-    /* --- LISTELER --- */
-    .category-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; padding: 30px 5%; }
-    .cat-card { background: #111; padding: 50px 20px; border-radius: 20px; border: 1px solid var(--accent-red); text-align: center; cursor: pointer; transition: 0.3s; font-size: 1.4rem; font-weight: bold; }
-    .cat-card:hover { background: var(--accent-red); transform: scale(1.03); }
+    /* --- GRADYAN YAZI BURADA --- */
+    h1 {
+      font-size: 3.5rem;
+      font-weight: 900;
+      letter-spacing: -2px;
+      margin-bottom: 10px;
+      /* Gradyan Ayarları */
+      background: linear-gradient(90deg, var(--gs-gold), var(--gs-red), var(--gs-gold));
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: shine 3s linear infinite;
+    }
 
-    .grid-channels { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; padding: 20px 5%; }
-    .channel-card { background: #1a1a1a; padding: 20px; border-radius: 12px; text-align: center; cursor: pointer; border: 1px solid transparent; transition: 0.2s; font-size: 0.85rem; }
-    .channel-card:hover { border-color: var(--accent-gold); }
-    .channel-card.active { background: var(--accent-red); font-weight: bold; }
+    .status-box {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 40px;
+      border-radius: 30px;
+      backdrop-filter: blur(15px);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    }
 
-    .back-btn { background: none; color: var(--accent-gold); border: 1px solid var(--accent-gold); padding: 10px 20px; border-radius: 8px; margin: 20px 5%; cursor: pointer; font-weight: bold; }
+    .loader {
+      width: 45px;
+      height: 45px;
+      border: 4px solid rgba(255,255,255,0.1);
+      border-top: 4px solid var(--gs-gold);
+      border-bottom: 4px solid var(--gs-red);
+      border-radius: 50%;
+      margin: 25px auto;
+      animation: spin 1s linear infinite;
+    }
+
+    p {
+      color: #aaa;
+      font-size: 1.1rem;
+      line-height: 1.6;
+    }
+
+    .highlight {
+      color: var(--gs-gold);
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* Animasyonlar */
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    @keyframes pulse { from { transform: scale(1); opacity: 0.2; } to { transform: scale(1.5); opacity: 0.4; } }
+    @keyframes shine { to { background-position: 200% center; } }
+
+    @media (max-width: 600px) {
+      h1 { font-size: 2.5rem; }
+      .status-box { padding: 25px; }
+    }
   </style>
 </head>
 <body>
 
-  <div id="login-page">
-    <div class="login-card">
-      <h1 style="color:var(--accent-gold); margin-bottom:30px; font-weight:900;">Z&M <span style="color:var(--accent-red)">STREAM</span></h1>
-      <input type="text" id="username" placeholder="Kullanıcı Adı">
-      <input type="password" id="password" placeholder="Şifre">
-      <button class="btn-login" onclick="attemptLogin()">GİRİŞ YAP</button>
+  <div class="bg-glow"></div>
+
+  <div class="container">
+    <div class="status-box">
+      <h1>Z&M STREAM</h1>
+      
+      <div class="loader"></div>
+      
+      <h2 style="margin-bottom: 15px; letter-spacing: 1px;">KISA BİR ARA...</h2>
+      
+      <p>Sizlere daha kesintisiz ve kaliteli bir deneyim sunmak için <br> 
+        <span class="highlight">Sistemi Güncelliyoruz.</span></p>
+        
+      <p style="margin-top: 25px; font-size: 0.9rem; color: var(--gs-gold); font-weight: bold;">
+        Çok yakında tekrar yayındayız!
+      </p>
     </div>
   </div>
 
-  <div id="intro-overlay">
-      <h1 style="color:var(--accent-gold); font-size:3rem; font-weight:900;">Z&M STREAM</h1>
-      <p style="color:#666; letter-spacing:4px; margin-top:10px;">İYİ SEYİRLER DİLER</p>
-      <div class="spinner"></div>
-  </div>
-
-  <div id="main-app">
-    <div class="top-announcement">
-        <div class="announcement-content">
-            Z&M STREAM PORTALINA HOŞ GELDİNİZ! KEYİFLİ SEYİRLER... SANSÜR SİSTEMİ AKTİFTİR.
-        </div>
-    </div>
-
-    <header>
-      <span style="font-weight:900; font-size:1.4rem;">Z&M <span style="color:var(--accent-gold)">STREAM</span></span>
-      <button onclick="location.reload()" style="background:none; color:#fff; border:1px solid #444; padding:8px 15px; border-radius:8px; cursor:pointer;">ÇIKIŞ</button>
-    </header>
-
-    <div id="category-screen">
-        <div class="category-grid" id="categoryList"></div>
-    </div>
-
-    <div id="channel-view" style="display:none;">
-        <button class="back-btn" onclick="backToCategories()">← KATEGORİLER</button>
-        <div class="video-section">
-            <div id="logo-censor"></div>
-            <div id="video-display"></div>
-        </div>
-        <div id="statusLabel" style="text-align:center; color:var(--accent-gold); margin:15px; font-weight:900;">KANAL SEÇİNİZ</div>
-        <div class="grid-channels" id="channelList"></div>
-    </div>
-  </div>
-
-  <script>
-    const USERS = [{ u: "zm", p: "1905" }, { u: "gs", p: "1905" }];
-
-    // YENİ KANAL LİSTESİ BURADA
-    const CHANNELS = [
-      { name: "Z&M SPORTS 1", url: "https://dlhd.link/stream/stream-62.php", category: "SPOR" },
-      { name: "Z&M SPORTS 3", url: "https://dlhd.link/stream/stream-64.php", category: "SPOR" },
-      { name: "Z&M SPORTS 4", url: "https://dlhd.link/stream/stream-67.php", category: "SPOR" },
-      { name: "TNT Sports 1", url: "https://dlhd.link/stream/stream-31.php", category: "SPOR" },
-      { name: "Dazn FHD", url: "https://dlhd.link/stream/stream-426.php", category: "SPOR" },
-      { name: "M.Laliga", url: "https://dlhd.link/stream/stream-5.php", category: "SPOR" },
-      { name: "Ziggo Sports FHD", url: "https://dlhd.link/stream/stream-393.php", category: "SPOR" },
-      { name: "Canal+ Sport", url: "https://dlhd.link/stream/stream-122.php", category: "SPOR" },
-      { name: "Bein Sports Xtra", url: "https://dlhd.link/stream/stream-100.php", category: "SPOR" },
-      { name: "Sport tv 1", url: "https://dlhd.link/stream/stream-49.php", category: "SPOR" },
-      { name: "Sport tv 2", url: "https://dlhd.link/stream/stream-74.php", category: "SPOR" },
-      { name: "Sport tv 3", url: "https://dlhd.link/stream/stream-454.php", category: "SPOR" },
-      { name: "Sport tv 5", url: "https://dlhd.link/stream/stream-290.php", category: "SPOR" },
-      { name: "Sport tv 6", url: "https://dlhd.link/stream/stream-291.php", category: "SPOR" },
-      { name: "TRT 1 FHD", url: "https://dlhd.link/stream/stream-1012.php", category: "ULUSAL" },
-      { name: "RTL", url: "https://dlhd.link/stream/stream-740.php", category: "SPOR" }
-    ];
-
-    function attemptLogin() {
-      const u = document.getElementById('username').value;
-      const p = document.getElementById('password').value;
-      if (USERS.find(user => user.u === u && user.p === p)) {
-        document.getElementById('login-page').style.display = 'none';
-        const intro = document.getElementById('intro-overlay');
-        intro.style.display = 'flex';
-        setTimeout(() => {
-          intro.style.display = 'none';
-          document.getElementById('main-app').style.display = 'block';
-          initCategories();
-        }, 2200);
-      } else { alert("Hata!"); }
-    }
-
-    function initCategories() {
-      const catList = document.getElementById('categoryList');
-      catList.innerHTML = '';
-      [...new Set(CHANNELS.map(c => c.category))].forEach(cat => {
-        const card = document.createElement('div');
-        card.className = 'cat-card'; card.innerHTML = `<span>${cat}</span>`;
-        card.onclick = () => showChannels(cat); catList.appendChild(card);
-      });
-    }
-
-    function showChannels(category) {
-      document.getElementById('category-screen').style.display = 'none';
-      document.getElementById('channel-view').style.display = 'block';
-      const grid = document.getElementById('channelList');
-      grid.innerHTML = '';
-      CHANNELS.filter(c => c.category === category).forEach(ch => {
-        const card = document.createElement('div');
-        card.className = 'channel-card'; card.innerText = ch.name;
-        card.onclick = () => playStream(ch, card); grid.appendChild(card);
-      });
-    }
-
-    function playStream(ch, el) {
-      document.querySelectorAll('.channel-card').forEach(c => c.classList.remove('active'));
-      el.classList.add('active');
-      document.getElementById('statusLabel').innerText = "OYNATILIYOR: " + ch.name;
-      document.getElementById('video-display').innerHTML = `<iframe src="${ch.url}" allow="autoplay; fullscreen"></iframe>`;
-      document.getElementById('logo-censor').style.display = 'block';
-    }
-
-    function backToCategories() {
-      document.getElementById('channel-view').style.display = 'none';
-      document.getElementById('category-screen').style.display = 'block';
-      document.getElementById('video-display').innerHTML = '';
-      document.getElementById('logo-censor').style.display = 'none';
-    }
-  </script>
 </body>
 </html>
