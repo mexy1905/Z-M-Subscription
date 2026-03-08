@@ -1,1 +1,118 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Z&M Stream |</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
+  
+  <style>
+    :root { --accent-red: #A90432; --accent-gold: #FDB912; --bg-dark: #0a0a0a; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg-dark); color: white; font-family: 'Montserrat', sans-serif; min-height: 100vh; overflow: hidden; }
 
+    /* --- LOGIN PAGE --- */
+    #login-page { height: 100vh; display: flex; justify-content: center; align-items: center; background: radial-gradient(circle at center, #222 0%, #000 100%); }
+    .login-card { background: rgba(255,255,255,0.05); padding: 3rem; border-radius: 25px; border-top: 4px solid var(--accent-red); text-align: center; width: 360px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
+    .login-card input { width: 100%; padding: 15px; margin-bottom: 15px; border-radius: 10px; border: 1px solid #333; background: #111; color: #fff; outline: none; }
+    .btn-login { width: 100%; padding: 15px; background: var(--accent-red); color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+    .btn-login:hover { background: #800326; }
+
+    /* --- MAIN APP --- */
+    #main-app { display: none; height: 100vh; flex-direction: column; }
+    header { padding: 1rem 5%; background: #000; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; }
+
+    .video-section { 
+      flex: 1; display: flex; justify-content: center; align-items: center; padding: 20px; background: #000; position: relative;
+    }
+    .video-container {
+      width: 100%; max-width: 1200px; aspect-ratio: 16/9; background: #111; border-radius: 15px; overflow: hidden; border: 2px solid #2a2a2a; position: relative;
+    }
+    iframe { width: 100%; height: 100%; border: none; }
+
+    .fullscreen-btn {
+      position: absolute; bottom: 20px; right: 20px; background: var(--accent-red); color: white;
+      border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; z-index: 100;
+    }
+
+    /* --- LOADING OVERLAY --- */
+    #intro-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 10000; }
+    .spinner { width: 50px; height: 50px; border: 4px solid rgba(255,255,255,0.1); border-top: 4px solid var(--accent-gold); border-radius: 50%; animation: spin 1s linear infinite; margin-top: 20px; }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+  <div id="login-page">
+    <div class="login-card">
+      <h1 style="color:var(--accent-gold); margin-bottom:30px; font-weight:900;">Z&M <span style="color:var(--accent-red)">STREAM</span></h1>
+      <input type="text" id="username" placeholder="Kullanıcı Adı">
+      <input type="password" id="password" placeholder="Şifre">
+      <button class="btn-login" onclick="attemptLogin()">YAYINA BAĞLAN</button>
+    </div>
+  </div>
+
+  <div id="intro-overlay">
+      <h1 style="color:var(--accent-gold); font-size:3rem; font-weight:900;">Z&M STREAM</h1>
+      <p style="color:#666; letter-spacing:4px; margin-top:10px;">CANLI YAYINA AKTARILIYOR</p>
+      <div class="spinner"></div>
+  </div>
+
+  <div id="main-app">
+    <header>
+      <span style="font-weight:900; font-size:1.4rem;">Z&M <span style="color:var(--accent-gold)">STREAM</span> <small style="font-size: 0.6rem; color: #444;">V1.0</small></span>
+      <div style="display:flex; align-items:center; gap:15px;">
+        <span id="live-indicator" style="color:#00ff00; font-size:0.8rem; font-weight:bold;">● CANLI</span>
+        <button onclick="location.reload()" style="background:none; color:#fff; border:1px solid #444; padding:8px 15px; border-radius:8px; cursor:pointer;">ÇIKIŞ</button>
+      </div>
+    </header>
+
+    <div class="video-section">
+        <div class="video-container" id="player-container">
+            <div id="video-display"></div>
+            <button class="fullscreen-btn" onclick="makeFullScreen()">TAM EKRAN YAP</button>
+        </div>
+    </div>
+  </div>
+
+  <script>
+    const USERS = [{ u: "zm", p: "1905" }, { u: "gs", p: "1905" }];
+    
+    // SADECE SENİN ÖZEL YAYININ
+    const NINJA_ID = "AuJ7Zh4"; 
+    const STREAM_URL = `https://vdo.ninja/?view=${NINJA_ID}&autoplay&clean&videobitrate=30000&shutup&label=0&codec=av1&fullscreen=1`;
+
+    function attemptLogin() {
+      const u = document.getElementById('username').value;
+      const p = document.getElementById('password').value;
+      if (USERS.find(user => user.u === u && user.p === p)) {
+        document.getElementById('login-page').style.display = 'none';
+        const intro = document.getElementById('intro-overlay');
+        intro.style.display = 'flex';
+        
+        setTimeout(() => {
+          intro.style.display = 'none';
+          document.getElementById('main-app').style.display = 'flex';
+          startStream();
+        }, 2200);
+      } else { alert("Hatalı Giriş!"); }
+    }
+
+    function startStream() {
+      document.getElementById('video-display').innerHTML = `
+        <iframe 
+          src="${STREAM_URL}" 
+          allow="autoplay; fullscreen; camera; microphone; display-capture" 
+          allowfullscreen="true">
+        </iframe>`;
+    }
+
+    function makeFullScreen() {
+      const player = document.getElementById("player-container");
+      if (player.requestFullscreen) { player.requestFullscreen(); }
+      else if (player.webkitRequestFullscreen) { player.webkitRequestFullscreen(); }
+      else if (player.msRequestFullscreen) { player.msRequestFullscreen(); }
+    }
+  </script>
+</body>
+</html>
