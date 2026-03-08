@@ -28,7 +28,7 @@
 
     header { padding: 1.5rem 5%; background: #000; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; }
 
-    /* --- PLAYER --- */
+    /* --- PLAYER (SANSÜR KODLARI TAMAMEN SİLİNDİ) --- */
     .video-section { 
       width: 85%; max-width: 1000px; margin: 15px auto; background: #000; border-radius: 12px; 
       overflow: hidden; position: relative; aspect-ratio: 16/9; border: 2px solid #2a2a2a;
@@ -140,7 +140,7 @@
       el.classList.add('active');
       document.getElementById('statusLabel').innerText = "OYNATILIYOR: " + ch.name;
       
-      // VDO.Ninja için gerekli izinleri ekledik (camera; microphone)
+      // Iframe'i tertemiz basıyoruz
       document.getElementById('video-display').innerHTML = `<iframe src="${ch.url}" allow="autoplay; fullscreen; camera; microphone"></iframe>`;
     }
 
