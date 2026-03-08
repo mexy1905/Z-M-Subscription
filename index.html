@@ -28,20 +28,12 @@
 
     header { padding: 1.5rem 5%; background: #000; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; }
 
-    /* --- PLAYER & SANSÜR --- */
+    /* --- PLAYER --- */
     .video-section { 
       width: 85%; max-width: 1000px; margin: 15px auto; background: #000; border-radius: 12px; 
       overflow: hidden; position: relative; aspect-ratio: 16/9; border: 2px solid #2a2a2a;
     }
     #video-display, iframe { width: 100% !important; height: 100% !important; border: none; display: block; }
-
-    #logo-censor {
-      position: absolute;
-      top: 0; right: 0; 
-      left: 82.50%; 
-      bottom: 82.91%;
-      background: #000; z-index: 999999; display: none; pointer-events: none; box-shadow: 0 0 15px #000;
-    }
 
     /* --- LISTELER --- */
     .category-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; padding: 30px 5%; }
@@ -76,7 +68,7 @@
   <div id="main-app">
     <div class="top-announcement">
         <div class="announcement-content">
-            Z&M STREAM PORTALINA HOŞ GELDİNİZ! KEYİFLİ SEYİRLER... SANSÜR SİSTEMİ AKTİFTİR.
+            Z&M STREAM PORTALINA HOŞ GELDİNİZ! KEYİFLİ SEYİRLER...
         </div>
     </div>
 
@@ -92,7 +84,6 @@
     <div id="channel-view" style="display:none;">
         <button class="back-btn" onclick="backToCategories()">← KATEGORİLER</button>
         <div class="video-section">
-            <div id="logo-censor"></div>
             <div id="video-display"></div>
         </div>
         <div id="statusLabel" style="text-align:center; color:var(--accent-gold); margin:15px; font-weight:900;">KANAL SEÇİNİZ</div>
@@ -103,7 +94,6 @@
   <script>
     const USERS = [{ u: "zm", p: "1905" }, { u: "gs", p: "1905" }];
 
-    // VDO.NINJA LİNKİN ENTEGRE EDİLDİ
     const CHANNELS = [
       { name: "Z&M ÖZEL YAYIN", url: "https://vdo.ninja/?view=AuJ7Zh4&autoplay&clean&videobitrate=10000&shutup&label=0&codec=av1", category: "Z&M" },
     ];
@@ -152,20 +142,12 @@
       
       // VDO.Ninja için gerekli izinleri ekledik (camera; microphone)
       document.getElementById('video-display').innerHTML = `<iframe src="${ch.url}" allow="autoplay; fullscreen; camera; microphone"></iframe>`;
-      
-      // Kendi yayınınsa sansürü kapat, diğerlerinde aç
-      if (ch.category === "ÖZEL") {
-        document.getElementById('logo-censor').style.display = 'none';
-      } else {
-        document.getElementById('logo-censor').style.display = 'block';
-      }
     }
 
     function backToCategories() {
       document.getElementById('channel-view').style.display = 'none';
       document.getElementById('category-screen').style.display = 'block';
       document.getElementById('video-display').innerHTML = '';
-      document.getElementById('logo-censor').style.display = 'none';
     }
   </script>
 </body>
