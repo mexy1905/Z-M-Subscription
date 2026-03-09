@@ -28,12 +28,21 @@
 
     header { padding: 1.5rem 5%; background: #000; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; }
 
-    /* --- PLAYER (SANSÜR KODLARI TAMAMEN SİLİNDİ) --- */
+    /* --- PLAYER AREA --- */
     .video-section { 
       width: 85%; max-width: 1000px; margin: 15px auto; background: #000; border-radius: 12px; 
       overflow: hidden; position: relative; aspect-ratio: 16/9; border: 2px solid #2a2a2a;
     }
     #video-display, iframe { width: 100% !important; height: 100% !important; border: none; display: block; }
+
+    /* Tam Ekran Butonu Stili */
+    .fs-btn {
+      position: absolute; bottom: 15px; right: 15px; 
+      background: rgba(169, 4, 50, 0.8); color: white; border: none; 
+      padding: 8px 15px; border-radius: 8px; cursor: pointer; 
+      font-weight: bold; z-index: 100; transition: 0.3s; font-size: 0.7rem;
+    }
+    .fs-btn:hover { background: var(--accent-red); transform: scale(1.05); }
 
     /* --- LISTELER --- */
     .category-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; padding: 30px 5%; }
@@ -83,8 +92,9 @@
 
     <div id="channel-view" style="display:none;">
         <button class="back-btn" onclick="backToCategories()">← KATEGORİLER</button>
-        <div class="video-section">
+        <div class="video-section" id="fullscreen-area">
             <div id="video-display"></div>
+            <button class="fs-btn" onclick="openFull()">TAM EKRAN</button>
         </div>
         <div id="statusLabel" style="text-align:center; color:var(--accent-gold); margin:15px; font-weight:900;">KANAL SEÇİNİZ</div>
         <div class="grid-channels" id="channelList"></div>
@@ -140,8 +150,24 @@
       el.classList.add('active');
       document.getElementById('statusLabel').innerText = "OYNATILIYOR: " + ch.name;
       
-      // Iframe'i tertemiz basıyoruz
-      document.getElementById('video-display').innerHTML = `<iframe src="${ch.url}" allow="autoplay; fullscreen; camera; microphone"></iframe>`;
+      // Iframe'e tam ekran yetkisi (allowfullscreen) verildi
+      document.getElementById('video-display').innerHTML = `
+        <iframe src="${ch.url}" 
+          allow="autoplay; fullscreen; camera; microphone; display-capture" 
+          allowfullscreen="true">
+        </iframe>`;
+    }
+
+    // Tam Ekran Fonksiyonu
+    function openFull() {
+      const elem = document.getElementById("fullscreen-area");
+      if (elem.requestFullscreen) {
+        elem.requestFullscreen();
+      } else if (elem.webkitRequestFullscreen) { /* Safari */
+        elem.webkitRequestFullscreen();
+      } else if (elem.msRequestFullscreen) { /* IE11 */
+        elem.msRequestFullscreen();
+      }
     }
 
     function backToCategories() {
@@ -152,4 +178,3 @@
   </script>
 </body>
 </html>
-
