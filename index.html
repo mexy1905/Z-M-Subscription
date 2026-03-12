@@ -3,178 +3,728 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Z&M Stream |</title>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&display=swap" rel="stylesheet">
-  
+  <title>Z&M Stream</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mpegts.js/1.7.3/mpegts.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+
   <style>
-    :root { --accent-red: #A90432; --accent-gold: #FDB912; --bg-dark: #0a0a0a; }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: var(--bg-dark); color: white; font-family: 'Montserrat', sans-serif; min-height: 100vh; overflow-x: hidden; }
-
-    /* --- LOGIN & INTRO --- */
-    #login-page { height: 100vh; display: flex; justify-content: center; align-items: center; background: radial-gradient(circle at center, #222 0%, #000 100%); }
-    .login-card { background: rgba(255,255,255,0.05); padding: 3rem; border-radius: 25px; border-top: 4px solid var(--accent-red); text-align: center; width: 360px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); }
-    .login-card input { width: 100%; padding: 15px; margin-bottom: 15px; border-radius: 10px; border: 1px solid #333; background: #111; color: #fff; outline: none; }
-    .btn-login { width: 100%; padding: 15px; background: var(--accent-red); color: white; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; }
-
-    #intro-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 10000; }
-    .spinner { width: 50px; height: 50px; border: 4px solid rgba(255,255,255,0.1); border-top: 4px solid var(--accent-gold); border-radius: 50%; animation: spin 1s linear infinite; margin-top: 20px; }
-    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-    #main-app { display: none; }
-    .top-announcement { background: linear-gradient(90deg, #000, var(--accent-red), #000); border-bottom: 1px solid var(--accent-gold); padding: 12px 0; overflow: hidden; white-space: nowrap; }
-    .announcement-content { display: inline-block; padding-left: 100%; animation: marquee 25s linear infinite; font-weight: bold; font-size: 0.85rem; }
-    @keyframes marquee { 0% { transform: translate(0, 0); } 100% { transform: translate(-100%, 0); } }
-
-    header { padding: 1.5rem 5%; background: #000; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; }
-
-    /* --- PLAYER AREA --- */
-    .video-section { 
-      width: 85%; max-width: 1000px; margin: 15px auto; background: #000; border-radius: 12px; 
-      overflow: hidden; position: relative; aspect-ratio: 16/9; border: 2px solid #2a2a2a;
+    :root {
+      --red: #A90432;
+      --red-bright: #ff0844;
+      --gold: #FDB912;
+      --gold-bright: #ffe066;
+      --bg: #060608;
+      --surface: rgba(255,255,255,0.03);
+      --border: rgba(255,255,255,0.07);
     }
-    #video-display, iframe { width: 100% !important; height: 100% !important; border: none; display: block; }
 
-    /* Tam Ekran Butonu Stili */
-    .fs-btn {
-      position: absolute; bottom: 15px; right: 15px; 
-      background: rgba(169, 4, 50, 0.8); color: white; border: none; 
-      padding: 8px 15px; border-radius: 8px; cursor: pointer; 
-      font-weight: bold; z-index: 100; transition: 0.3s; font-size: 0.7rem;
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: white;
+      font-family: 'Rajdhani', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
     }
-    .fs-btn:hover { background: var(--accent-red); transform: scale(1.05); }
 
-    /* --- LISTELER --- */
-    .category-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; padding: 30px 5%; }
-    .cat-card { background: #111; padding: 50px 20px; border-radius: 20px; border: 1px solid var(--accent-red); text-align: center; cursor: pointer; transition: 0.3s; font-size: 1.4rem; font-weight: bold; }
-    .cat-card:hover { background: var(--accent-red); transform: scale(1.03); }
+    /* ── ANIMATED BACKGROUND ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 10% 10%, rgba(169,4,50,0.18) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 90% 90%, rgba(253,185,18,0.12) 0%, transparent 60%),
+        radial-gradient(ellipse 40% 60% at 50% 50%, rgba(169,4,50,0.06) 0%, transparent 70%);
+      animation: bgPulse 8s ease-in-out infinite alternate;
+      pointer-events: none;
+      z-index: 0;
+    }
 
-    .grid-channels { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; padding: 20px 5%; }
-    .channel-card { background: #1a1a1a; padding: 20px; border-radius: 12px; text-align: center; cursor: pointer; border: 1px solid transparent; transition: 0.2s; font-size: 0.85rem; }
-    .channel-card:hover { border-color: var(--accent-gold); }
-    .channel-card.active { background: var(--accent-red); font-weight: bold; }
+    @keyframes bgPulse {
+      0%   { opacity: 0.6; transform: scale(1); }
+      100% { opacity: 1;   transform: scale(1.05); }
+    }
 
-    .back-btn { background: none; color: var(--accent-gold); border: 1px solid var(--accent-gold); padding: 10px 20px; border-radius: 8px; margin: 20px 5%; cursor: pointer; font-weight: bold; }
+    /* Grid overlay */
+    body::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(169,4,50,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(169,4,50,0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ══════════════════════════════
+       LOGIN PAGE
+    ══════════════════════════════ */
+    #login-page {
+      position: relative;
+      z-index: 10;
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .login-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2rem;
+      animation: loginFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes loginFadeIn {
+      from { opacity: 0; transform: translateY(40px) scale(0.95); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .login-brand {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 5rem;
+      letter-spacing: 6px;
+      line-height: 1;
+      background: linear-gradient(135deg, var(--gold) 0%, #fff 45%, var(--red) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 0 30px rgba(169,4,50,0.5));
+      animation: brandGlow 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes brandGlow {
+      from { filter: drop-shadow(0 0 20px rgba(169,4,50,0.4)); }
+      to   { filter: drop-shadow(0 0 50px rgba(253,185,18,0.6)); }
+    }
+
+    .login-tagline {
+      font-size: 0.85rem;
+      letter-spacing: 5px;
+      color: rgba(255,255,255,0.3);
+      text-transform: uppercase;
+      margin-top: -1.5rem;
+    }
+
+    .login-card {
+      width: 100%;
+      max-width: 360px;
+      background: rgba(10,10,15,0.85);
+      backdrop-filter: blur(40px);
+      border-radius: 28px;
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 2.5rem 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .login-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--red), var(--gold), var(--red), transparent);
+      animation: scanLine 3s linear infinite;
+    }
+
+    @keyframes scanLine {
+      0%   { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+
+    .login-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gold), var(--red), var(--gold), transparent);
+    }
+
+    .input-group {
+      position: relative;
+      margin-bottom: 1rem;
+    }
+
+    .input-group i {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: rgba(255,255,255,0.25);
+      transition: color 0.3s;
+      pointer-events: none;
+    }
+
+    .input-group:focus-within i { color: var(--gold); }
+
+    .login-card input {
+      width: 100%;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 15px 16px 15px 44px;
+      border-radius: 14px;
+      color: white;
+      outline: none;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      transition: all 0.3s;
+    }
+
+    .login-card input::placeholder { color: rgba(255,255,255,0.2); }
+
+    .login-card input:focus {
+      border-color: rgba(253,185,18,0.4);
+      background: rgba(253,185,18,0.04);
+      box-shadow: 0 0 0 3px rgba(253,185,18,0.08), 0 0 20px rgba(253,185,18,0.05);
+    }
+
+    .btn-login {
+      width: 100%;
+      background: linear-gradient(135deg, var(--red) 0%, #c4053f 50%, var(--red) 100%);
+      background-size: 200% 100%;
+      color: white;
+      border: none;
+      padding: 17px;
+      border-radius: 14px;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.3rem;
+      letter-spacing: 3px;
+      cursor: pointer;
+      transition: all 0.4s;
+      margin-top: 0.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-login::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.15) 50%, transparent 60%);
+      transform: translateX(-100%);
+      transition: transform 0.5s;
+    }
+
+    .btn-login:hover {
+      background-position: 100% 0;
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px rgba(169,4,50,0.5);
+    }
+
+    .btn-login:hover::after { transform: translateX(100%); }
+    .btn-login:active { transform: translateY(0); }
+
+    #login-error {
+      color: var(--red-bright);
+      font-size: 0.85rem;
+      margin-top: 12px;
+      text-align: center;
+      font-weight: 700;
+      letter-spacing: 1px;
+      display: none;
+      animation: shake 0.4s ease;
+    }
+
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      25%      { transform: translateX(-8px); }
+      75%      { transform: translateX(8px); }
+    }
+
+    /* ══════════════════════════════
+       MAIN APP
+    ══════════════════════════════ */
+    #main-app {
+      display: none;
+      flex-direction: column;
+      flex: 1;
+      position: relative;
+      z-index: 10;
+      animation: appReveal 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes appReveal {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── HEADER ── */
+    header {
+      padding: 0.8rem 4%;
+      background: rgba(6,6,8,0.92);
+      backdrop-filter: blur(30px);
+      border-bottom: 1px solid rgba(169,4,50,0.3);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 1px 30px rgba(169,4,50,0.15);
+    }
+
+    header::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--red), var(--gold), var(--red), transparent);
+      animation: headerLine 4s linear infinite;
+      background-size: 200%;
+    }
+
+    @keyframes headerLine {
+      0%   { background-position: 0% 0; }
+      100% { background-position: 200% 0; }
+    }
+
+    .header-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .live-dot {
+      width: 10px;
+      height: 10px;
+      background: var(--red-bright);
+      border-radius: 50%;
+      box-shadow: 0 0 0 0 rgba(255,8,68,0.6);
+      animation: livePulse 1.5s ease-out infinite;
+    }
+
+    @keyframes livePulse {
+      0%   { box-shadow: 0 0 0 0 rgba(255,8,68,0.7); }
+      70%  { box-shadow: 0 0 0 10px rgba(255,8,68,0); }
+      100% { box-shadow: 0 0 0 0 rgba(255,8,68,0); }
+    }
+
+    .header-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.7rem;
+      letter-spacing: 3px;
+    }
+
+    .header-title span { color: var(--gold); }
+
+    .nav-right { display: flex; align-items: center; gap: 10px; }
+
+    .live-badge {
+      background: rgba(169,4,50,0.2);
+      border: 1px solid rgba(169,4,50,0.4);
+      color: var(--red-bright);
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 3px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      animation: badgePulse 2s ease-in-out infinite;
+    }
+
+    @keyframes badgePulse {
+      0%,100% { opacity: 1; }
+      50%      { opacity: 0.6; }
+    }
+
+    .logout-btn {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.5);
+      padding: 8px 18px;
+      border-radius: 10px;
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-size: 0.9rem;
+    }
+
+    .logout-btn:hover {
+      color: white;
+      border-color: var(--red);
+      background: rgba(169,4,50,0.15);
+      box-shadow: 0 0 15px rgba(169,4,50,0.2);
+    }
+
+    /* ── VIDEO SECTION ── */
+    .video-section {
+      width: 93%;
+      max-width: 1000px;
+      margin: 28px auto 10px;
+      position: relative;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow:
+        0 0 0 1px rgba(169,4,50,0.2),
+        0 30px 80px rgba(0,0,0,0.9),
+        0 0 60px rgba(169,4,50,0.08);
+    }
+
+    .video-section::before {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      border-radius: 21px;
+      background: linear-gradient(135deg, rgba(169,4,50,0.5), rgba(253,185,18,0.3), rgba(169,4,50,0.5));
+      z-index: -1;
+      animation: borderGlow 4s linear infinite;
+      background-size: 300%;
+    }
+
+    @keyframes borderGlow {
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    video {
+      width: 100%;
+      aspect-ratio: 16/9;
+      display: block;
+      background: #000;
+    }
+
+    /* overlays */
+    #error-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.95);
+      z-index: 999;
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 20px;
+      animation: overlayIn 0.3s ease;
+    }
+
+    @keyframes overlayIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    #error-overlay .err-icon {
+      width: 70px; height: 70px;
+      border-radius: 50%;
+      background: rgba(169,4,50,0.15);
+      border: 2px solid rgba(169,4,50,0.4);
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 20px;
+      animation: errPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes errPulse {
+      0%,100% { box-shadow: 0 0 0 0 rgba(169,4,50,0.4); }
+      50%      { box-shadow: 0 0 0 15px rgba(169,4,50,0); }
+    }
+
+    #error-overlay i { color: var(--red-bright); }
+    #error-overlay h2 { font-weight: 700; font-size: 1.2rem; margin-bottom: 8px; letter-spacing: 1px; }
+    #error-overlay p { color: rgba(255,255,255,0.4); font-size: 0.9rem; letter-spacing: 0.5px; }
+
+    #loading-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      z-index: 100;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      backdrop-filter: blur(5px);
+    }
+
+    .spinner-ring {
+      width: 56px; height: 56px;
+      position: relative;
+    }
+
+    .spinner-ring::before,
+    .spinner-ring::after {
+      content: '';
+      position: absolute;
+      border-radius: 50%;
+    }
+
+    .spinner-ring::before {
+      inset: 0;
+      border: 3px solid transparent;
+      border-top-color: var(--gold);
+      border-bottom-color: var(--red);
+      animation: spin 0.9s linear infinite;
+    }
+
+    .spinner-ring::after {
+      inset: 8px;
+      border: 2px solid transparent;
+      border-left-color: rgba(253,185,18,0.4);
+      animation: spin 1.4s linear infinite reverse;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── STATUS BAR ── */
+    .status-bar {
+      width: 93%;
+      max-width: 1000px;
+      margin: 14px auto;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .status-indicator {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.15);
+      transition: all 0.3s;
+      flex-shrink: 0;
+    }
+
+    .status-indicator.live {
+      background: var(--red-bright);
+      animation: livePulse 1.5s ease-out infinite;
+    }
+
+    .status-indicator.connecting {
+      background: var(--gold);
+      animation: livePulse 0.8s ease-out infinite;
+    }
+
+    #statusLabel {
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      color: rgba(255,255,255,0.35);
+      text-transform: uppercase;
+      transition: color 0.3s;
+    }
+
+    #statusLabel.live { color: var(--gold); }
+    #statusLabel.connecting { color: rgba(253,185,18,0.6); }
+
+    /* ── CHANNELS GRID ── */
+    .channels-header {
+      width: 93%;
+      max-width: 1000px;
+      margin: 0 auto 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .channels-header h3 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.1rem;
+      letter-spacing: 3px;
+      color: rgba(255,255,255,0.4);
+    }
+
+    .ch-divider {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, rgba(169,4,50,0.3), transparent);
+    }
+
+    .grid-channels {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 12px;
+      width: 93%;
+      max-width: 1000px;
+      margin: 0 auto;
+      padding-bottom: 50px;
+    }
+
+    .channel-card {
+      background: rgba(255,255,255,0.025);
+      border: 1px solid rgba(255,255,255,0.06);
+      padding: 22px 10px 18px;
+      border-radius: 18px;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+      overflow: hidden;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: cardReveal 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes cardReveal {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .channel-card::before {
+      content: '';
+      position: absolute;
+      top: -50%; left: -50%;
+      width: 200%; height: 200%;
+      background: radial-gradient(circle, rgba(253,185,18,0.06) 0%, transparent 60%);
+      opacity: 0;
+      transition: opacity 0.4s;
+    }
+
+    .channel-card:hover {
+      border-color: rgba(169,4,50,0.5);
+      background: rgba(169,4,50,0.06);
+      transform: translateY(-6px) scale(1.02);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.5), 0 0 20px rgba(169,4,50,0.1);
+    }
+
+    .channel-card:hover::before { opacity: 1; }
+
+    .channel-card.active {
+      background: linear-gradient(135deg, rgba(169,4,50,0.8) 0%, rgba(100,2,30,0.9) 100%);
+      border-color: rgba(253,185,18,0.5);
+      transform: translateY(-4px) scale(1.02);
+      box-shadow:
+        0 15px 35px rgba(169,4,50,0.35),
+        0 0 0 1px rgba(253,185,18,0.2),
+        inset 0 1px 0 rgba(255,255,255,0.1);
+    }
+
+    .card-icon-wrap {
+      width: 44px; height: 44px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 12px;
+      transition: all 0.3s;
+    }
+
+    .channel-card:hover .card-icon-wrap {
+      background: rgba(169,4,50,0.15);
+      border-color: rgba(169,4,50,0.3);
+    }
+
+    .channel-card.active .card-icon-wrap {
+      background: rgba(255,255,255,0.12);
+      border-color: rgba(253,185,18,0.3);
+      box-shadow: 0 0 15px rgba(253,185,18,0.15);
+    }
+
+    .channel-card i { color: rgba(255,255,255,0.4); transition: all 0.3s; }
+    .channel-card:hover i { color: var(--gold); }
+    .channel-card.active i { color: white; filter: drop-shadow(0 0 6px rgba(255,255,255,0.5)); }
+
+    .channel-card span {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      color: rgba(255,255,255,0.5);
+      transition: color 0.3s;
+      display: block;
+      line-height: 1.3;
+    }
+
+    .channel-card:hover span { color: rgba(255,255,255,0.9); }
+    .channel-card.active span { color: white; }
+
+    .active-pip {
+      position: absolute;
+      top: 10px; right: 10px;
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--gold);
+      display: none;
+      animation: livePulse 1.5s ease-out infinite;
+    }
+
+    .channel-card.active .active-pip { display: block; }
+
+    @media (max-width: 600px) {
+      .grid-channels { grid-template-columns: repeat(2, 1fr); }
+      .login-brand { font-size: 3.5rem; }
+      .header-title { font-size: 1.3rem; }
+    }
   </style>
 </head>
 <body>
 
+  <!-- LOGIN -->
   <div id="login-page">
-    <div class="login-card">
-      <h1 style="color:var(--accent-gold); margin-bottom:30px; font-weight:900;">Z&M <span style="color:var(--accent-red)">STREAM</span></h1>
-      <input type="text" id="username" placeholder="Kullanıcı Adı">
-      <input type="password" id="password" placeholder="Şifre">
-      <button class="btn-login" onclick="attemptLogin()">GİRİŞ YAP</button>
-    </div>
-  </div>
+    <div class="login-wrap">
+      <div>
+        <div class="login-brand">Z&M STREAM</div>
+        <div class="login-tagline">Canlı Yayın Platformu</div>
+      </div>
 
-  <div id="intro-overlay">
-      <h1 style="color:var(--accent-gold); font-size:3rem; font-weight:900;">Z&M STREAM</h1>
-      <p style="color:#666; letter-spacing:4px; margin-top:10px;">İYİ SEYİRLER DİLER</p>
-      <div class="spinner"></div>
-  </div>
-
-  <div id="main-app">
-    <div class="top-announcement">
-        <div class="announcement-content">
-            Z&M STREAM PORTALINA HOŞ GELDİNİZ! KEYİFLİ SEYİRLER...
+      <div class="login-card">
+        <div class="input-group">
+          <i data-lucide="user" size="16"></i>
+          <input type="text" id="username" placeholder="Kullanıcı Adı" autocomplete="off">
         </div>
+        <div class="input-group">
+          <i data-lucide="lock" size="16"></i>
+          <input type="password" id="password" placeholder="Şifre">
+        </div>
+        <button class="btn-login" onclick="attemptLogin()">Sisteme Giriş</button>
+        <p id="login-error">⚠ Bilgiler hatalı, tekrar dene!</p>
+      </div>
     </div>
+  </div>
 
+  <!-- MAIN APP -->
+  <div id="main-app">
     <header>
-      <span style="font-weight:900; font-size:1.4rem;">Z&M <span style="color:var(--accent-gold)">STREAM</span></span>
-      <button onclick="location.reload()" style="background:none; color:#fff; border:1px solid #444; padding:8px 15px; border-radius:8px; cursor:pointer;">ÇIKIŞ</button>
+      <div class="header-brand">
+        <div class="live-dot"></div>
+        <div class="header-title">Z&M <span>STREAM</span></div>
+        <div class="live-badge">CANLI</div>
+      </div>
+      <div class="nav-right">
+        <button class="logout-btn" onclick="location.reload()">Çıkış</button>
+      </div>
     </header>
 
-    <div id="category-screen">
-        <div class="category-grid" id="categoryList"></div>
+    <div class="video-section">
+      <div id="error-overlay">
+        <div class="err-icon">
+          <i data-lucide="shield-alert" size="32"></i>
+        </div>
+        <h2>Kanal Şu An Kapalı</h2>
+        <p>Sorun devam ederse yöneticilerle görüşün</p>
+      </div>
+      <div id="loading-overlay">
+        <div class="spinner-ring"></div>
+      </div>
+      <video id="mainPlayer" controls autoplay playsinline></video>
     </div>
 
-    <div id="channel-view" style="display:none;">
-        <button class="back-btn" onclick="backToCategories()">← KATEGORİLER</button>
-        <div class="video-section" id="fullscreen-area">
-            <div id="video-display"></div>
-            <button class="fs-btn" onclick="openFull()">TAM EKRAN</button>
-        </div>
-        <div id="statusLabel" style="text-align:center; color:var(--accent-gold); margin:15px; font-weight:900;">KANAL SEÇİNİZ</div>
-        <div class="grid-channels" id="channelList"></div>
+    <div class="status-bar">
+      <div class="status-indicator" id="statusDot"></div>
+      <div id="statusLabel">Kanal seçiniz</div>
     </div>
+
+    <div class="channels-header">
+      <h3>Kanallar</h3>
+      <div class="ch-divider"></div>
+    </div>
+
+    <div class="grid-channels" id="channelList"></div>
   </div>
 
   <script>
-    const USERS = [{ u: "zm", p: "1905" }, { u: "gs", p: "1905" }];
+    const CONFIG = {
+      auth: { u: "zm", p: "1905" }
+    };
 
     const CHANNELS = [
-      { name: "Z&M ÖZEL YAYIN", url: "https://vdo.ninja/?view=AuJ7Zh4&autoplay&clean&videobitrate=10000&shutup&label=0&codec=av1", category: "Z&M" },
-    ];
-
-    function attemptLogin() {
-      const u = document.getElementById('username').value;
-      const p = document.getElementById('password').value;
-      if (USERS.find(user => user.u === u && user.p === p)) {
-        document.getElementById('login-page').style.display = 'none';
-        const intro = document.getElementById('intro-overlay');
-        intro.style.display = 'flex';
-        setTimeout(() => {
-          intro.style.display = 'none';
-          document.getElementById('main-app').style.display = 'block';
-          initCategories();
-        }, 2200);
-      } else { alert("Hata!"); }
-    }
-
-    function initCategories() {
-      const catList = document.getElementById('categoryList');
-      catList.innerHTML = '';
-      [...new Set(CHANNELS.map(c => c.category))].forEach(cat => {
-        const card = document.createElement('div');
-        card.className = 'cat-card'; card.innerHTML = `<span>${cat}</span>`;
-        card.onclick = () => showChannels(cat); catList.appendChild(card);
-      });
-    }
-
-    function showChannels(category) {
-      document.getElementById('category-screen').style.display = 'none';
-      document.getElementById('channel-view').style.display = 'block';
-      const grid = document.getElementById('channelList');
-      grid.innerHTML = '';
-      CHANNELS.filter(c => c.category === category).forEach(ch => {
-        const card = document.createElement('div');
-        card.className = 'channel-card'; card.innerText = ch.name;
-        card.onclick = () => playStream(ch, card); grid.appendChild(card);
-      });
-    }
-
-    function playStream(ch, el) {
-      document.querySelectorAll('.channel-card').forEach(c => c.classList.remove('active'));
-      el.classList.add('active');
-      document.getElementById('statusLabel').innerText = "OYNATILIYOR: " + ch.name;
-      
-      // Iframe'e tam ekran yetkisi (allowfullscreen) verildi
-      document.getElementById('video-display').innerHTML = `
-        <iframe src="${ch.url}" 
-          allow="autoplay; fullscreen; camera; microphone; display-capture" 
-          allowfullscreen="true">
-        </iframe>`;
-    }
-
-    // Tam Ekran Fonksiyonu
-    function openFull() {
-      const elem = document.getElementById("fullscreen-area");
-      if (elem.requestFullscreen) {
-        elem.requestFullscreen();
-      } else if (elem.webkitRequestFullscreen) { /* Safari */
-        elem.webkitRequestFullscreen();
-      } else if (elem.msRequestFullscreen) { /* IE11 */
-        elem.msRequestFullscreen();
-      }
-    }
-
-    function backToCategories() {
-      document.getElementById('channel-view').style.display = 'none';
-      document.getElementById('category-screen').style.display = 'block';
-      document.getElementById('video-display').innerHTML = '';
-    }
-  </script>
-</body>
-</html>
+      { id: "136",     name: "Z&M Extra 1",   icon: "award" },
+      { id: "137",     name: "Z&M Extra 2",   icon: "award" },
+      { id: "150",     name: "Z&M Extra 3",  icon: "star" },
+      { id: "trt_m3u8",name: "Z&M Extra 4",     icon: "activity", url:
