@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Z&M Stream | Premium</title>
+  <title>Z&M Stream</title>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/lucide@latest"></script>
 
@@ -12,10 +12,7 @@
       --red: #A90432;
       --red-bright: #ff0844;
       --gold: #FDB912;
-      --gold-bright: #ffe066;
       --bg: #060608;
-      --surface: rgba(255,255,255,0.03);
-      --border: rgba(255,255,255,0.07);
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -25,312 +22,604 @@
       color: white;
       font-family: 'Rajdhani', sans-serif;
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
       overflow-x: hidden;
     }
 
-    /* ── ANIMATED BACKGROUND (Senin orijinal efektlerin) ── */
     body::before {
       content: '';
-      position: fixed;
-      inset: 0;
+      position: fixed; inset: 0;
       background:
         radial-gradient(ellipse 80% 50% at 10% 10%, rgba(169,4,50,0.18) 0%, transparent 60%),
-        radial-gradient(ellipse 60% 40% at 90% 90%, rgba(253,185,18,0.12) 0%, transparent 60%),
-        radial-gradient(ellipse 40% 60% at 50% 50%, rgba(169,4,50,0.06) 0%, transparent 70%);
+        radial-gradient(ellipse 60% 40% at 90% 90%, rgba(253,185,18,0.12) 0%, transparent 60%);
       animation: bgPulse 8s ease-in-out infinite alternate;
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    @keyframes bgPulse {
-      0%   { opacity: 0.6; transform: scale(1); }
-      100% { opacity: 1;   transform: scale(1.05); }
+      pointer-events: none; z-index: 0;
     }
 
     body::after {
       content: '';
-      position: fixed;
-      inset: 0;
+      position: fixed; inset: 0;
       background-image:
         linear-gradient(rgba(169,4,50,0.04) 1px, transparent 1px),
         linear-gradient(90deg, rgba(169,4,50,0.04) 1px, transparent 1px);
       background-size: 60px 60px;
-      pointer-events: none;
-      z-index: 0;
+      pointer-events: none; z-index: 0;
     }
 
-    /* ── LOGIN PAGE ── */
+    @keyframes bgPulse {
+      from { opacity: 0.6; transform: scale(1); }
+      to   { opacity: 1;   transform: scale(1.05); }
+    }
+
+    /* ══ LOGIN ══ */
     #login-page {
-      position: relative;
-      z-index: 10;
-      flex: 1;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
+      position: relative; z-index: 10;
+      height: 100vh;
+      display: flex; justify-content: center; align-items: center; padding: 20px;
     }
 
     .login-wrap {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 2rem;
-      animation: loginFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      display: flex; flex-direction: column; align-items: center; gap: 2rem;
+      animation: fadeUp 0.8s cubic-bezier(0.16,1,0.3,1) forwards;
     }
 
-    @keyframes loginFadeIn {
+    @keyframes fadeUp {
       from { opacity: 0; transform: translateY(40px) scale(0.95); }
       to   { opacity: 1; transform: translateY(0) scale(1); }
     }
 
     .login-brand {
       font-family: 'Bebas Neue', sans-serif;
-      font-size: 5rem;
-      letter-spacing: 6px;
+      font-size: 5rem; letter-spacing: 6px; line-height: 1; text-align: center;
       background: linear-gradient(135deg, var(--gold) 0%, #fff 45%, var(--red) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      filter: drop-shadow(0 0 30px rgba(169,4,50,0.5));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      animation: brandGlow 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes brandGlow {
+      from { filter: drop-shadow(0 0 20px rgba(169,4,50,0.4)); }
+      to   { filter: drop-shadow(0 0 50px rgba(253,185,18,0.6)); }
+    }
+
+    .login-tagline {
+      font-size: 0.8rem; letter-spacing: 5px;
+      color: rgba(255,255,255,0.3); text-transform: uppercase;
+      margin-top: -1.5rem; text-align: center;
     }
 
     .login-card {
-      width: 100%;
-      max-width: 360px;
-      background: rgba(10,10,15,0.85);
-      backdrop-filter: blur(40px);
-      border-radius: 28px;
-      border: 1px solid rgba(255,255,255,0.08);
-      padding: 2.5rem 2rem;
-      position: relative;
-      overflow: hidden;
+      width: 100%; max-width: 360px;
+      background: rgba(10,10,15,0.85); backdrop-filter: blur(40px);
+      border-radius: 28px; border: 1px solid rgba(255,255,255,0.08);
+      padding: 2.5rem 2rem; position: relative; overflow: hidden;
+    }
+
+    .login-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--red), var(--gold), var(--red), transparent);
+      background-size: 200%; animation: scanLine 3s linear infinite;
+    }
+
+    .login-card::after {
+      content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gold), var(--red), transparent);
+    }
+
+    @keyframes scanLine {
+      0%   { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
     }
 
     .input-group { position: relative; margin-bottom: 1rem; }
-    .input-group i { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,0.25); }
+
+    .input-group i {
+      position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+      color: rgba(255,255,255,0.25); transition: color 0.3s; pointer-events: none;
+    }
+
+    .input-group:focus-within i { color: var(--gold); }
 
     .login-card input {
       width: 100%;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.08);
-      padding: 15px 16px 15px 44px;
-      border-radius: 14px;
-      color: white;
-      outline: none;
-      font-family: 'Rajdhani', sans-serif;
-      font-weight: 600;
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+      padding: 15px 16px 15px 44px; border-radius: 14px; color: white; outline: none;
+      font-family: 'Rajdhani', sans-serif; font-size: 1rem; font-weight: 600;
+      letter-spacing: 1px; transition: all 0.3s;
+    }
+
+    .login-card input::placeholder { color: rgba(255,255,255,0.2); }
+
+    .login-card input:focus {
+      border-color: rgba(253,185,18,0.4); background: rgba(253,185,18,0.04);
+      box-shadow: 0 0 0 3px rgba(253,185,18,0.08);
     }
 
     .btn-login {
       width: 100%;
       background: linear-gradient(135deg, var(--red) 0%, #c4053f 100%);
-      color: white;
-      border: none;
-      padding: 17px;
-      border-radius: 14px;
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 1.3rem;
-      letter-spacing: 3px;
-      cursor: pointer;
-      transition: 0.4s;
+      color: white; border: none; padding: 17px; border-radius: 14px;
+      font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; letter-spacing: 3px;
+      cursor: pointer; transition: all 0.4s; margin-top: 0.5rem;
+      position: relative; overflow: hidden;
+    }
+
+    .btn-login::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.15) 50%, transparent 60%);
+      transform: translateX(-100%); transition: transform 0.5s;
     }
 
     .btn-login:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(169,4,50,0.5); }
+    .btn-login:hover::after { transform: translateX(100%); }
+    .btn-login:active { transform: translateY(0); }
 
-    #login-error { color: var(--red-bright); font-size: 0.85rem; margin-top: 12px; text-align: center; font-weight: 700; display: none; }
+    /* ══ INTRO ══ */
+    #intro-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: #000; display: none;
+      flex-direction: column; justify-content: center; align-items: center;
+      z-index: 10000;
+    }
 
-    /* ── MAIN APP ── */
-    #main-app { display: none; flex-direction: column; flex: 1; position: relative; z-index: 10; }
+    .intro-brand {
+      font-family: 'Bebas Neue', sans-serif; font-size: 4rem; letter-spacing: 6px;
+      background: linear-gradient(135deg, var(--gold), #fff, var(--red));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      animation: brandGlow 1.5s ease-in-out infinite alternate;
+    }
+
+    .intro-sub {
+      color: rgba(255,255,255,0.3); letter-spacing: 5px;
+      font-size: 0.8rem; margin-top: 10px; text-transform: uppercase;
+    }
+
+    .spinner-ring {
+      width: 56px; height: 56px; position: relative; margin-top: 30px;
+    }
+    .spinner-ring::before, .spinner-ring::after {
+      content: ''; position: absolute; border-radius: 50%;
+    }
+    .spinner-ring::before {
+      inset: 0; border: 3px solid transparent;
+      border-top-color: var(--gold); border-bottom-color: var(--red);
+      animation: spin 0.9s linear infinite;
+    }
+    .spinner-ring::after {
+      inset: 8px; border: 2px solid transparent;
+      border-left-color: rgba(253,185,18,0.4);
+      animation: spin 1.4s linear infinite reverse;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ══ MAIN APP ══ */
+    #main-app { display: none; position: relative; z-index: 10; }
+
+    .top-announcement {
+      background: linear-gradient(90deg, #000, rgba(169,4,50,0.5), #000);
+      border-bottom: 1px solid rgba(253,185,18,0.15);
+      padding: 9px 0; overflow: hidden; white-space: nowrap;
+    }
+
+    .announcement-content {
+      display: inline-block; padding-left: 100%;
+      animation: marquee 25s linear infinite;
+      font-size: 0.78rem; font-weight: 700; letter-spacing: 3px;
+      color: rgba(255,255,255,0.6);
+    }
+
+    @keyframes marquee {
+      from { transform: translate(0,0); }
+      to   { transform: translate(-100%,0); }
+    }
 
     header {
-      padding: 0.8rem 4%;
-      background: rgba(6,6,8,0.92);
-      backdrop-filter: blur(30px);
-      border-bottom: 1px solid rgba(169,4,50,0.3);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      position: sticky; top: 0;
-      z-index: 100;
+      padding: 0.9rem 5%;
+      background: rgba(6,6,8,0.95); backdrop-filter: blur(30px);
+      border-bottom: 1px solid rgba(169,4,50,0.25);
+      display: flex; justify-content: space-between; align-items: center;
+      position: sticky; top: 0; z-index: 100;
+      box-shadow: 0 1px 30px rgba(169,4,50,0.12);
+    }
+
+    header::after {
+      content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--red), var(--gold), var(--red), transparent);
+      background-size: 200%; animation: scanLine 4s linear infinite;
+    }
+
+    .header-brand { display: flex; align-items: center; gap: 12px; }
+
+    .live-dot {
+      width: 10px; height: 10px; background: var(--red-bright); border-radius: 50%;
+      animation: livePulse 1.5s ease-out infinite;
+    }
+
+    @keyframes livePulse {
+      0%   { box-shadow: 0 0 0 0 rgba(255,8,68,0.7); }
+      70%  { box-shadow: 0 0 0 10px rgba(255,8,68,0); }
+      100% { box-shadow: 0 0 0 0 rgba(255,8,68,0); }
     }
 
     .header-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.7rem; letter-spacing: 3px; }
     .header-title span { color: var(--gold); }
 
-    /* ── VIDEO SECTION ── */
+    .live-badge {
+      background: rgba(169,4,50,0.2); border: 1px solid rgba(169,4,50,0.4);
+      color: var(--red-bright); font-size: 0.7rem; font-weight: 700;
+      letter-spacing: 3px; padding: 4px 10px; border-radius: 6px;
+      animation: badgePulse 2s ease-in-out infinite;
+    }
+
+    @keyframes badgePulse { 0%,100% { opacity: 1; } 50% { opacity: 0.6; } }
+
+    .logout-btn {
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.5); padding: 8px 18px; border-radius: 10px;
+      font-family: 'Rajdhani', sans-serif; font-weight: 700; letter-spacing: 1px;
+      cursor: pointer; transition: all 0.3s; font-size: 0.9rem;
+    }
+
+    .logout-btn:hover { color: white; border-color: var(--red); background: rgba(169,4,50,0.15); }
+
+    /* ══ CATEGORIES ══ */
+    #category-screen { padding: 30px 5% 50px; }
+
+    .section-title {
+      font-family: 'Bebas Neue', sans-serif; font-size: 1rem; letter-spacing: 4px;
+      color: rgba(255,255,255,0.3); margin-bottom: 20px;
+      display: flex; align-items: center; gap: 12px;
+    }
+
+    .section-title::after {
+      content: ''; flex: 1; height: 1px;
+      background: linear-gradient(90deg, rgba(169,4,50,0.4), transparent);
+    }
+
+    .category-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 16px;
+    }
+
+    .cat-card {
+      background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);
+      padding: 36px 20px; border-radius: 20px;
+      text-align: center; cursor: pointer;
+      transition: all 0.35s cubic-bezier(0.175,0.885,0.32,1.275);
+      position: relative; overflow: hidden;
+      opacity: 0; transform: translateY(20px);
+      animation: cardReveal 0.5s cubic-bezier(0.16,1,0.3,1) forwards;
+    }
+
+    @keyframes cardReveal {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .cat-card:hover {
+      border-color: rgba(169,4,50,0.5);
+      transform: translateY(-6px) scale(1.02);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.5), 0 0 20px rgba(169,4,50,0.08);
+      background: rgba(169,4,50,0.05);
+    }
+
+    .cat-icon {
+      width: 56px; height: 56px; border-radius: 14px;
+      background: rgba(169,4,50,0.1); border: 1px solid rgba(169,4,50,0.2);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 14px; transition: all 0.3s;
+    }
+
+    .cat-card:hover .cat-icon {
+      background: rgba(169,4,50,0.2); border-color: rgba(169,4,50,0.4);
+      box-shadow: 0 0 20px rgba(169,4,50,0.15);
+    }
+
+    .cat-card i { color: var(--gold); }
+    .cat-card span { font-size: 1.1rem; font-weight: 700; letter-spacing: 1px; display: block; }
+    .cat-count { font-size: 0.72rem; color: rgba(255,255,255,0.25); margin-top: 6px; letter-spacing: 1px; }
+
+    /* ══ CHANNEL VIEW ══ */
+    #channel-view { display: none; }
+
+    .back-btn {
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.55); padding: 10px 20px; border-radius: 10px;
+      margin: 20px 5% 12px; cursor: pointer;
+      font-family: 'Rajdhani', sans-serif; font-weight: 700; letter-spacing: 1px;
+      transition: all 0.3s; display: inline-flex; align-items: center; gap: 8px;
+      font-size: 0.9rem;
+    }
+
+    .back-btn:hover { color: white; border-color: var(--gold); background: rgba(253,185,18,0.06); }
+
     .video-section {
-      width: 93%;
-      max-width: 1000px;
-      margin: 28px auto 10px;
-      position: relative;
-      border-radius: 20px;
-      overflow: hidden;
-      aspect-ratio: 16/9;
-      background: #000;
-      box-shadow: 0 30px 80px rgba(0,0,0,0.9);
+      width: 90%; max-width: 1000px; margin: 0 auto;
+      border-radius: 20px; overflow: hidden; position: relative;
+      box-shadow: 0 0 0 1px rgba(169,4,50,0.2), 0 30px 80px rgba(0,0,0,0.9);
     }
 
-    #video-target { width: 100%; height: 100%; }
-    iframe { width: 100%; height: 100%; border: none; display: block; }
-
-    #error-overlay {
-      position: absolute; inset: 0; background: rgba(0,0,0,0.95); z-index: 99;
-      display: none; flex-direction: column; justify-content: center; align-items: center;
+    .video-section::before {
+      content: ''; position: absolute; inset: -1px; border-radius: 21px;
+      background: linear-gradient(135deg, rgba(169,4,50,0.5), rgba(253,185,18,0.3), rgba(169,4,50,0.5));
+      background-size: 300%; z-index: -1;
+      animation: borderGlow 4s linear infinite;
     }
 
-    /* ── CHANNELS GRID ── */
+    @keyframes borderGlow {
+      0%   { background-position: 0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    #video-display { aspect-ratio: 16/9; background: #000; }
+    #video-display iframe { width: 100%; height: 100%; border: none; display: block; }
+
+    .status-bar {
+      width: 90%; max-width: 1000px; margin: 14px auto;
+      display: flex; align-items: center; gap: 10px;
+    }
+
+    .status-dot {
+      width: 8px; height: 8px; border-radius: 50%;
+      background: rgba(255,255,255,0.15); transition: all 0.3s; flex-shrink: 0;
+    }
+
+    .status-dot.live { background: var(--red-bright); animation: livePulse 1.5s ease-out infinite; }
+
+    #statusLabel {
+      font-size: 0.78rem; font-weight: 700; letter-spacing: 2.5px;
+      color: rgba(255,255,255,0.35); text-transform: uppercase; transition: color 0.3s;
+    }
+
+    #statusLabel.live { color: var(--gold); }
+
+    .ch-header {
+      width: 90%; max-width: 1000px; margin: 4px auto 14px;
+      font-family: 'Bebas Neue', sans-serif; font-size: 1rem; letter-spacing: 4px;
+      color: rgba(255,255,255,0.3);
+      display: flex; align-items: center; gap: 12px;
+    }
+
+    .ch-header::after {
+      content: ''; flex: 1; height: 1px;
+      background: linear-gradient(90deg, rgba(169,4,50,0.3), transparent);
+    }
+
     .grid-channels {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-      gap: 12px;
-      width: 93%;
-      max-width: 1000px;
-      margin: 20px auto;
-      padding-bottom: 50px;
+      gap: 12px; width: 90%; max-width: 1000px; margin: 0 auto; padding-bottom: 50px;
     }
 
     .channel-card {
-      background: rgba(255,255,255,0.025);
-      border: 1px solid rgba(255,255,255,0.06);
-      padding: 22px 10px;
-      border-radius: 18px;
-      cursor: pointer;
-      text-align: center;
-      transition: all 0.3s;
-      position: relative;
+      background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.06);
+      padding: 20px 10px 16px; border-radius: 16px; cursor: pointer; text-align: center;
+      transition: all 0.35s cubic-bezier(0.175,0.885,0.32,1.275);
+      position: relative; overflow: hidden;
+      opacity: 0; transform: translateY(20px);
+      animation: cardReveal 0.5s cubic-bezier(0.16,1,0.3,1) forwards;
     }
 
-    .channel-card:hover, .channel-card.active {
-      border-color: rgba(169,4,50,0.5);
-      background: rgba(169,4,50,0.1);
-      transform: translateY(-5px);
+    .channel-card:hover {
+      border-color: rgba(169,4,50,0.5); background: rgba(169,4,50,0.06);
+      transform: translateY(-5px) scale(1.02); box-shadow: 0 12px 30px rgba(0,0,0,0.5);
     }
 
-    .channel-card.active { border-color: var(--gold); }
+    .channel-card.active {
+      background: linear-gradient(135deg, rgba(169,4,50,0.8), rgba(100,2,30,0.9));
+      border-color: rgba(253,185,18,0.4); transform: translateY(-4px);
+      box-shadow: 0 15px 35px rgba(169,4,50,0.35);
+    }
 
-    .card-icon-wrap { width: 44px; height: 44px; background: rgba(255,255,255,0.05); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; }
-    
-    .status-bar { width: 93%; max-width: 1000px; margin: 14px auto; display: flex; align-items: center; gap: 10px; }
-    .status-indicator { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.1); }
-    .status-indicator.live { background: var(--red-bright); box-shadow: 0 0 10px var(--red); }
-    #statusLabel { font-size: 0.8rem; font-weight: 700; letter-spacing: 2.5px; color: rgba(255,255,255,0.3); text-transform: uppercase; }
+    .ch-icon-wrap {
+      width: 40px; height: 40px; border-radius: 10px;
+      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 10px; transition: all 0.3s;
+    }
+
+    .channel-card:hover .ch-icon-wrap { background: rgba(169,4,50,0.15); border-color: rgba(169,4,50,0.3); }
+    .channel-card.active .ch-icon-wrap { background: rgba(255,255,255,0.12); border-color: rgba(253,185,18,0.3); }
+
+    .channel-card i { color: rgba(255,255,255,0.35); transition: all 0.3s; }
+    .channel-card:hover i { color: var(--gold); }
+    .channel-card.active i { color: white; filter: drop-shadow(0 0 6px rgba(255,255,255,0.5)); }
+
+    .channel-card span {
+      font-size: 0.75rem; font-weight: 700; letter-spacing: 0.3px;
+      color: rgba(255,255,255,0.45); transition: color 0.3s; display: block; line-height: 1.3;
+    }
+
+    .channel-card:hover span { color: rgba(255,255,255,0.9); }
+    .channel-card.active span { color: white; }
+
+    .active-pip {
+      position: absolute; top: 9px; right: 9px;
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--gold); display: none;
+      animation: livePulse 1.5s ease-out infinite;
+    }
+
+    .channel-card.active .active-pip { display: block; }
+
+    @media (max-width: 600px) {
+      .login-brand { font-size: 3.5rem; }
+      .header-title { font-size: 1.3rem; }
+      .category-grid { grid-template-columns: repeat(2, 1fr); }
+      .grid-channels  { grid-template-columns: repeat(2, 1fr); }
+    }
   </style>
 </head>
 <body>
 
+  <!-- LOGIN -->
   <div id="login-page">
     <div class="login-wrap">
-      <div class="login-brand">Z&M STREAM</div>
+      <div style="text-align:center;">
+        <div class="login-brand">Z&M STREAM</div>
+        <div class="login-tagline"></div>
+      </div>
       <div class="login-card">
         <div class="input-group">
           <i data-lucide="user" size="16"></i>
-          <input type="text" id="username" placeholder="Kullanıcı Adı">
+          <input type="text" id="username" placeholder="Kullanıcı Adı" autocomplete="off">
         </div>
         <div class="input-group">
           <i data-lucide="lock" size="16"></i>
           <input type="password" id="password" placeholder="Şifre">
         </div>
         <button class="btn-login" onclick="attemptLogin()">Sisteme Giriş</button>
-        <p id="login-error">⚠ Bilgiler hatalı!</p>
       </div>
     </div>
   </div>
 
+  <!-- INTRO -->
+  <div id="intro-overlay">
+    <div class="intro-brand">Z&M STREAM</div>
+    <div class="intro-sub">İyi Seyirler Diler</div>
+    <div class="spinner-ring"></div>
+  </div>
+
+  <!-- MAIN APP -->
   <div id="main-app">
+    <div class="top-announcement">
+      <div class="announcement-content">
+        ✦ Z&M STREAM HOŞ GELDİNİZ &nbsp;&nbsp;&nbsp; ✦ KEYİFLİ SEYİRLER DİLERİZ &nbsp;&nbsp;&nbsp; ✦ Z&M STREAM HOŞ GELDİNİZ &nbsp;&nbsp;&nbsp; ✦ KEYİFLİ SEYİRLER DİLERİZ
+      </div>
+    </div>
+
     <header>
-      <div class="header-title">Z&M <span>STREAM</span></div>
-      <button class="btn-login" style="padding: 8px 15px; font-size: 0.8rem; width: auto;" onclick="location.reload()">Çıkış</button>
+      <div class="header-brand">
+        <div class="live-dot"></div>
+        <div class="header-title">Z&M <span>STREAM</span></div>
+        <div class="live-badge">CANLI</div>
+      </div>
+      <button class="logout-btn" onclick="location.reload()">Çıkış</button>
     </header>
 
-    <div class="video-section">
-      <div id="error-overlay">
-        <i data-lucide="shield-alert" size="32" style="color:var(--red-bright); margin-bottom:10px;"></i>
-        <h2>Kanal Kapalı</h2>
+    <div id="category-screen">
+      <div style="padding: 30px 5% 0;">
+        <div class="section-title">Kategoriler</div>
       </div>
-      <div id="video-target"></div>
+      <div style="padding: 0 5%;">
+        <div class="category-grid" id="categoryList"></div>
+      </div>
     </div>
 
-    <div class="status-bar">
-      <div class="status-indicator" id="statusDot"></div>
-      <div id="statusLabel">Lütfen Kanal Seçin</div>
+    <div id="channel-view">
+      <button class="back-btn" onclick="backToCategories()">
+        <i data-lucide="arrow-left" size="16"></i> Kategoriler
+      </button>
+      <div class="video-section">
+        <div id="video-display"></div>
+      </div>
+      <div class="status-bar">
+        <div class="status-dot" id="statusDot"></div>
+        <div id="statusLabel">Kanal seçiniz</div>
+      </div>
+      <div class="ch-header">Kanallar</div>
+      <div class="grid-channels" id="channelList"></div>
     </div>
-
-    <div class="grid-channels" id="channelList"></div>
   </div>
 
   <script>
-    lucide.createIcons();
+    const USERS = [{ u: "zm", p: "1905" }, { u: "gs", p: "1905" }];
 
-    // Giriş bilgileri
-    const AUTH = { u: "zm", p: "1905" };
-
-    // Kanallar - Extra 1'e senin Ninja linkini gömdüm
     const CHANNELS = [
-      { name: "Z&M Extra 1", icon: "award", url: "https://vdo.ninja/?view=AuJ7Zh4&autoplay&clean&videobitrate=10000" },
-      { name: "Z&M Extra 2", icon: "award", url: "" },
-      { name: "Z&M Extra 3", icon: "star", url: "" },
-      { name: "Z&M Extra 4", icon: "activity", url: "" }
+      { name: "Z&M ÖZEL YAYIN", url: "https://vdo.ninja/?view=AuJ7Zh4&autoplay&clean&videobitrate=10000&shutup&label=0&codec=av1", category: "Z&M", icon: "star" },
     ];
 
+    const CAT_ICONS = {
+      "Z&M": "star", "SPOR": "award", "HABER": "radio",
+      "FİLM": "film", "MÜZİK": "music", "ÇOCUK": "smile",
+    };
+
     function attemptLogin() {
-      const u = document.getElementById('username').value;
-      const p = document.getElementById('password').value;
-      if (u === AUTH.u && p === AUTH.p) {
+      const u = document.getElementById('username').value.trim();
+      const p = document.getElementById('password').value.trim();
+      if (USERS.find(user => user.u === u && user.p === p)) {
         document.getElementById('login-page').style.display = 'none';
-        document.getElementById('main-app').style.display = 'flex';
-        initChannels();
+        const intro = document.getElementById('intro-overlay');
+        intro.style.display = 'flex';
+        setTimeout(() => {
+          intro.style.display = 'none';
+          document.getElementById('main-app').style.display = 'block';
+          initCategories();
+        }, 2200);
       } else {
-        const err = document.getElementById('login-error');
-        err.style.display = 'block';
-        setTimeout(() => err.style.display = 'none', 3000);
+        const card = document.querySelector('.login-card');
+        card.style.transition = 'box-shadow 0.3s, border-color 0.3s';
+        card.style.borderColor = 'rgba(255,8,68,0.6)';
+        card.style.boxShadow = '0 0 30px rgba(255,8,68,0.2)';
+        setTimeout(() => { card.style.borderColor = ''; card.style.boxShadow = ''; }, 1500);
       }
     }
 
-    function initChannels() {
-      const list = document.getElementById('channelList');
-      list.innerHTML = '';
-      CHANNELS.forEach(ch => {
+    function initCategories() {
+      const catList = document.getElementById('categoryList');
+      catList.innerHTML = '';
+      const categories = [...new Set(CHANNELS.map(c => c.category))];
+      categories.forEach((cat, i) => {
+        const count = CHANNELS.filter(c => c.category === cat).length;
+        const icon = CAT_ICONS[cat] || 'tv';
         const card = document.createElement('div');
-        card.className = 'channel-card';
+        card.className = 'cat-card';
+        card.style.animationDelay = (i * 0.1) + 's';
         card.innerHTML = `
-          <div class="card-icon-wrap"><i data-lucide="${ch.icon}"></i></div>
-          <span>${ch.name}</span>
+          <div class="cat-icon"><i data-lucide="${icon}" size="24"></i></div>
+          <span>${cat}</span>
+          <div class="cat-count">${count} kanal</div>
         `;
-        card.onclick = () => play(ch, card);
-        list.appendChild(card);
+        card.onclick = () => showChannels(cat);
+        catList.appendChild(card);
       });
       lucide.createIcons();
     }
 
-    function play(ch, el) {
-      const target = document.getElementById('video-target');
-      const err = document.getElementById('error-overlay');
-      const statusLabel = document.getElementById('statusLabel');
-      const statusDot = document.getElementById('statusDot');
+    function showChannels(category) {
+      document.getElementById('category-screen').style.display = 'none';
+      document.getElementById('channel-view').style.display = 'block';
+      const grid = document.getElementById('channelList');
+      grid.innerHTML = '';
+      CHANNELS.filter(c => c.category === category).forEach((ch, i) => {
+        const card = document.createElement('div');
+        card.className = 'channel-card';
+        card.style.animationDelay = (i * 0.07) + 's';
+        const icon = ch.icon || 'tv';
+        card.innerHTML = `
+          <div class="active-pip"></div>
+          <div class="ch-icon-wrap"><i data-lucide="${icon}" size="18"></i></div>
+          <span>${ch.name}</span>
+        `;
+        card.onclick = () => playStream(ch, card);
+        grid.appendChild(card);
+      });
+      lucide.createIcons();
+    }
 
+    function playStream(ch, el) {
       document.querySelectorAll('.channel-card').forEach(c => c.classList.remove('active'));
       el.classList.add('active');
-
-      err.style.display = 'none';
-      target.innerHTML = '';
-
-      if (!ch.url) {
-        err.style.display = 'flex';
-        statusLabel.innerText = "YAYIN ÇEVRİMDIŞI";
-        statusDot.className = 'status-indicator';
-        return;
-      }
-
-      // Ninja linki iframe gerektirir
-      const iframe = document.createElement('iframe');
-      iframe.src = ch.url;
-      iframe.allow = "autoplay; fullscreen";
-      target.appendChild(iframe);
-
-      statusLabel.innerText = "YAYINDA: " + ch.name;
-      statusDot.className = 'status-indicator live';
+      document.getElementById('statusDot').className = 'status-dot live';
+      const lbl = document.getElementById('statusLabel');
+      lbl.className = 'live';
+      lbl.textContent = 'Oynatılıyor: ' + ch.name;
+      document.getElementById('video-display').innerHTML =
+        `<iframe src="${ch.url}" allow="autoplay; fullscreen; camera; microphone"></iframe>`;
     }
+
+    function backToCategories() {
+      document.getElementById('channel-view').style.display = 'none';
+      document.getElementById('category-screen').style.display = 'block';
+      document.getElementById('video-display').innerHTML = '';
+    }
+
+    document.addEventListener('keypress', e => {
+      if (e.key === 'Enter' && document.getElementById('login-page').style.display !== 'none') {
+        attemptLogin();
+      }
+    });
+
+    window.onload = () => lucide.createIcons();
   </script>
 </body>
 </html>
