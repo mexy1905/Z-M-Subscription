@@ -3,10 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Z&M Stream</title>
+  <title>Z&M Stream | Premium</title>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/mpegts.js/1.7.3/mpegts.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
 
   <style>
@@ -32,7 +30,7 @@
       overflow-x: hidden;
     }
 
-    /* ── ANIMATED BACKGROUND ── */
+    /* ── ANIMATED BACKGROUND (Senin orijinal efektlerin) ── */
     body::before {
       content: '';
       position: fixed;
@@ -51,7 +49,6 @@
       100% { opacity: 1;   transform: scale(1.05); }
     }
 
-    /* Grid overlay */
     body::after {
       content: '';
       position: fixed;
@@ -64,9 +61,7 @@
       z-index: 0;
     }
 
-    /* ══════════════════════════════
-       LOGIN PAGE
-    ══════════════════════════════ */
+    /* ── LOGIN PAGE ── */
     #login-page {
       position: relative;
       z-index: 10;
@@ -94,25 +89,10 @@
       font-family: 'Bebas Neue', sans-serif;
       font-size: 5rem;
       letter-spacing: 6px;
-      line-height: 1;
       background: linear-gradient(135deg, var(--gold) 0%, #fff 45%, var(--red) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       filter: drop-shadow(0 0 30px rgba(169,4,50,0.5));
-      animation: brandGlow 3s ease-in-out infinite alternate;
-    }
-
-    @keyframes brandGlow {
-      from { filter: drop-shadow(0 0 20px rgba(169,4,50,0.4)); }
-      to   { filter: drop-shadow(0 0 50px rgba(253,185,18,0.6)); }
-    }
-
-    .login-tagline {
-      font-size: 0.85rem;
-      letter-spacing: 5px;
-      color: rgba(255,255,255,0.3);
-      text-transform: uppercase;
-      margin-top: -1.5rem;
     }
 
     .login-card {
@@ -127,44 +107,8 @@
       overflow: hidden;
     }
 
-    .login-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, var(--red), var(--gold), var(--red), transparent);
-      animation: scanLine 3s linear infinite;
-    }
-
-    @keyframes scanLine {
-      0%   { background-position: -200% 0; }
-      100% { background-position: 200% 0; }
-    }
-
-    .login-card::after {
-      content: '';
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, var(--gold), var(--red), var(--gold), transparent);
-    }
-
-    .input-group {
-      position: relative;
-      margin-bottom: 1rem;
-    }
-
-    .input-group i {
-      position: absolute;
-      left: 14px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: rgba(255,255,255,0.25);
-      transition: color 0.3s;
-      pointer-events: none;
-    }
-
-    .input-group:focus-within i { color: var(--gold); }
+    .input-group { position: relative; margin-bottom: 1rem; }
+    .input-group i { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: rgba(255,255,255,0.25); }
 
     .login-card input {
       width: 100%;
@@ -175,24 +119,12 @@
       color: white;
       outline: none;
       font-family: 'Rajdhani', sans-serif;
-      font-size: 1rem;
       font-weight: 600;
-      letter-spacing: 1px;
-      transition: all 0.3s;
-    }
-
-    .login-card input::placeholder { color: rgba(255,255,255,0.2); }
-
-    .login-card input:focus {
-      border-color: rgba(253,185,18,0.4);
-      background: rgba(253,185,18,0.04);
-      box-shadow: 0 0 0 3px rgba(253,185,18,0.08), 0 0 20px rgba(253,185,18,0.05);
     }
 
     .btn-login {
       width: 100%;
-      background: linear-gradient(135deg, var(--red) 0%, #c4053f 50%, var(--red) 100%);
-      background-size: 200% 100%;
+      background: linear-gradient(135deg, var(--red) 0%, #c4053f 100%);
       color: white;
       border: none;
       padding: 17px;
@@ -201,65 +133,16 @@
       font-size: 1.3rem;
       letter-spacing: 3px;
       cursor: pointer;
-      transition: all 0.4s;
-      margin-top: 0.5rem;
-      position: relative;
-      overflow: hidden;
+      transition: 0.4s;
     }
 
-    .btn-login::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.15) 50%, transparent 60%);
-      transform: translateX(-100%);
-      transition: transform 0.5s;
-    }
+    .btn-login:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(169,4,50,0.5); }
 
-    .btn-login:hover {
-      background-position: 100% 0;
-      transform: translateY(-2px);
-      box-shadow: 0 12px 30px rgba(169,4,50,0.5);
-    }
+    #login-error { color: var(--red-bright); font-size: 0.85rem; margin-top: 12px; text-align: center; font-weight: 700; display: none; }
 
-    .btn-login:hover::after { transform: translateX(100%); }
-    .btn-login:active { transform: translateY(0); }
+    /* ── MAIN APP ── */
+    #main-app { display: none; flex-direction: column; flex: 1; position: relative; z-index: 10; }
 
-    #login-error {
-      color: var(--red-bright);
-      font-size: 0.85rem;
-      margin-top: 12px;
-      text-align: center;
-      font-weight: 700;
-      letter-spacing: 1px;
-      display: none;
-      animation: shake 0.4s ease;
-    }
-
-    @keyframes shake {
-      0%,100% { transform: translateX(0); }
-      25%      { transform: translateX(-8px); }
-      75%      { transform: translateX(8px); }
-    }
-
-    /* ══════════════════════════════
-       MAIN APP
-    ══════════════════════════════ */
-    #main-app {
-      display: none;
-      flex-direction: column;
-      flex: 1;
-      position: relative;
-      z-index: 10;
-      animation: appReveal 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    }
-
-    @keyframes appReveal {
-      from { opacity: 0; transform: translateY(20px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    /* ── HEADER ── */
     header {
       padding: 0.8rem 4%;
       background: rgba(6,6,8,0.92);
@@ -268,95 +151,12 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      position: sticky;
-      top: 0;
+      position: sticky; top: 0;
       z-index: 100;
-      box-shadow: 0 1px 30px rgba(169,4,50,0.15);
     }
 
-    header::after {
-      content: '';
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, var(--red), var(--gold), var(--red), transparent);
-      animation: headerLine 4s linear infinite;
-      background-size: 200%;
-    }
-
-    @keyframes headerLine {
-      0%   { background-position: 0% 0; }
-      100% { background-position: 200% 0; }
-    }
-
-    .header-brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .live-dot {
-      width: 10px;
-      height: 10px;
-      background: var(--red-bright);
-      border-radius: 50%;
-      box-shadow: 0 0 0 0 rgba(255,8,68,0.6);
-      animation: livePulse 1.5s ease-out infinite;
-    }
-
-    @keyframes livePulse {
-      0%   { box-shadow: 0 0 0 0 rgba(255,8,68,0.7); }
-      70%  { box-shadow: 0 0 0 10px rgba(255,8,68,0); }
-      100% { box-shadow: 0 0 0 0 rgba(255,8,68,0); }
-    }
-
-    .header-title {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 1.7rem;
-      letter-spacing: 3px;
-    }
-
+    .header-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.7rem; letter-spacing: 3px; }
     .header-title span { color: var(--gold); }
-
-    .nav-right { display: flex; align-items: center; gap: 10px; }
-
-    .live-badge {
-      background: rgba(169,4,50,0.2);
-      border: 1px solid rgba(169,4,50,0.4);
-      color: var(--red-bright);
-      font-size: 0.7rem;
-      font-weight: 700;
-      letter-spacing: 3px;
-      padding: 4px 10px;
-      border-radius: 6px;
-      animation: badgePulse 2s ease-in-out infinite;
-    }
-
-    @keyframes badgePulse {
-      0%,100% { opacity: 1; }
-      50%      { opacity: 0.6; }
-    }
-
-    .logout-btn {
-      background: rgba(255,255,255,0.04);
-      border: 1px solid rgba(255,255,255,0.1);
-      color: rgba(255,255,255,0.5);
-      padding: 8px 18px;
-      border-radius: 10px;
-      font-family: 'Rajdhani', sans-serif;
-      font-weight: 700;
-      letter-spacing: 1px;
-      cursor: pointer;
-      transition: all 0.3s;
-      font-size: 0.9rem;
-    }
-
-    .logout-btn:hover {
-      color: white;
-      border-color: var(--red);
-      background: rgba(169,4,50,0.15);
-      box-shadow: 0 0 15px rgba(169,4,50,0.2);
-    }
 
     /* ── VIDEO SECTION ── */
     .video-section {
@@ -366,365 +166,171 @@
       position: relative;
       border-radius: 20px;
       overflow: hidden;
-      box-shadow:
-        0 0 0 1px rgba(169,4,50,0.2),
-        0 30px 80px rgba(0,0,0,0.9),
-        0 0 60px rgba(169,4,50,0.08);
-    }
-
-    .video-section::before {
-      content: '';
-      position: absolute;
-      inset: -1px;
-      border-radius: 21px;
-      background: linear-gradient(135deg, rgba(169,4,50,0.5), rgba(253,185,18,0.3), rgba(169,4,50,0.5));
-      z-index: -1;
-      animation: borderGlow 4s linear infinite;
-      background-size: 300%;
-    }
-
-    @keyframes borderGlow {
-      0%   { background-position: 0% 50%; }
-      50%  { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-
-    video {
-      width: 100%;
       aspect-ratio: 16/9;
-      display: block;
       background: #000;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.9);
     }
 
-    /* overlays */
+    #video-target { width: 100%; height: 100%; }
+    iframe { width: 100%; height: 100%; border: none; display: block; }
+
     #error-overlay {
-      position: absolute;
-      inset: 0;
-      background: rgba(0,0,0,0.95);
-      z-index: 999;
-      display: none;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      text-align: center;
-      padding: 20px;
-      animation: overlayIn 0.3s ease;
+      position: absolute; inset: 0; background: rgba(0,0,0,0.95); z-index: 99;
+      display: none; flex-direction: column; justify-content: center; align-items: center;
     }
-
-    @keyframes overlayIn {
-      from { opacity: 0; }
-      to   { opacity: 1; }
-    }
-
-    #error-overlay .err-icon {
-      width: 70px; height: 70px;
-      border-radius: 50%;
-      background: rgba(169,4,50,0.15);
-      border: 2px solid rgba(169,4,50,0.4);
-      display: flex; align-items: center; justify-content: center;
-      margin-bottom: 20px;
-      animation: errPulse 2s ease-in-out infinite;
-    }
-
-    @keyframes errPulse {
-      0%,100% { box-shadow: 0 0 0 0 rgba(169,4,50,0.4); }
-      50%      { box-shadow: 0 0 0 15px rgba(169,4,50,0); }
-    }
-
-    #error-overlay i { color: var(--red-bright); }
-    #error-overlay h2 { font-weight: 700; font-size: 1.2rem; margin-bottom: 8px; letter-spacing: 1px; }
-    #error-overlay p { color: rgba(255,255,255,0.4); font-size: 0.9rem; letter-spacing: 0.5px; }
-
-    #loading-overlay {
-      position: absolute;
-      inset: 0;
-      background: rgba(0,0,0,0.75);
-      z-index: 100;
-      display: none;
-      justify-content: center;
-      align-items: center;
-      backdrop-filter: blur(5px);
-    }
-
-    .spinner-ring {
-      width: 56px; height: 56px;
-      position: relative;
-    }
-
-    .spinner-ring::before,
-    .spinner-ring::after {
-      content: '';
-      position: absolute;
-      border-radius: 50%;
-    }
-
-    .spinner-ring::before {
-      inset: 0;
-      border: 3px solid transparent;
-      border-top-color: var(--gold);
-      border-bottom-color: var(--red);
-      animation: spin 0.9s linear infinite;
-    }
-
-    .spinner-ring::after {
-      inset: 8px;
-      border: 2px solid transparent;
-      border-left-color: rgba(253,185,18,0.4);
-      animation: spin 1.4s linear infinite reverse;
-    }
-
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    /* ── STATUS BAR ── */
-    .status-bar {
-      width: 93%;
-      max-width: 1000px;
-      margin: 14px auto;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .status-indicator {
-      width: 8px; height: 8px;
-      border-radius: 50%;
-      background: rgba(255,255,255,0.15);
-      transition: all 0.3s;
-      flex-shrink: 0;
-    }
-
-    .status-indicator.live {
-      background: var(--red-bright);
-      animation: livePulse 1.5s ease-out infinite;
-    }
-
-    .status-indicator.connecting {
-      background: var(--gold);
-      animation: livePulse 0.8s ease-out infinite;
-    }
-
-    #statusLabel {
-      font-size: 0.8rem;
-      font-weight: 700;
-      letter-spacing: 2.5px;
-      color: rgba(255,255,255,0.35);
-      text-transform: uppercase;
-      transition: color 0.3s;
-    }
-
-    #statusLabel.live { color: var(--gold); }
-    #statusLabel.connecting { color: rgba(253,185,18,0.6); }
 
     /* ── CHANNELS GRID ── */
-    .channels-header {
-      width: 93%;
-      max-width: 1000px;
-      margin: 0 auto 16px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .channels-header h3 {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 1.1rem;
-      letter-spacing: 3px;
-      color: rgba(255,255,255,0.4);
-    }
-
-    .ch-divider {
-      flex: 1;
-      height: 1px;
-      background: linear-gradient(90deg, rgba(169,4,50,0.3), transparent);
-    }
-
     .grid-channels {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
       gap: 12px;
       width: 93%;
       max-width: 1000px;
-      margin: 0 auto;
+      margin: 20px auto;
       padding-bottom: 50px;
     }
 
     .channel-card {
       background: rgba(255,255,255,0.025);
       border: 1px solid rgba(255,255,255,0.06);
-      padding: 22px 10px 18px;
+      padding: 22px 10px;
       border-radius: 18px;
       cursor: pointer;
       text-align: center;
-      transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      position: relative;
-      overflow: hidden;
-      opacity: 0;
-      transform: translateY(20px);
-      animation: cardReveal 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    }
-
-    @keyframes cardReveal {
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .channel-card::before {
-      content: '';
-      position: absolute;
-      top: -50%; left: -50%;
-      width: 200%; height: 200%;
-      background: radial-gradient(circle, rgba(253,185,18,0.06) 0%, transparent 60%);
-      opacity: 0;
-      transition: opacity 0.4s;
-    }
-
-    .channel-card:hover {
-      border-color: rgba(169,4,50,0.5);
-      background: rgba(169,4,50,0.06);
-      transform: translateY(-6px) scale(1.02);
-      box-shadow: 0 15px 35px rgba(0,0,0,0.5), 0 0 20px rgba(169,4,50,0.1);
-    }
-
-    .channel-card:hover::before { opacity: 1; }
-
-    .channel-card.active {
-      background: linear-gradient(135deg, rgba(169,4,50,0.8) 0%, rgba(100,2,30,0.9) 100%);
-      border-color: rgba(253,185,18,0.5);
-      transform: translateY(-4px) scale(1.02);
-      box-shadow:
-        0 15px 35px rgba(169,4,50,0.35),
-        0 0 0 1px rgba(253,185,18,0.2),
-        inset 0 1px 0 rgba(255,255,255,0.1);
-    }
-
-    .card-icon-wrap {
-      width: 44px; height: 44px;
-      border-radius: 12px;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.08);
-      display: flex; align-items: center; justify-content: center;
-      margin: 0 auto 12px;
       transition: all 0.3s;
+      position: relative;
     }
 
-    .channel-card:hover .card-icon-wrap {
-      background: rgba(169,4,50,0.15);
-      border-color: rgba(169,4,50,0.3);
+    .channel-card:hover, .channel-card.active {
+      border-color: rgba(169,4,50,0.5);
+      background: rgba(169,4,50,0.1);
+      transform: translateY(-5px);
     }
 
-    .channel-card.active .card-icon-wrap {
-      background: rgba(255,255,255,0.12);
-      border-color: rgba(253,185,18,0.3);
-      box-shadow: 0 0 15px rgba(253,185,18,0.15);
-    }
+    .channel-card.active { border-color: var(--gold); }
 
-    .channel-card i { color: rgba(255,255,255,0.4); transition: all 0.3s; }
-    .channel-card:hover i { color: var(--gold); }
-    .channel-card.active i { color: white; filter: drop-shadow(0 0 6px rgba(255,255,255,0.5)); }
-
-    .channel-card span {
-      font-size: 0.75rem;
-      font-weight: 700;
-      letter-spacing: 0.3px;
-      color: rgba(255,255,255,0.5);
-      transition: color 0.3s;
-      display: block;
-      line-height: 1.3;
-    }
-
-    .channel-card:hover span { color: rgba(255,255,255,0.9); }
-    .channel-card.active span { color: white; }
-
-    .active-pip {
-      position: absolute;
-      top: 10px; right: 10px;
-      width: 7px; height: 7px;
-      border-radius: 50%;
-      background: var(--gold);
-      display: none;
-      animation: livePulse 1.5s ease-out infinite;
-    }
-
-    .channel-card.active .active-pip { display: block; }
-
-    @media (max-width: 600px) {
-      .grid-channels { grid-template-columns: repeat(2, 1fr); }
-      .login-brand { font-size: 3.5rem; }
-      .header-title { font-size: 1.3rem; }
-    }
+    .card-icon-wrap { width: 44px; height: 44px; background: rgba(255,255,255,0.05); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px; }
+    
+    .status-bar { width: 93%; max-width: 1000px; margin: 14px auto; display: flex; align-items: center; gap: 10px; }
+    .status-indicator { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.1); }
+    .status-indicator.live { background: var(--red-bright); box-shadow: 0 0 10px var(--red); }
+    #statusLabel { font-size: 0.8rem; font-weight: 700; letter-spacing: 2.5px; color: rgba(255,255,255,0.3); text-transform: uppercase; }
   </style>
 </head>
 <body>
 
-  <!-- LOGIN -->
   <div id="login-page">
     <div class="login-wrap">
-      <div>
-        <div class="login-brand">Z&M STREAM</div>
-        <div class="login-tagline">Canlı Yayın Platformu</div>
-      </div>
-
+      <div class="login-brand">Z&M STREAM</div>
       <div class="login-card">
         <div class="input-group">
           <i data-lucide="user" size="16"></i>
-          <input type="text" id="username" placeholder="Kullanıcı Adı" autocomplete="off">
+          <input type="text" id="username" placeholder="Kullanıcı Adı">
         </div>
         <div class="input-group">
           <i data-lucide="lock" size="16"></i>
           <input type="password" id="password" placeholder="Şifre">
         </div>
         <button class="btn-login" onclick="attemptLogin()">Sisteme Giriş</button>
-        <p id="login-error">⚠ Bilgiler hatalı, tekrar dene!</p>
+        <p id="login-error">⚠ Bilgiler hatalı!</p>
       </div>
     </div>
   </div>
 
-  <!-- MAIN APP -->
   <div id="main-app">
     <header>
-      <div class="header-brand">
-        <div class="live-dot"></div>
-        <div class="header-title">Z&M <span>STREAM</span></div>
-        <div class="live-badge">CANLI</div>
-      </div>
-      <div class="nav-right">
-        <button class="logout-btn" onclick="location.reload()">Çıkış</button>
-      </div>
+      <div class="header-title">Z&M <span>STREAM</span></div>
+      <button class="btn-login" style="padding: 8px 15px; font-size: 0.8rem; width: auto;" onclick="location.reload()">Çıkış</button>
     </header>
 
     <div class="video-section">
       <div id="error-overlay">
-        <div class="err-icon">
-          <i data-lucide="shield-alert" size="32"></i>
-        </div>
-        <h2>Kanal Şu An Kapalı</h2>
-        <p>Sorun devam ederse yöneticilerle görüşün</p>
+        <i data-lucide="shield-alert" size="32" style="color:var(--red-bright); margin-bottom:10px;"></i>
+        <h2>Kanal Kapalı</h2>
       </div>
-      <div id="loading-overlay">
-        <div class="spinner-ring"></div>
-      </div>
-      <video id="mainPlayer" controls autoplay playsinline></video>
+      <div id="video-target"></div>
     </div>
 
     <div class="status-bar">
       <div class="status-indicator" id="statusDot"></div>
-      <div id="statusLabel">Kanal seçiniz</div>
-    </div>
-
-    <div class="channels-header">
-      <h3>Kanallar</h3>
-      <div class="ch-divider"></div>
+      <div id="statusLabel">Lütfen Kanal Seçin</div>
     </div>
 
     <div class="grid-channels" id="channelList"></div>
   </div>
 
   <script>
-    const CONFIG = {
-      auth: { u: "zm", p: "1905" }
-    };
+    lucide.createIcons();
 
+    // Giriş bilgileri
+    const AUTH = { u: "zm", p: "1905" };
+
+    // Kanallar - Extra 1'e senin Ninja linkini gömdüm
     const CHANNELS = [
-      { id: "136",     name: "Z&M Extra 1",   icon: "award" },
-      { id: "137",     name: "Z&M Extra 2",   icon: "award" },
-      { id: "150",     name: "Z&M Extra 3",  icon: "star" },
-      { id: "trt_m3u8",name: "Z&M Extra 4",     icon: "activity", url:
+      { name: "Z&M Extra 1", icon: "award", url: "https://vdo.ninja/?view=AuJ7Zh4&autoplay&clean&videobitrate=10000" },
+      { name: "Z&M Extra 2", icon: "award", url: "" },
+      { name: "Z&M Extra 3", icon: "star", url: "" },
+      { name: "Z&M Extra 4", icon: "activity", url: "" }
+    ];
+
+    function attemptLogin() {
+      const u = document.getElementById('username').value;
+      const p = document.getElementById('password').value;
+      if (u === AUTH.u && p === AUTH.p) {
+        document.getElementById('login-page').style.display = 'none';
+        document.getElementById('main-app').style.display = 'flex';
+        initChannels();
+      } else {
+        const err = document.getElementById('login-error');
+        err.style.display = 'block';
+        setTimeout(() => err.style.display = 'none', 3000);
+      }
+    }
+
+    function initChannels() {
+      const list = document.getElementById('channelList');
+      list.innerHTML = '';
+      CHANNELS.forEach(ch => {
+        const card = document.createElement('div');
+        card.className = 'channel-card';
+        card.innerHTML = `
+          <div class="card-icon-wrap"><i data-lucide="${ch.icon}"></i></div>
+          <span>${ch.name}</span>
+        `;
+        card.onclick = () => play(ch, card);
+        list.appendChild(card);
+      });
+      lucide.createIcons();
+    }
+
+    function play(ch, el) {
+      const target = document.getElementById('video-target');
+      const err = document.getElementById('error-overlay');
+      const statusLabel = document.getElementById('statusLabel');
+      const statusDot = document.getElementById('statusDot');
+
+      document.querySelectorAll('.channel-card').forEach(c => c.classList.remove('active'));
+      el.classList.add('active');
+
+      err.style.display = 'none';
+      target.innerHTML = '';
+
+      if (!ch.url) {
+        err.style.display = 'flex';
+        statusLabel.innerText = "YAYIN ÇEVRİMDIŞI";
+        statusDot.className = 'status-indicator';
+        return;
+      }
+
+      // Ninja linki iframe gerektirir
+      const iframe = document.createElement('iframe');
+      iframe.src = ch.url;
+      iframe.allow = "autoplay; fullscreen";
+      target.appendChild(iframe);
+
+      statusLabel.innerText = "YAYINDA: " + ch.name;
+      statusDot.className = 'status-indicator live';
+    }
+  </script>
+</body>
+</html>
