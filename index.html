@@ -170,6 +170,13 @@
     .user-name{font-size:.9rem;font-weight:700;color:rgba(255,255,255,.7);}
     .user-del-btn{background:rgba(169,4,50,.1);border:1px solid rgba(169,4,50,.2);color:rgba(255,100,100,.7);width:28px;height:28px;border-radius:7px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;}
     .user-del-btn:hover{background:rgba(169,4,50,.3);color:white;}
+    .toggle-row.editing{border-color:rgba(253,185,18,.3);background:rgba(253,185,18,.04);}
+    .ch-edit-btn{background:rgba(253,185,18,.08);border:1px solid rgba(253,185,18,.2);color:rgba(253,185,18,.7);width:28px;height:28px;border-radius:7px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.8rem;transition:all .2s;flex-shrink:0;}
+    .ch-edit-btn:hover{background:rgba(253,185,18,.2);color:var(--gold);}
+    .ch-del-btn{background:rgba(169,4,50,.1);border:1px solid rgba(169,4,50,.2);color:rgba(255,100,100,.7);width:28px;height:28px;border-radius:7px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.8rem;transition:all .2s;flex-shrink:0;}
+    .ch-del-btn:hover{background:rgba(169,4,50,.3);color:white;}
+    .ch-edit-form{margin-top:8px;padding:10px;background:rgba(0,0,0,.3);border-radius:10px;border:1px solid rgba(253,185,18,.15);}
+    .bakim-active{border-color:rgba(255,100,50,.6)!important;background:rgba(255,100,50,.15)!important;color:rgba(255,180,80,1)!important;}
     .cat-toggle-btn{padding:6px 12px;border-radius:8px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:rgba(255,255,255,.4);font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.8rem;letter-spacing:1px;cursor:pointer;transition:all .2s;}
     .cat-toggle-btn.selected{background:rgba(169,4,50,.25);border-color:rgba(169,4,50,.5);color:white;}
 
@@ -294,8 +301,20 @@
     </div>
 
     <div class="admin-section">
-      <div class="admin-section-title">📺 Kanal Yönetimi</div>
+      <div class="admin-section-title" style="display:flex;justify-content:space-between;align-items:center;">
+        <span>📺 Kanal Yönetimi</span>
+        <button id="bakim-btn" onclick="toggleBakim()" style="font-family:'Rajdhani',sans-serif;font-size:.75rem;font-weight:700;letter-spacing:1px;padding:5px 12px;border-radius:8px;border:1px solid rgba(255,100,50,.3);background:rgba(255,100,50,.08);color:rgba(255,150,80,.8);cursor:pointer;transition:all .2s;">🔧 Bakım Modu</button>
+      </div>
       <div class="channel-toggle-list" id="admin-channel-list"></div>
+      <!-- Yeni kanal ekle -->
+      <div style="margin-top:12px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:14px;">
+        <div style="font-size:.75rem;font-weight:700;letter-spacing:2px;color:rgba(255,255,255,.3);margin-bottom:10px;">YENİ KANAL EKLE</div>
+        <input class="admin-input" type="text" id="new-ch-name" placeholder="Kanal adı (ör: BeIN Sports)">
+        <input class="admin-input" type="text" id="new-ch-url" placeholder="Yayın URL'si">
+        <select class="admin-input" id="new-ch-cat" style="cursor:pointer;"><option value="Z&M">Z&amp;M</option><option value="Spor">Spor</option><option value="Yabancı">Yabancı</option></select>
+        <button class="admin-btn-primary" onclick="addChannel()" style="font-size:1rem;padding:10px;">+ Kanal Ekle</button>
+        <p id="add-ch-error" style="color:var(--red-bright);font-size:.8rem;margin-top:8px;display:none;font-weight:700;"></p>
+      </div>
     </div>
 
     <div class="admin-section">
@@ -522,16 +541,106 @@
     document.getElementById('admin-panel-overlay').style.display = 'none';
   }
 
+  let bakimModu = false;
+
+  function toggleBakim() {
+    bakimModu = !bakimModu;
+    CHANNELS.forEach(ch => channelStates[ch.id] = !bakimModu);
+    const btn = document.getElementById('bakim-btn');
+    if (bakimModu) {
+      btn.textContent = '✅ Bakım Aktif';
+      btn.classList.add('bakim-active');
+    } else {
+      btn.textContent = '🔧 Bakım Modu';
+      btn.classList.remove('bakim-active');
+    }
+    renderAdminChannels();
+  }
+
   function renderAdminChannels() {
     const list = document.getElementById('admin-channel-list');
     list.innerHTML = '';
-    CHANNELS.forEach(function(ch) {
+    CHANNELS.forEach(function(ch, idx) {
       const isOn = channelStates[ch.id];
       const row = document.createElement('div');
       row.className = 'toggle-row';
-      row.innerHTML = '<div><div class="toggle-label">' + ch.name + '</div><div class="toggle-cat">' + ch.category + '</div></div><label class="toggle-switch"><input type="checkbox" ' + (isOn?'checked':'') + ' onchange="toggleChannel(\'' + ch.id + '\', this.checked)"><span class="toggle-slider"></span></label>';
-      list.appendChild(row);
+      row.id = 'ch-row-' + ch.id;
+      row.innerHTML = `
+        <div style="flex:1;min-width:0;">
+          <div class="toggle-label" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${ch.name}</div>
+          <div class="toggle-cat">${ch.category}</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
+          <button class="ch-edit-btn" onclick="toggleEditForm('${ch.id}')" title="URL Düzenle">✏️</button>
+          <button class="ch-del-btn" onclick="deleteChannel('${ch.id}')" title="Sil">✕</button>
+          <label class="toggle-switch">
+            <input type="checkbox" ${isOn?'checked':''} onchange="toggleChannel('${ch.id}', this.checked)">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      `;
+      // Edit form (gizli)
+      const editDiv = document.createElement('div');
+      editDiv.className = 'ch-edit-form';
+      editDiv.id = 'edit-form-' + ch.id;
+      editDiv.style.display = 'none';
+      editDiv.innerHTML = `
+        <input class="admin-input" style="margin-bottom:6px;" type="text" id="edit-name-${ch.id}" value="${ch.name}" placeholder="Kanal adı">
+        <input class="admin-input" style="margin-bottom:6px;" type="text" id="edit-url-${ch.id}" value="${ch.url}" placeholder="URL">
+        <div style="display:flex;gap:6px;">
+          <button class="admin-btn-gold" style="flex:1;font-size:.8rem;padding:8px;" onclick="saveChannelEdit('${ch.id}')">💾 Kaydet</button>
+          <button class="admin-btn-gold" style="font-size:.8rem;padding:8px;background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.1);color:rgba(255,255,255,.4);" onclick="toggleEditForm('${ch.id}')">İptal</button>
+        </div>
+      `;
+      const wrap = document.createElement('div');
+      wrap.style.cssText = 'background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:10px 14px;margin-bottom:2px;';
+      wrap.appendChild(row);
+      wrap.appendChild(editDiv);
+      list.appendChild(wrap);
     });
+  }
+
+  function toggleEditForm(id) {
+    const form = document.getElementById('edit-form-' + id);
+    const isOpen = form.style.display !== 'none';
+    form.style.display = isOpen ? 'none' : 'block';
+  }
+
+  function saveChannelEdit(id) {
+    const ch = CHANNELS.find(x => x.id === id);
+    if (!ch) return;
+    const newName = document.getElementById('edit-name-' + id).value.trim();
+    const newUrl  = document.getElementById('edit-url-' + id).value.trim();
+    if (!newName || !newUrl) return;
+    ch.name = newName;
+    ch.url  = newUrl;
+    toggleEditForm(id);
+    renderAdminChannels();
+  }
+
+  function deleteChannel(id) {
+    if (!confirm('Bu kanalı silmek istediğine emin misin?')) return;
+    const idx = CHANNELS.findIndex(x => x.id === id);
+    if (idx > -1) {
+      CHANNELS.splice(idx, 1);
+      delete channelStates[id];
+    }
+    renderAdminChannels();
+  }
+
+  function addChannel() {
+    const name = document.getElementById('new-ch-name').value.trim();
+    const url  = document.getElementById('new-ch-url').value.trim();
+    const cat  = document.getElementById('new-ch-cat').value;
+    const err  = document.getElementById('add-ch-error');
+    err.style.display = 'none';
+    if (!name || !url) { err.textContent = 'Ad ve URL zorunlu!'; err.style.display = 'block'; return; }
+    const id = 'ch_' + Date.now();
+    CHANNELS.push({ id, name, url, category: cat, logo: null });
+    channelStates[id] = true;
+    document.getElementById('new-ch-name').value = '';
+    document.getElementById('new-ch-url').value = '';
+    renderAdminChannels();
   }
 
   function toggleChannel(id, state) { channelStates[id] = state; }
