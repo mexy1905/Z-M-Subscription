@@ -6,620 +6,570 @@
   <title>Z&M Stream</title>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/lucide@latest"></script>
-
   <style>
-    :root {
-      --red: #A90432;
-      --red-bright: #ff0844;
-      --gold: #FDB912;
-      --bg: #060608;
-    }
-
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      background: var(--bg);
-      color: white;
-      font-family: 'Rajdhani', sans-serif;
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
-
-    body::before {
-      content: '';
-      position: fixed; inset: 0;
-      background:
-        radial-gradient(ellipse 80% 50% at 10% 10%, rgba(169,4,50,0.18) 0%, transparent 60%),
-        radial-gradient(ellipse 60% 40% at 90% 90%, rgba(253,185,18,0.12) 0%, transparent 60%);
-      animation: bgPulse 8s ease-in-out infinite alternate;
-      pointer-events: none; z-index: 0;
-    }
-
-    body::after {
-      content: '';
-      position: fixed; inset: 0;
-      background-image:
-        linear-gradient(rgba(169,4,50,0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(169,4,50,0.04) 1px, transparent 1px);
-      background-size: 60px 60px;
-      pointer-events: none; z-index: 0;
-    }
-
-    @keyframes bgPulse {
-      from { opacity: 0.6; transform: scale(1); }
-      to   { opacity: 1;   transform: scale(1.05); }
-    }
-
-    /* ══ LOGIN ══ */
-    #login-page {
-      position: relative; z-index: 10;
-      height: 100vh;
-      display: flex; justify-content: center; align-items: center; padding: 20px;
-    }
-
-    .login-wrap {
-      display: flex; flex-direction: column; align-items: center; gap: 2rem;
-      animation: fadeUp 0.8s cubic-bezier(0.16,1,0.3,1) forwards;
-    }
-
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(40px) scale(0.95); }
-      to   { opacity: 1; transform: translateY(0) scale(1); }
-    }
-
-    .login-brand {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 5rem; letter-spacing: 6px; line-height: 1; text-align: center;
-      background: linear-gradient(135deg, var(--gold) 0%, #fff 45%, var(--red) 100%);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      animation: brandGlow 3s ease-in-out infinite alternate;
-    }
-
-    @keyframes brandGlow {
-      from { filter: drop-shadow(0 0 20px rgba(169,4,50,0.4)); }
-      to   { filter: drop-shadow(0 0 50px rgba(253,185,18,0.6)); }
-    }
-
-    .login-tagline {
-      font-size: 0.8rem; letter-spacing: 5px;
-      color: rgba(255,255,255,0.3); text-transform: uppercase;
-      margin-top: -1.5rem; text-align: center;
-    }
-
-    .login-card {
-      width: 100%; max-width: 360px;
-      background: rgba(10,10,15,0.85); backdrop-filter: blur(40px);
-      border-radius: 28px; border: 1px solid rgba(255,255,255,0.08);
-      padding: 2.5rem 2rem; position: relative; overflow: hidden;
-    }
-
-    .login-card::before {
-      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
-      background: linear-gradient(90deg, transparent, var(--red), var(--gold), var(--red), transparent);
-      background-size: 200%; animation: scanLine 3s linear infinite;
-    }
-
-    .login-card::after {
-      content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
-      background: linear-gradient(90deg, transparent, var(--gold), var(--red), transparent);
-    }
-
-    @keyframes scanLine {
-      0%   { background-position: -200% 0; }
-      100% { background-position: 200% 0; }
-    }
-
-    .input-group { position: relative; margin-bottom: 1rem; }
-
-    .input-group i {
-      position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
-      color: rgba(255,255,255,0.25); transition: color 0.3s; pointer-events: none;
-    }
-
-    .input-group:focus-within i { color: var(--gold); }
-
-    .login-card input {
-      width: 100%;
-      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
-      padding: 15px 16px 15px 44px; border-radius: 14px; color: white; outline: none;
-      font-family: 'Rajdhani', sans-serif; font-size: 1rem; font-weight: 600;
-      letter-spacing: 1px; transition: all 0.3s;
-    }
-
-    .login-card input::placeholder { color: rgba(255,255,255,0.2); }
-
-    .login-card input:focus {
-      border-color: rgba(253,185,18,0.4); background: rgba(253,185,18,0.04);
-      box-shadow: 0 0 0 3px rgba(253,185,18,0.08);
-    }
-
-    .btn-login {
-      width: 100%;
-      background: linear-gradient(135deg, var(--red) 0%, #c4053f 100%);
-      color: white; border: none; padding: 17px; border-radius: 14px;
-      font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; letter-spacing: 3px;
-      cursor: pointer; transition: all 0.4s; margin-top: 0.5rem;
-      position: relative; overflow: hidden;
-    }
-
-    .btn-login::after {
-      content: ''; position: absolute; inset: 0;
-      background: linear-gradient(135deg, transparent 40%, rgba(255,255,255,0.15) 50%, transparent 60%);
-      transform: translateX(-100%); transition: transform 0.5s;
-    }
-
-    .btn-login:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(169,4,50,0.5); }
-    .btn-login:hover::after { transform: translateX(100%); }
-    .btn-login:active { transform: translateY(0); }
-
-    /* ══ INTRO ══ */
-    #intro-overlay {
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: #000; display: none;
-      flex-direction: column; justify-content: center; align-items: center;
-      z-index: 10000;
-    }
-
-    .intro-brand {
-      font-family: 'Bebas Neue', sans-serif; font-size: 4rem; letter-spacing: 6px;
-      background: linear-gradient(135deg, var(--gold), #fff, var(--red));
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      animation: brandGlow 1.5s ease-in-out infinite alternate;
-    }
-
-    .intro-sub {
-      color: rgba(255,255,255,0.3); letter-spacing: 5px;
-      font-size: 0.8rem; margin-top: 10px; text-transform: uppercase;
-    }
-
-    .spinner-ring {
-      width: 56px; height: 56px; position: relative; margin-top: 30px;
-    }
-    .spinner-ring::before, .spinner-ring::after {
-      content: ''; position: absolute; border-radius: 50%;
-    }
-    .spinner-ring::before {
-      inset: 0; border: 3px solid transparent;
-      border-top-color: var(--gold); border-bottom-color: var(--red);
-      animation: spin 0.9s linear infinite;
-    }
-    .spinner-ring::after {
-      inset: 8px; border: 2px solid transparent;
-      border-left-color: rgba(253,185,18,0.4);
-      animation: spin 1.4s linear infinite reverse;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    /* ══ MAIN APP ══ */
-    #main-app { display: none; position: relative; z-index: 10; }
-
-    .top-announcement {
-      background: linear-gradient(90deg, #000, rgba(169,4,50,0.5), #000);
-      border-bottom: 1px solid rgba(253,185,18,0.15);
-      padding: 9px 0; overflow: hidden; white-space: nowrap;
-    }
-
-    .announcement-content {
-      display: inline-block; padding-left: 100%;
-      animation: marquee 25s linear infinite;
-      font-size: 0.78rem; font-weight: 700; letter-spacing: 3px;
-      color: rgba(255,255,255,0.6);
-    }
-
-    @keyframes marquee {
-      from { transform: translate(0,0); }
-      to   { transform: translate(-100%,0); }
-    }
-
-    header {
-      padding: 0.9rem 5%;
-      background: rgba(6,6,8,0.95); backdrop-filter: blur(30px);
-      border-bottom: 1px solid rgba(169,4,50,0.25);
-      display: flex; justify-content: space-between; align-items: center;
-      position: sticky; top: 0; z-index: 100;
-      box-shadow: 0 1px 30px rgba(169,4,50,0.12);
-    }
-
-    header::after {
-      content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
-      background: linear-gradient(90deg, transparent, var(--red), var(--gold), var(--red), transparent);
-      background-size: 200%; animation: scanLine 4s linear infinite;
-    }
-
-    .header-brand { display: flex; align-items: center; gap: 12px; }
-
-    .live-dot {
-      width: 10px; height: 10px; background: var(--red-bright); border-radius: 50%;
-      animation: livePulse 1.5s ease-out infinite;
-    }
-
-    @keyframes livePulse {
-      0%   { box-shadow: 0 0 0 0 rgba(255,8,68,0.7); }
-      70%  { box-shadow: 0 0 0 10px rgba(255,8,68,0); }
-      100% { box-shadow: 0 0 0 0 rgba(255,8,68,0); }
-    }
-
-    .header-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.7rem; letter-spacing: 3px; }
-    .header-title span { color: var(--gold); }
-
-    .live-badge {
-      background: rgba(169,4,50,0.2); border: 1px solid rgba(169,4,50,0.4);
-      color: var(--red-bright); font-size: 0.7rem; font-weight: 700;
-      letter-spacing: 3px; padding: 4px 10px; border-radius: 6px;
-      animation: badgePulse 2s ease-in-out infinite;
-    }
-
-    @keyframes badgePulse { 0%,100% { opacity: 1; } 50% { opacity: 0.6; } }
-
-    .logout-btn {
-      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);
-      color: rgba(255,255,255,0.5); padding: 8px 18px; border-radius: 10px;
-      font-family: 'Rajdhani', sans-serif; font-weight: 700; letter-spacing: 1px;
-      cursor: pointer; transition: all 0.3s; font-size: 0.9rem;
-    }
-
-    .logout-btn:hover { color: white; border-color: var(--red); background: rgba(169,4,50,0.15); }
-
-    /* ══ CATEGORIES ══ */
-    #category-screen { padding: 30px 5% 50px; }
-
-    .section-title {
-      font-family: 'Bebas Neue', sans-serif; font-size: 1rem; letter-spacing: 4px;
-      color: rgba(255,255,255,0.3); margin-bottom: 20px;
-      display: flex; align-items: center; gap: 12px;
-    }
-
-    .section-title::after {
-      content: ''; flex: 1; height: 1px;
-      background: linear-gradient(90deg, rgba(169,4,50,0.4), transparent);
-    }
-
-    .category-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 16px;
-    }
-
-    .cat-card {
-      background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06);
-      padding: 36px 20px; border-radius: 20px;
-      text-align: center; cursor: pointer;
-      transition: all 0.35s cubic-bezier(0.175,0.885,0.32,1.275);
-      position: relative; overflow: hidden;
-      opacity: 0; transform: translateY(20px);
-      animation: cardReveal 0.5s cubic-bezier(0.16,1,0.3,1) forwards;
-    }
-
-    @keyframes cardReveal {
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .cat-card:hover {
-      border-color: rgba(169,4,50,0.5);
-      transform: translateY(-6px) scale(1.02);
-      box-shadow: 0 15px 35px rgba(0,0,0,0.5), 0 0 20px rgba(169,4,50,0.08);
-      background: rgba(169,4,50,0.05);
-    }
-
-    .cat-icon {
-      width: 56px; height: 56px; border-radius: 14px;
-      background: rgba(169,4,50,0.1); border: 1px solid rgba(169,4,50,0.2);
-      display: flex; align-items: center; justify-content: center;
-      margin: 0 auto 14px; transition: all 0.3s;
-    }
-
-    .cat-card:hover .cat-icon {
-      background: rgba(169,4,50,0.2); border-color: rgba(169,4,50,0.4);
-      box-shadow: 0 0 20px rgba(169,4,50,0.15);
-    }
-
-    .cat-card i { color: var(--gold); }
-    .cat-card span { font-size: 1.1rem; font-weight: 700; letter-spacing: 1px; display: block; }
-    .cat-count { font-size: 0.72rem; color: rgba(255,255,255,0.25); margin-top: 6px; letter-spacing: 1px; }
-
-    /* ══ CHANNEL VIEW ══ */
-    #channel-view { display: none; }
-
-    .back-btn {
-      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);
-      color: rgba(255,255,255,0.55); padding: 10px 20px; border-radius: 10px;
-      margin: 20px 5% 12px; cursor: pointer;
-      font-family: 'Rajdhani', sans-serif; font-weight: 700; letter-spacing: 1px;
-      transition: all 0.3s; display: inline-flex; align-items: center; gap: 8px;
-      font-size: 0.9rem;
-    }
-
-    .back-btn:hover { color: white; border-color: var(--gold); background: rgba(253,185,18,0.06); }
-
-    .video-section {
-      width: 90%; max-width: 1000px; margin: 0 auto;
-      border-radius: 20px; overflow: hidden; position: relative;
-      box-shadow: 0 0 0 1px rgba(169,4,50,0.2), 0 30px 80px rgba(0,0,0,0.9);
-    }
-
-    .video-section::before {
-      content: ''; position: absolute; inset: -1px; border-radius: 21px;
-      background: linear-gradient(135deg, rgba(169,4,50,0.5), rgba(253,185,18,0.3), rgba(169,4,50,0.5));
-      background-size: 300%; z-index: -1;
-      animation: borderGlow 4s linear infinite;
-    }
-
-    @keyframes borderGlow {
-      0%   { background-position: 0% 50%; }
-      50%  { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-
-    #video-display { aspect-ratio: 16/9; background: #000; }
-    #video-display iframe { width: 100%; height: 100%; border: none; display: block; }
-
-    .status-bar {
-      width: 90%; max-width: 1000px; margin: 14px auto;
-      display: flex; align-items: center; gap: 10px;
-    }
-
-    .status-dot {
-      width: 8px; height: 8px; border-radius: 50%;
-      background: rgba(255,255,255,0.15); transition: all 0.3s; flex-shrink: 0;
-    }
-
-    .status-dot.live { background: var(--red-bright); animation: livePulse 1.5s ease-out infinite; }
-
-    #statusLabel {
-      font-size: 0.78rem; font-weight: 700; letter-spacing: 2.5px;
-      color: rgba(255,255,255,0.35); text-transform: uppercase; transition: color 0.3s;
-    }
-
-    #statusLabel.live { color: var(--gold); }
-
-    .ch-header {
-      width: 90%; max-width: 1000px; margin: 4px auto 14px;
-      font-family: 'Bebas Neue', sans-serif; font-size: 1rem; letter-spacing: 4px;
-      color: rgba(255,255,255,0.3);
-      display: flex; align-items: center; gap: 12px;
-    }
-
-    .ch-header::after {
-      content: ''; flex: 1; height: 1px;
-      background: linear-gradient(90deg, rgba(169,4,50,0.3), transparent);
-    }
-
-    .grid-channels {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-      gap: 12px; width: 90%; max-width: 1000px; margin: 0 auto; padding-bottom: 50px;
-    }
-
-    .channel-card {
-      background: rgba(255,255,255,0.025); border: 1px solid rgba(255,255,255,0.06);
-      padding: 20px 10px 16px; border-radius: 16px; cursor: pointer; text-align: center;
-      transition: all 0.35s cubic-bezier(0.175,0.885,0.32,1.275);
-      position: relative; overflow: hidden;
-      opacity: 0; transform: translateY(20px);
-      animation: cardReveal 0.5s cubic-bezier(0.16,1,0.3,1) forwards;
-    }
-
-    .channel-card:hover {
-      border-color: rgba(169,4,50,0.5); background: rgba(169,4,50,0.06);
-      transform: translateY(-5px) scale(1.02); box-shadow: 0 12px 30px rgba(0,0,0,0.5);
-    }
-
-    .channel-card.active {
-      background: linear-gradient(135deg, rgba(169,4,50,0.8), rgba(100,2,30,0.9));
-      border-color: rgba(253,185,18,0.4); transform: translateY(-4px);
-      box-shadow: 0 15px 35px rgba(169,4,50,0.35);
-    }
-
-    .ch-icon-wrap {
-      width: 40px; height: 40px; border-radius: 10px;
-      background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08);
-      display: flex; align-items: center; justify-content: center;
-      margin: 0 auto 10px; transition: all 0.3s;
-    }
-
-    .channel-card:hover .ch-icon-wrap { background: rgba(169,4,50,0.15); border-color: rgba(169,4,50,0.3); }
-    .channel-card.active .ch-icon-wrap { background: rgba(255,255,255,0.12); border-color: rgba(253,185,18,0.3); }
-
-    .channel-card i { color: rgba(255,255,255,0.35); transition: all 0.3s; }
-    .channel-card:hover i { color: var(--gold); }
-    .channel-card.active i { color: white; filter: drop-shadow(0 0 6px rgba(255,255,255,0.5)); }
-
-    .channel-card span {
-      font-size: 0.75rem; font-weight: 700; letter-spacing: 0.3px;
-      color: rgba(255,255,255,0.45); transition: color 0.3s; display: block; line-height: 1.3;
-    }
-
-    .channel-card:hover span { color: rgba(255,255,255,0.9); }
-    .channel-card.active span { color: white; }
-
-    .active-pip {
-      position: absolute; top: 9px; right: 9px;
-      width: 7px; height: 7px; border-radius: 50%;
-      background: var(--gold); display: none;
-      animation: livePulse 1.5s ease-out infinite;
-    }
-
-    .channel-card.active .active-pip { display: block; }
-
-    @media (max-width: 600px) {
-      .login-brand { font-size: 3.5rem; }
-      .header-title { font-size: 1.3rem; }
-      .category-grid { grid-template-columns: repeat(2, 1fr); }
-      .grid-channels  { grid-template-columns: repeat(2, 1fr); }
+    :root { --red:#A90432; --red-bright:#ff0844; --gold:#FDB912; --bg:#060608; }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    body{background:var(--bg);color:white;font-family:'Rajdhani',sans-serif;min-height:100vh;overflow-x:hidden;}
+    body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 80% 50% at 10% 10%,rgba(169,4,50,.18) 0%,transparent 60%),radial-gradient(ellipse 60% 40% at 90% 90%,rgba(253,185,18,.12) 0%,transparent 60%);animation:bgPulse 8s ease-in-out infinite alternate;pointer-events:none;z-index:0;}
+    body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(169,4,50,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(169,4,50,.04) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0;}
+    @keyframes bgPulse{from{opacity:.6;transform:scale(1)}to{opacity:1;transform:scale(1.05)}}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(40px) scale(.95)}to{opacity:1;transform:translateY(0) scale(1)}}
+    @keyframes scanLine{0%{background-position:-200% 0}100%{background-position:200% 0}}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    @keyframes livePulse{0%{box-shadow:0 0 0 0 rgba(255,8,68,.7)}70%{box-shadow:0 0 0 10px rgba(255,8,68,0)}100%{box-shadow:0 0 0 0 rgba(255,8,68,0)}}
+    @keyframes badgePulse{0%,100%{opacity:1}50%{opacity:.6}}
+    @keyframes cardReveal{to{opacity:1;transform:translateY(0)}}
+    @keyframes marquee{from{transform:translate(0,0)}to{transform:translate(-100%,0)}}
+    @keyframes brandGlow{from{filter:drop-shadow(0 0 20px rgba(169,4,50,.4))}to{filter:drop-shadow(0 0 50px rgba(253,185,18,.6))}}
+    @keyframes popIn{from{opacity:0;transform:translate(-50%,-50%) scale(.85)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+    @keyframes popOut{from{opacity:1;transform:translate(-50%,-50%) scale(1)}to{opacity:0;transform:translate(-50%,-50%) scale(.85)}}
+
+    /* ── LOGIN ── */
+    #login-page{position:relative;z-index:10;height:100vh;display:flex;justify-content:center;align-items:center;padding:20px;}
+    .login-wrap{display:flex;flex-direction:column;align-items:center;gap:2rem;animation:fadeUp .8s cubic-bezier(.16,1,.3,1) forwards;}
+    .login-brand{font-family:'Bebas Neue',sans-serif;font-size:5rem;letter-spacing:6px;line-height:1;text-align:center;background:linear-gradient(135deg,var(--gold) 0%,#fff 45%,var(--red) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:brandGlow 3s ease-in-out infinite alternate;}
+    .login-card{width:100%;max-width:360px;background:rgba(10,10,15,.85);backdrop-filter:blur(40px);border-radius:28px;border:1px solid rgba(255,255,255,.08);padding:2.5rem 2rem;position:relative;overflow:hidden;}
+    .login-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--red),var(--gold),var(--red),transparent);background-size:200%;animation:scanLine 3s linear infinite;}
+    .login-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),var(--red),transparent);}
+    .input-group{position:relative;margin-bottom:1rem;}
+    .input-group i{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:rgba(255,255,255,.25);transition:color .3s;pointer-events:none;}
+    .input-group:focus-within i{color:var(--gold);}
+    .login-card input{width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);padding:15px 16px 15px 44px;border-radius:14px;color:white;outline:none;font-family:'Rajdhani',sans-serif;font-size:1rem;font-weight:600;letter-spacing:1px;transition:all .3s;}
+    .login-card input::placeholder{color:rgba(255,255,255,.2);}
+    .login-card input:focus{border-color:rgba(253,185,18,.4);background:rgba(253,185,18,.04);box-shadow:0 0 0 3px rgba(253,185,18,.08);}
+    .btn-login{width:100%;background:linear-gradient(135deg,var(--red) 0%,#c4053f 100%);color:white;border:none;padding:17px;border-radius:14px;font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:3px;cursor:pointer;transition:all .4s;margin-top:.5rem;position:relative;overflow:hidden;}
+    .btn-login::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,transparent 40%,rgba(255,255,255,.15) 50%,transparent 60%);transform:translateX(-100%);transition:transform .5s;}
+    .btn-login:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(169,4,50,.5);}
+    .btn-login:hover::after{transform:translateX(100%);}
+
+    /* ── INTRO ── */
+    #intro-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:#000;display:none;flex-direction:column;justify-content:center;align-items:center;z-index:10000;}
+    .intro-brand{font-family:'Bebas Neue',sans-serif;font-size:4rem;letter-spacing:6px;background:linear-gradient(135deg,var(--gold),#fff,var(--red));-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:brandGlow 1.5s ease-in-out infinite alternate;}
+    .intro-sub{color:rgba(255,255,255,.3);letter-spacing:5px;font-size:.8rem;margin-top:10px;text-transform:uppercase;}
+    .spinner-ring{width:56px;height:56px;position:relative;margin-top:30px;}
+    .spinner-ring::before,.spinner-ring::after{content:'';position:absolute;border-radius:50%;}
+    .spinner-ring::before{inset:0;border:3px solid transparent;border-top-color:var(--gold);border-bottom-color:var(--red);animation:spin .9s linear infinite;}
+    .spinner-ring::after{inset:8px;border:2px solid transparent;border-left-color:rgba(253,185,18,.4);animation:spin 1.4s linear infinite reverse;}
+
+    /* ── WELCOME POPUP ── */
+    #welcome-popup{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:9999;display:none;animation:popIn .4s cubic-bezier(.16,1,.3,1) forwards;}
+    .welcome-box{background:rgba(10,10,15,.97);backdrop-filter:blur(40px);border-radius:24px;border:1px solid rgba(253,185,18,.2);padding:2.5rem 2.5rem 2rem;text-align:center;min-width:300px;max-width:380px;position:relative;overflow:hidden;box-shadow:0 40px 80px rgba(0,0,0,.9);}
+    .welcome-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),var(--red),var(--gold),transparent);}
+    .welcome-emoji{font-size:2.5rem;margin-bottom:1rem;display:block;}
+    .welcome-title{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:3px;color:var(--gold);margin-bottom:.4rem;}
+    .welcome-msg{color:rgba(255,255,255,.6);font-size:.95rem;font-weight:600;letter-spacing:.5px;margin-bottom:1.5rem;}
+    .welcome-close{background:linear-gradient(135deg,var(--red),#c4053f);border:none;color:white;padding:12px 30px;border-radius:12px;font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:2px;cursor:pointer;transition:all .3s;}
+    .welcome-close:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(169,4,50,.4);}
+    #popup-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(4px);z-index:9998;display:none;}
+
+    /* ── MAIN APP ── */
+    #main-app{display:none;position:relative;z-index:10;animation:fadeUp .6s cubic-bezier(.16,1,.3,1) forwards;}
+    .top-announcement{background:linear-gradient(90deg,#000,rgba(169,4,50,.5),#000);border-bottom:1px solid rgba(253,185,18,.15);padding:9px 0;overflow:hidden;white-space:nowrap;}
+    .announcement-content{display:inline-block;padding-left:100%;animation:marquee 25s linear infinite;font-size:.78rem;font-weight:700;letter-spacing:3px;color:rgba(255,255,255,.6);}
+
+    /* ── HEADER ── */
+    header{padding:.9rem 5%;background:rgba(6,6,8,.95);backdrop-filter:blur(30px);border-bottom:1px solid rgba(169,4,50,.25);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;box-shadow:0 1px 30px rgba(169,4,50,.12);}
+    header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--red),var(--gold),var(--red),transparent);background-size:200%;animation:scanLine 4s linear infinite;}
+    .header-brand{display:flex;align-items:center;gap:12px;}
+    .live-dot{width:10px;height:10px;background:var(--red-bright);border-radius:50%;animation:livePulse 1.5s ease-out infinite;}
+    .header-title{font-family:'Bebas Neue',sans-serif;font-size:1.7rem;letter-spacing:3px;}
+    .header-title span{color:var(--gold);}
+    .live-badge{background:rgba(169,4,50,.2);border:1px solid rgba(169,4,50,.4);color:var(--red-bright);font-size:.7rem;font-weight:700;letter-spacing:3px;padding:4px 10px;border-radius:6px;animation:badgePulse 2s ease-in-out infinite;}
+    .nav-right{display:flex;align-items:center;gap:8px;}
+    .logout-btn{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.5);padding:8px 18px;border-radius:10px;font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:1px;cursor:pointer;transition:all .3s;font-size:.9rem;}
+    .logout-btn:hover{color:white;border-color:var(--red);background:rgba(169,4,50,.15);}
+    .admin-btn{background:rgba(253,185,18,.08);border:1px solid rgba(253,185,18,.2);color:rgba(253,185,18,.7);padding:8px 14px;border-radius:10px;font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:1px;cursor:pointer;transition:all .3s;font-size:.85rem;display:flex;align-items:center;gap:6px;}
+    .admin-btn:hover{color:var(--gold);border-color:var(--gold);background:rgba(253,185,18,.12);}
+
+    /* ── DUYURU BANDI ── */
+    .announcement-bar{display:none;background:rgba(253,185,18,.06);border-bottom:1px solid rgba(253,185,18,.15);padding:10px 5%;align-items:center;gap:10px;}
+    .announcement-bar.visible{display:flex;}
+    .ann-icon{color:var(--gold);flex-shrink:0;}
+    .ann-text{font-size:.85rem;font-weight:700;color:rgba(255,255,255,.7);letter-spacing:.5px;flex:1;}
+
+    /* ── CATEGORIES ── */
+    #category-screen{padding:30px 5% 50px;}
+    .section-title{font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:4px;color:rgba(255,255,255,.3);margin-bottom:20px;display:flex;align-items:center;gap:12px;}
+    .section-title::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(169,4,50,.4),transparent);}
+    .category-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;}
+    .cat-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);padding:36px 20px;border-radius:20px;text-align:center;cursor:pointer;transition:all .35s cubic-bezier(.175,.885,.32,1.275);position:relative;overflow:hidden;opacity:0;transform:translateY(20px);animation:cardReveal .5s cubic-bezier(.16,1,.3,1) forwards;}
+    .cat-card:hover{border-color:rgba(169,4,50,.5);transform:translateY(-6px) scale(1.02);box-shadow:0 15px 35px rgba(0,0,0,.5);background:rgba(169,4,50,.05);}
+    .cat-icon{width:56px;height:56px;border-radius:14px;background:rgba(169,4,50,.1);border:1px solid rgba(169,4,50,.2);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;transition:all .3s;}
+    .cat-card:hover .cat-icon{background:rgba(169,4,50,.2);border-color:rgba(169,4,50,.4);box-shadow:0 0 20px rgba(169,4,50,.15);}
+    .cat-card i{color:var(--gold);}
+    .cat-card span{font-size:1.1rem;font-weight:700;letter-spacing:1px;display:block;}
+    .cat-count{font-size:.72rem;color:rgba(255,255,255,.25);margin-top:6px;letter-spacing:1px;}
+
+    /* ── CHANNEL VIEW ── */
+    #channel-view{display:none;}
+    .back-btn{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.55);padding:10px 20px;border-radius:10px;margin:20px 5% 12px;cursor:pointer;font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:1px;transition:all .3s;display:inline-flex;align-items:center;gap:8px;font-size:.9rem;}
+    .back-btn:hover{color:white;border-color:var(--gold);background:rgba(253,185,18,.06);}
+    .video-section{width:90%;max-width:1000px;margin:0 auto;border-radius:20px;overflow:hidden;position:relative;box-shadow:0 0 0 1px rgba(169,4,50,.2),0 30px 80px rgba(0,0,0,.9);}
+    .video-section::before{content:'';position:absolute;inset:-1px;border-radius:21px;background:linear-gradient(135deg,rgba(169,4,50,.5),rgba(253,185,18,.3),rgba(169,4,50,.5));background-size:300%;z-index:-1;animation:borderGlow 4s linear infinite;}
+    @keyframes borderGlow{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+    #video-display{aspect-ratio:16/9;background:#000;}
+    #video-display iframe{width:100%;height:100%;border:none;display:block;}
+    .status-bar{width:90%;max-width:1000px;margin:14px auto;display:flex;align-items:center;gap:10px;}
+    .status-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.15);transition:all .3s;flex-shrink:0;}
+    .status-dot.live{background:var(--red-bright);animation:livePulse 1.5s ease-out infinite;}
+    #statusLabel{font-size:.78rem;font-weight:700;letter-spacing:2.5px;color:rgba(255,255,255,.35);text-transform:uppercase;transition:color .3s;}
+    #statusLabel.live{color:var(--gold);}
+    .ch-header{width:90%;max-width:1000px;margin:4px auto 14px;font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:4px;color:rgba(255,255,255,.3);display:flex;align-items:center;gap:12px;}
+    .ch-header::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(169,4,50,.3),transparent);}
+    .grid-channels{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;width:90%;max-width:1000px;margin:0 auto;padding-bottom:50px;}
+    .channel-card{background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.06);padding:20px 10px 16px;border-radius:16px;cursor:pointer;text-align:center;transition:all .35s cubic-bezier(.175,.885,.32,1.275);position:relative;overflow:hidden;opacity:0;transform:translateY(20px);animation:cardReveal .5s cubic-bezier(.16,1,.3,1) forwards;}
+    .channel-card.disabled{opacity:.35;cursor:not-allowed;filter:grayscale(.8);}
+    .channel-card.disabled:hover{transform:none;box-shadow:none;border-color:rgba(255,255,255,.06);}
+    .channel-card:not(.disabled):hover{border-color:rgba(169,4,50,.5);background:rgba(169,4,50,.06);transform:translateY(-5px) scale(1.02);box-shadow:0 12px 30px rgba(0,0,0,.5);}
+    .channel-card.active{background:linear-gradient(135deg,rgba(169,4,50,.8),rgba(100,2,30,.9));border-color:rgba(253,185,18,.4);transform:translateY(-4px);box-shadow:0 15px 35px rgba(169,4,50,.35);}
+    .ch-logo-wrap{width:56px;height:56px;border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;overflow:hidden;position:relative;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);transition:all .3s;}
+    .ch-logo-wrap img{width:100%;height:100%;object-fit:contain;padding:6px;}
+    .ch-monogram{font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:.5px;color:white;text-shadow:0 1px 4px rgba(0,0,0,.5);}
+    .channel-card:not(.disabled):hover .ch-logo-wrap{border-color:rgba(169,4,50,.4);box-shadow:0 0 15px rgba(169,4,50,.15);}
+    .channel-card.active .ch-logo-wrap{border-color:rgba(253,185,18,.4);box-shadow:0 0 15px rgba(253,185,18,.2);}
+    .channel-card span{font-size:.75rem;font-weight:700;letter-spacing:.3px;color:rgba(255,255,255,.45);transition:color .3s;display:block;line-height:1.3;}
+    .channel-card:not(.disabled):hover span{color:rgba(255,255,255,.9);}
+    .channel-card.active span{color:white;}
+    .active-pip{position:absolute;top:9px;right:9px;width:7px;height:7px;border-radius:50%;background:var(--gold);display:none;animation:livePulse 1.5s ease-out infinite;}
+    .channel-card.active .active-pip{display:block;}
+    .closed-badge{position:absolute;top:8px;left:8px;background:rgba(0,0,0,.7);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.4);font-size:.55rem;font-weight:700;letter-spacing:1px;padding:2px 6px;border-radius:5px;text-transform:uppercase;}
+
+    /* ── ADMIN PANEL ── */
+    #admin-login-overlay,#admin-panel-overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(10px);z-index:9000;display:none;justify-content:center;align-items:center;}
+    .admin-modal{background:rgba(10,10,15,.98);border:1px solid rgba(253,185,18,.2);border-radius:24px;padding:2.5rem;width:100%;max-width:480px;margin:20px;position:relative;overflow:hidden;max-height:90vh;overflow-y:auto;}
+    .admin-modal::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),var(--red),var(--gold),transparent);}
+    .admin-modal h2{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:3px;color:var(--gold);margin-bottom:1.5rem;display:flex;align-items:center;gap:10px;}
+    .admin-close{position:absolute;top:16px;right:16px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.5);width:32px;height:32px;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .3s;}
+    .admin-close:hover{color:white;border-color:var(--red);background:rgba(169,4,50,.2);}
+    .admin-section{margin-bottom:1.8rem;}
+    .admin-section-title{font-size:.75rem;font-weight:700;letter-spacing:3px;color:rgba(255,255,255,.3);text-transform:uppercase;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,.06);}
+    .admin-input{width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);padding:12px 16px;border-radius:12px;color:white;outline:none;font-family:'Rajdhani',sans-serif;font-size:.95rem;font-weight:600;margin-bottom:8px;transition:all .3s;}
+    .admin-input:focus{border-color:rgba(253,185,18,.4);background:rgba(253,185,18,.03);}
+    .admin-btn-primary{background:linear-gradient(135deg,var(--red),#c4053f);border:none;color:white;padding:12px 24px;border-radius:12px;font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:2px;cursor:pointer;transition:all .3s;width:100%;}
+    .admin-btn-primary:hover{transform:translateY(-1px);box-shadow:0 8px 20px rgba(169,4,50,.4);}
+    .admin-btn-gold{background:linear-gradient(135deg,rgba(253,185,18,.2),rgba(253,185,18,.1));border:1px solid rgba(253,185,18,.3);color:var(--gold);padding:10px 20px;border-radius:10px;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.9rem;cursor:pointer;transition:all .3s;}
+    .admin-btn-gold:hover{background:rgba(253,185,18,.2);}
+    .channel-toggle-list{display:flex;flex-direction:column;gap:8px;max-height:300px;overflow-y:auto;padding-right:4px;}
+    .channel-toggle-list::-webkit-scrollbar{width:4px;}
+    .channel-toggle-list::-webkit-scrollbar-track{background:rgba(255,255,255,.04);}
+    .channel-toggle-list::-webkit-scrollbar-thumb{background:rgba(169,4,50,.4);border-radius:2px;}
+    .toggle-row{display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);padding:10px 14px;border-radius:12px;transition:all .3s;}
+    .toggle-row:hover{border-color:rgba(255,255,255,.1);}
+    .toggle-label{font-size:.88rem;font-weight:700;color:rgba(255,255,255,.7);letter-spacing:.3px;}
+    .toggle-cat{font-size:.7rem;color:rgba(255,255,255,.3);letter-spacing:1px;}
+    .toggle-switch{position:relative;width:44px;height:24px;flex-shrink:0;}
+    .toggle-switch input{opacity:0;width:0;height:0;position:absolute;}
+    .toggle-slider{position:absolute;inset:0;background:rgba(255,255,255,.1);border-radius:12px;cursor:pointer;transition:.3s;}
+    .toggle-slider::before{content:'';position:absolute;width:18px;height:18px;left:3px;top:3px;background:rgba(255,255,255,.4);border-radius:50%;transition:.3s;}
+    .toggle-switch input:checked+.toggle-slider{background:rgba(52,211,153,.3);border:1px solid rgba(52,211,153,.4);}
+    .toggle-switch input:checked+.toggle-slider::before{transform:translateX(20px);background:#34d399;}
+    .ann-row{display:flex;gap:8px;}
+    .ann-row .admin-input{flex:1;margin-bottom:0;}
+    .user-list{display:flex;flex-direction:column;gap:6px;}
+    .user-row{display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);padding:10px 14px;border-radius:10px;}
+    .user-name{font-size:.9rem;font-weight:700;color:rgba(255,255,255,.7);}
+    .user-role{font-size:.65rem;letter-spacing:2px;color:rgba(253,185,18,.6);text-transform:uppercase;}
+
+    @media(max-width:600px){
+      .login-brand{font-size:3.5rem;}
+      .header-title{font-size:1.3rem;}
+      .category-grid{grid-template-columns:repeat(2,1fr);}
+      .grid-channels{grid-template-columns:repeat(2,1fr);}
+      .admin-modal{padding:1.5rem;}
     }
   </style>
 </head>
 <body>
 
-  <!-- LOGIN -->
-  <div id="login-page">
-    <div class="login-wrap">
-      <div style="text-align:center;">
-        <div class="login-brand">Z&M STREAM</div>
-        <div class="login-tagline"></div>
+<!-- LOGIN -->
+<div id="login-page">
+  <div class="login-wrap">
+    <div style="text-align:center;">
+      <div class="login-brand">Z&M STREAM</div>
+    </div>
+    <div class="login-card">
+      <div class="input-group">
+        <i data-lucide="user" size="16"></i>
+        <input type="text" id="username" placeholder="Kullanıcı Adı" autocomplete="off">
       </div>
-      <div class="login-card">
-        <div class="input-group">
-          <i data-lucide="user" size="16"></i>
-          <input type="text" id="username" placeholder="Kullanıcı Adı" autocomplete="off">
-        </div>
-        <div class="input-group">
-          <i data-lucide="lock" size="16"></i>
-          <input type="password" id="password" placeholder="Şifre">
-        </div>
-        <button class="btn-login" onclick="attemptLogin()">Sisteme Giriş</button>
+      <div class="input-group">
+        <i data-lucide="lock" size="16"></i>
+        <input type="password" id="password" placeholder="Şifre">
       </div>
+      <button class="btn-login" onclick="attemptLogin()">Sisteme Giriş</button>
+    </div>
+  </div>
+</div>
+
+<!-- INTRO -->
+<div id="intro-overlay">
+  <div class="intro-brand">Z&M STREAM</div>
+  <div class="intro-sub" id="intro-sub-text">İyi Seyirler Diler</div>
+  <div class="spinner-ring"></div>
+</div>
+
+<!-- WELCOME POPUP -->
+<div id="popup-overlay" onclick="closeWelcome()"></div>
+<div id="welcome-popup">
+  <div class="welcome-box">
+    <span class="welcome-emoji">👋</span>
+    <div class="welcome-title" id="welcome-title">HOŞ GELDİN!</div>
+    <div class="welcome-msg" id="welcome-msg">Z&M Stream'e bağlandın. İyi seyirler!</div>
+    <button class="welcome-close" onclick="closeWelcome()">Hadi Başlayalım</button>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="main-app">
+  <div class="top-announcement">
+    <div class="announcement-content" id="ticker-text">
+      ✦ Z&M STREAM PORTALINA HOŞ GELDİNİZ &nbsp;&nbsp;&nbsp; ✦ KEYİFLİ SEYİRLER DİLERİZ &nbsp;&nbsp;&nbsp; ✦ Z&M STREAM PORTALINA HOŞ GELDİNİZ &nbsp;&nbsp;&nbsp; ✦ KEYİFLİ SEYİRLER DİLERİZ
     </div>
   </div>
 
-  <!-- INTRO -->
-  <div id="intro-overlay">
-    <div class="intro-brand">Z&M STREAM</div>
-    <div class="intro-sub">İyi Seyirler Diler</div>
-    <div class="spinner-ring"></div>
+  <!-- Duyuru Bandı -->
+  <div class="announcement-bar" id="announcement-bar">
+    <i data-lucide="megaphone" size="16" class="ann-icon"></i>
+    <div class="ann-text" id="announcement-text"></div>
   </div>
 
-  <!-- MAIN APP -->
-  <div id="main-app">
-    <div class="top-announcement">
-      <div class="announcement-content">
-        ✦ Z&M STREAM HOŞ GELDİNİZ &nbsp;&nbsp;&nbsp; ✦ KEYİFLİ SEYİRLER DİLERİZ &nbsp;&nbsp;&nbsp; ✦ Z&M STREAM HOŞ GELDİNİZ &nbsp;&nbsp;&nbsp; ✦ KEYİFLİ SEYİRLER DİLERİZ
-      </div>
+  <header>
+    <div class="header-brand">
+      <div class="live-dot"></div>
+      <div class="header-title">Z&M <span>STREAM</span></div>
+      <div class="live-badge">CANLI</div>
     </div>
-
-    <header>
-      <div class="header-brand">
-        <div class="live-dot"></div>
-        <div class="header-title">Z&M <span>STREAM</span></div>
-        <div class="live-badge">CANLI</div>
-      </div>
-      <button class="logout-btn" onclick="location.reload()">Çıkış</button>
-    </header>
-
-    <div id="category-screen">
-      <div style="padding: 30px 5% 0;">
-        <div class="section-title">Kategoriler</div>
-      </div>
-      <div style="padding: 0 5%;">
-        <div class="category-grid" id="categoryList"></div>
-      </div>
-    </div>
-
-    <div id="channel-view">
-      <button class="back-btn" onclick="backToCategories()">
-        <i data-lucide="arrow-left" size="16"></i> Kategoriler
+    <div class="nav-right">
+      <button class="admin-btn" id="admin-btn" onclick="openAdminLogin()">
+        ⚙ Yönetim
       </button>
-      <div class="video-section">
-        <div id="video-display"></div>
-      </div>
-      <div class="status-bar">
-        <div class="status-dot" id="statusDot"></div>
-        <div id="statusLabel">Kanal seçiniz</div>
-      </div>
-      <div class="ch-header">Kanallar</div>
-      <div class="grid-channels" id="channelList"></div>
+      <button class="logout-btn" onclick="location.reload()">Çıkış</button>
     </div>
+  </header>
+
+  <div id="category-screen">
+    <div style="padding:30px 5% 0;"><div class="section-title">Kategoriler</div></div>
+    <div style="padding:0 5%;"><div class="category-grid" id="categoryList"></div></div>
   </div>
 
-  <script>
-    const USERS = [{ u: "zm", p: "1905" }, { u: "gs", p: "1905" }];
+  <div id="channel-view">
+    <button class="back-btn" onclick="backToCategories()">
+      <i data-lucide="arrow-left" size="16"></i> Kategoriler
+    </button>
+    <div class="video-section"><div id="video-display"></div></div>
+    <div class="status-bar">
+      <div class="status-dot" id="statusDot"></div>
+      <div id="statusLabel">Kanal seçiniz</div>
+    </div>
+    <div class="ch-header">Kanallar</div>
+    <div class="grid-channels" id="channelList"></div>
+  </div>
+</div>
 
-    const CHANNELS = [
-      { name: "Z&M ÖZEL YAYIN", url: "https://vdo.ninja/?view=AuJ7Zh4&autoplay&clean&videobitrate=10000&shutup&label=0&codec=av1", category: "Z&M", icon: "star" },
-    ];
+<!-- ADMIN ŞİFRE GİRİŞİ -->
+<div id="admin-login-overlay" style="display:none;justify-content:center;align-items:center;">
+  <div class="admin-modal" style="max-width:340px;">
+    <button class="admin-close" onclick="closeAdminLogin()"><i data-lucide="x" size="14"></i></button>
+    <h2><i data-lucide="shield" size="22"></i> Yönetici Girişi</h2>
+    <input class="admin-input" type="password" id="admin-pass-input" placeholder="Admin Şifresi">
+    <button class="admin-btn-primary" onclick="checkAdminPass()">Giriş Yap</button>
+    <p id="admin-pass-error" style="color:var(--red-bright);font-size:.8rem;margin-top:10px;display:none;text-align:center;font-weight:700;">Şifre yanlış!</p>
+  </div>
+</div>
 
-    const CAT_ICONS = {
-      "Z&M": "star", "SPOR": "award", "HABER": "radio",
-      "FİLM": "film", "MÜZİK": "music", "ÇOCUK": "smile",
-    };
+<!-- ADMİN PANELİ -->
+<div id="admin-panel-overlay" style="display:none;justify-content:center;align-items:flex-start;padding:20px;">
+  <div class="admin-modal">
+    <button class="admin-close" onclick="closeAdminPanel()"><i data-lucide="x" size="14"></i></button>
+    <h2><i data-lucide="settings-2" size="22"></i> Yönetici Paneli</h2>
 
-    function attemptLogin() {
-      const u = document.getElementById('username').value.trim();
-      const p = document.getElementById('password').value.trim();
-      if (USERS.find(user => user.u === u && user.p === p)) {
-        document.getElementById('login-page').style.display = 'none';
-        const intro = document.getElementById('intro-overlay');
-        intro.style.display = 'flex';
-        setTimeout(() => {
-          intro.style.display = 'none';
-          document.getElementById('main-app').style.display = 'block';
-          initCategories();
-        }, 2200);
-      } else {
-        const card = document.querySelector('.login-card');
-        card.style.transition = 'box-shadow 0.3s, border-color 0.3s';
-        card.style.borderColor = 'rgba(255,8,68,0.6)';
-        card.style.boxShadow = '0 0 30px rgba(255,8,68,0.2)';
-        setTimeout(() => { card.style.borderColor = ''; card.style.boxShadow = ''; }, 1500);
-      }
+    <!-- Duyuru -->
+    <div class="admin-section">
+      <div class="admin-section-title">📢 Duyuru Yönetimi</div>
+      <div class="ann-row">
+        <input class="admin-input" type="text" id="ann-input" placeholder="Duyuru metnini girin...">
+        <button class="admin-btn-gold" onclick="saveAnnouncement()">Yayınla</button>
+      </div>
+      <button class="admin-btn-gold" style="margin-top:8px;width:100%;background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.1);color:rgba(255,255,255,.4);" onclick="clearAnnouncement()">Duyuruyu Kaldır</button>
+    </div>
+
+    <!-- Kanal Aç/Kapa -->
+    <div class="admin-section">
+      <div class="admin-section-title">📺 Kanal Yönetimi</div>
+      <div class="channel-toggle-list" id="admin-channel-list"></div>
+    </div>
+
+    <!-- Kullanıcılar -->
+    <div class="admin-section">
+      <div class="admin-section-title">👥 Kullanıcılar</div>
+      <div class="user-list" id="admin-user-list"></div>
+    </div>
+
+    <button class="admin-btn-primary" onclick="closeAdminPanel()">Kapat & Kaydet</button>
+  </div>
+</div>
+
+<script>
+  const ADMIN_PASS = "mexy774";
+
+  const USERS = [
+    { u: "zm", p: "1905", name: "Z&M", role: "Üye" },
+    { u: "gs", p: "1905", name: "GS", role: "Üye" },
+  ];
+
+  let channelStates = {}; // id → true/false (açık/kapalı)
+  let announcement = "";
+  let currentUser = null;
+
+  const CHANNELS = [
+    { id:"zm_ozel",    name:"Z&M ÖZEL YAYIN", url:"https://vdo.ninja/?view=AuJ7Zh4&autoplay&clean&videobitrate=10000&shutup&label=0&codec=av1", category:"Z&M",    logo:null },
+    { id:"zm_s1",      name:"Z&M Sports 1",   url:"https://test-streams.mux.dev/x36xhzz/url_6/193039199_mp4_h264_aac_hd_7.m3u8", category:"Spor",   logo:null },
+    { id:"zm_s2",      name:"Z&M Sports 2",   url:"https://test-streams.mux.dev/x36xhzz/url_6/193039199_mp4_h264_aac_hd_7.m3u8", category:"Spor",   logo:null },
+    { id:"zm_s3",      name:"Z&M Sports 3",   url:"https://test-streams.mux.dev/x36xhzz/url_6/193039199_mp4_h264_aac_hd_7.m3u8", category:"Spor",   logo:null },
+    { id:"zm_s4",      name:"Z&M Sports 4",   url:"https://test-streams.mux.dev/x36xhzz/url_6/193039199_mp4_h264_aac_hd_7.m3u8", category:"Spor",   logo:null },
+    { id:"zm_s5",      name:"Z&M Sports 5",   url:"https://test-streams.mux.dev/x36xhzz/url_6/193039199_mp4_h264_aac_hd_7.m3u8", category:"Spor",   logo:null },
+    { id:"trt_spor",   name:"TRT Spor",        url:"https://test-streams.mux.dev/x36xhzz/url_6/193039199_mp4_h264_aac_hd_7.m3u8", category:"Spor",   logo:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/TRT_Spor_logo_%282017%29.svg/240px-TRT_Spor_logo_%282017%29.svg.png" },
+    { id:"trt_yhd",    name:"TRT Spor YHD",    url:"https://test-streams.mux.dev/x36xhzz/url_6/193039199_mp4_h264_aac_hd_7.m3u8", category:"Spor",   logo:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/TRT_Spor_logo_%282017%29.svg/240px-TRT_Spor_logo_%282017%29.svg.png" },
+    { id:"s_sport",    name:"S Sport",         url:"https://test-streams.mux.dev/x36xhzz/url_6/193039199_mp4_h264_aac_hd_7.m3u8", category:"Spor",   logo:"https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/S_Sport_logo.svg/240px-S_Sport_logo.svg.png" },
+    { id:"s_plus",     name:"S Sport Plus",    url:"https://test-streams.mux.dev/x36xhzz/url_6/193039199_mp4_h264_aac_hd_7.m3u8", category:"Spor",   logo:"https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/S_Sport_logo.svg/240px-S_Sport_logo.svg.png" },
+    { id:"tabii",      name:"Tabii Sports",    url:"https://test-streams.mux.dev/x36xhzz/url_6/193039199_mp4_h264_aac_hd_7.m3u8", category:"Spor",   logo:"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Tabii_logo.svg/240px-Tabii_logo.svg.png" },
+    { id:"yab1",  name:"Yabancı Kanal 1",  url:"https://test-streams.mux.dev/x36xhzz/url_6/193039199_mp4_h264_aac_hd_7.m3u8", category:"Yabancı", logo:null },
+    { id:"yab2",  name:"Yabancı Kanal 2",  url:"https://test-streams.mux.dev/x36xhzz/url_6/193039199_mp4_h264_aac_hd_7.m3u8", category:"Yabancı", logo:null },
+    { id:"yab3",  name:"Yabancı Kanal 3",  url:"https://test-streams.mux.dev/x36xhzz/url_6/193039199_mp4_h264_aac_hd_7.m3u8", category:"Yabancı", logo:null },
+    { id:"yab4",  name:"Yabancı Kanal 4",  url:"https://test-streams.mux.dev/x36xhzz/url_6/193039199_mp4_h264_aac_hd_7.m3u8", category:"Yabancı", logo:null },
+    { id:"yab5",  name:"Yabancı Kanal 5",  url:"https://test-streams.mux.dev/x36xhzz/url_6/193039199_mp4_h264_aac_hd_7.m3u8", category:"Yabancı", logo:null },
+    { id:"yab6",  name:"Yabancı Kanal 6",  url:"https://test-streams.mux.dev/x36xhzz/url_6/193039199_mp4_h264_aac_hd_7.m3u8", category:"Yabancı", logo:null },
+    { id:"yab7",  name:"Yabancı Kanal 7",  url:"https://test-streams.mux.dev/x36xhzz/url_6/193039199_mp4_h264_aac_hd_7.m3u8", category:"Yabancı", logo:null },
+    { id:"yab8",  name:"Yabancı Kanal 8",  url:"https://test-streams.mux.dev/x36xhzz/url_6/193039199_mp4_h264_aac_hd_7.m3u8", category:"Yabancı", logo:null },
+    { id:"yab9",  name:"Yabancı Kanal 9",  url:"https://test-streams.mux.dev/x36xhzz/url_6/193039199_mp4_h264_aac_hd_7.m3u8", category:"Yabancı", logo:null },
+    { id:"yab10", name:"Yabancı Kanal 10", url:"https://test-streams.mux.dev/x36xhzz/url_6/193039199_mp4_h264_aac_hd_7.m3u8", category:"Yabancı", logo:null },
+  ];
+
+  // Tüm kanallar başlangıçta açık
+  CHANNELS.forEach(ch => channelStates[ch.id] = true);
+
+  const CAT_ICONS = { "Z&M":"star","Spor":"award","Yabancı":"globe","Haber":"radio","Film & Dizi":"film","Müzik":"music" };
+  const MONO_COLORS = [['#A90432','#ff0844'],['#1a6ef5','#5ba4ff'],['#7c3aed','#a855f7'],['#0891b2','#22d3ee'],['#059669','#34d399'],['#d97706','#fbbf24'],['#dc2626','#f87171'],['#0f766e','#2dd4bf']];
+
+  function getMonogram(name) {
+    const words = name.replace(/[^a-zA-ZğüşıöçĞÜŞİÖÇ0-9\s]/g,'').trim().split(/\s+/);
+    return words.length >= 2 ? (words[0][0]+words[1][0]).toUpperCase() : words[0].substring(0,2).toUpperCase();
+  }
+
+  function getMonoColor(name) {
+    let h=0; for(let c of name) h=(h*31+c.charCodeAt(0))&0xffffffff;
+    return MONO_COLORS[Math.abs(h)%MONO_COLORS.length];
+  }
+
+  function buildLogoHTML(ch) {
+    if (ch.logo) return `<div class="ch-logo-wrap"><img src="${ch.logo}" alt="${ch.name}" onerror="this.parentElement.innerHTML='<span class=ch-monogram>${getMonogram(ch.name)}</span>';this.parentElement.style.background='linear-gradient(135deg,${getMonoColor(ch.name).join(',')})';"></div>`;
+    const [c1,c2]=getMonoColor(ch.name);
+    return `<div class="ch-logo-wrap" style="background:linear-gradient(135deg,${c1},${c2})"><span class="ch-monogram">${getMonogram(ch.name)}</span></div>`;
+  }
+
+  /* ── LOGIN ── */
+  function attemptLogin() {
+    const u = document.getElementById('username').value.trim();
+    const p = document.getElementById('password').value.trim();
+    const user = USERS.find(x => x.u===u && x.p===p);
+    if (user) {
+      currentUser = user;
+      document.getElementById('login-page').style.display = 'none';
+      document.getElementById('intro-sub-text').textContent = `Hoş geldin, ${user.name}! İyi seyirler.`;
+      const intro = document.getElementById('intro-overlay');
+      intro.style.display = 'flex';
+      setTimeout(() => {
+        intro.style.display = 'none';
+        document.getElementById('main-app').style.display = 'block';
+        initCategories();
+        showWelcomePopup(user);
+        if (announcement) showAnnouncementBar();
+        // Admin butonu her zaman görünür
+        lucide.createIcons();
+      }, 2200);
+    } else {
+      const card = document.querySelector('.login-card');
+      card.style.transition = 'box-shadow .3s, border-color .3s';
+      card.style.borderColor = 'rgba(255,8,68,.6)';
+      card.style.boxShadow = '0 0 30px rgba(255,8,68,.2)';
+      setTimeout(() => { card.style.borderColor=''; card.style.boxShadow=''; }, 1500);
     }
+  }
 
-    function initCategories() {
-      const catList = document.getElementById('categoryList');
-      catList.innerHTML = '';
-      const categories = [...new Set(CHANNELS.map(c => c.category))];
-      categories.forEach((cat, i) => {
-        const count = CHANNELS.filter(c => c.category === cat).length;
-        const icon = CAT_ICONS[cat] || 'tv';
-        const card = document.createElement('div');
-        card.className = 'cat-card';
-        card.style.animationDelay = (i * 0.1) + 's';
-        card.innerHTML = `
-          <div class="cat-icon"><i data-lucide="${icon}" size="24"></i></div>
-          <span>${cat}</span>
-          <div class="cat-count">${count} kanal</div>
-        `;
-        card.onclick = () => showChannels(cat);
-        catList.appendChild(card);
-      });
-      lucide.createIcons();
-    }
+  /* ── WELCOME POPUP ── */
+  function showWelcomePopup(user) {
+    document.getElementById('welcome-title').textContent = `HOŞ GELDİN, ${user.name.toUpperCase()}!`;
+    document.getElementById('welcome-msg').textContent = `Z&M Stream'e bağlandın. Harika seyirler!`;
+    document.getElementById('popup-overlay').style.display = 'block';
+    document.getElementById('welcome-popup').style.display = 'block';
+  }
 
-    function showChannels(category) {
-      document.getElementById('category-screen').style.display = 'none';
-      document.getElementById('channel-view').style.display = 'block';
-      const grid = document.getElementById('channelList');
-      grid.innerHTML = '';
-      CHANNELS.filter(c => c.category === category).forEach((ch, i) => {
-        const card = document.createElement('div');
-        card.className = 'channel-card';
-        card.style.animationDelay = (i * 0.07) + 's';
-        const icon = ch.icon || 'tv';
-        card.innerHTML = `
-          <div class="active-pip"></div>
-          <div class="ch-icon-wrap"><i data-lucide="${icon}" size="18"></i></div>
-          <span>${ch.name}</span>
-        `;
-        card.onclick = () => playStream(ch, card);
-        grid.appendChild(card);
-      });
-      lucide.createIcons();
-    }
+  function closeWelcome() {
+    document.getElementById('popup-overlay').style.display = 'none';
+    document.getElementById('welcome-popup').style.display = 'none';
+  }
 
-    function playStream(ch, el) {
-      document.querySelectorAll('.channel-card').forEach(c => c.classList.remove('active'));
-      el.classList.add('active');
-      document.getElementById('statusDot').className = 'status-dot live';
-      const lbl = document.getElementById('statusLabel');
-      lbl.className = 'live';
-      lbl.textContent = 'Oynatılıyor: ' + ch.name;
-      document.getElementById('video-display').innerHTML =
-        `<iframe src="${ch.url}" allow="autoplay; fullscreen; camera; microphone"></iframe>`;
-    }
-
-    function backToCategories() {
-      document.getElementById('channel-view').style.display = 'none';
-      document.getElementById('category-screen').style.display = 'block';
-      document.getElementById('video-display').innerHTML = '';
-    }
-
-    document.addEventListener('keypress', e => {
-      if (e.key === 'Enter' && document.getElementById('login-page').style.display !== 'none') {
-        attemptLogin();
-      }
+  /* ── CATEGORIES ── */
+  function initCategories() {
+    const catList = document.getElementById('categoryList');
+    catList.innerHTML = '';
+    const categories = [...new Set(CHANNELS.map(c=>c.category))];
+    categories.forEach((cat,i) => {
+      const count = CHANNELS.filter(c=>c.category===cat).length;
+      const icon = CAT_ICONS[cat]||'tv';
+      const card = document.createElement('div');
+      card.className = 'cat-card';
+      card.style.animationDelay = (i*.1)+'s';
+      card.innerHTML = `<div class="cat-icon"><i data-lucide="${icon}" size="24"></i></div><span>${cat}</span><div class="cat-count">${count} kanal</div>`;
+      card.onclick = () => showChannels(cat);
+      catList.appendChild(card);
     });
+    lucide.createIcons();
+  }
 
-    window.onload = () => lucide.createIcons();
-  </script>
+  function showChannels(category) {
+    document.getElementById('category-screen').style.display = 'none';
+    document.getElementById('channel-view').style.display = 'block';
+    const grid = document.getElementById('channelList');
+    grid.innerHTML = '';
+    CHANNELS.filter(c=>c.category===category).forEach((ch,i) => {
+      const isOn = channelStates[ch.id];
+      const card = document.createElement('div');
+      card.className = 'channel-card' + (isOn ? '' : ' disabled');
+      card.style.animationDelay = (i*.07)+'s';
+      card.innerHTML = `
+        <div class="active-pip"></div>
+        ${!isOn ? '<div class="closed-badge">Kapalı</div>' : ''}
+        ${buildLogoHTML(ch)}
+        <span>${ch.name}</span>
+      `;
+      if (isOn) card.onclick = () => playStream(ch, card);
+      grid.appendChild(card);
+    });
+  }
+
+  function backToCategories() {
+    document.getElementById('channel-view').style.display = 'none';
+    document.getElementById('category-screen').style.display = 'block';
+    document.getElementById('video-display').innerHTML = '';
+  }
+
+  function playStream(ch, el) {
+    document.querySelectorAll('.channel-card').forEach(c=>c.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('statusDot').className = 'status-dot live';
+    const lbl = document.getElementById('statusLabel');
+    lbl.className = 'live';
+    lbl.textContent = 'Oynatılıyor: '+ch.name;
+    document.getElementById('video-display').innerHTML = `<iframe src="${ch.url}" allow="autoplay; fullscreen; camera; microphone"></iframe>`;
+  }
+
+  /* ── DUYURU ── */
+  function showAnnouncementBar() {
+    const bar = document.getElementById('announcement-bar');
+    document.getElementById('announcement-text').textContent = announcement;
+    bar.classList.add('visible');
+    lucide.createIcons();
+  }
+
+  /* ── ADMIN GİRİŞ ── */
+  function openAdminLogin() {
+    document.getElementById('admin-login-overlay').style.display = 'flex';
+    document.getElementById('admin-pass-input').value = '';
+    document.getElementById('admin-pass-error').style.display = 'none';
+  }
+
+  function closeAdminLogin() {
+    document.getElementById('admin-login-overlay').style.display = 'none';
+  }
+
+  function checkAdminPass() {
+    const val = document.getElementById('admin-pass-input').value;
+    if (val === ADMIN_PASS) {
+      closeAdminLogin();
+      openAdminPanel();
+    } else {
+      document.getElementById('admin-pass-error').style.display = 'block';
+    }
+  }
+
+  /* ── ADMIN PANELİ ── */
+  function openAdminPanel() {
+    document.getElementById('admin-panel-overlay').style.display = 'flex';
+    renderAdminChannels();
+    renderAdminUsers();
+    document.getElementById('ann-input').value = announcement;
+    lucide.createIcons();
+  }
+
+  function closeAdminPanel() {
+    document.getElementById('admin-panel-overlay').style.display = 'none';
+    // Kanal listesini güncelle (eğer açık durumdaysa)
+    const cv = document.getElementById('channel-view');
+    if (cv.style.display !== 'none') {
+      const currentCat = document.querySelector('.back-btn')?.dataset?.cat;
+      if (currentCat) showChannels(currentCat);
+    }
+  }
+
+  function renderAdminChannels() {
+    const list = document.getElementById('admin-channel-list');
+    list.innerHTML = '';
+    CHANNELS.forEach(ch => {
+      const row = document.createElement('div');
+      row.className = 'toggle-row';
+      const isOn = channelStates[ch.id];
+      row.innerHTML = `
+        <div>
+          <div class="toggle-label">${ch.name}</div>
+          <div class="toggle-cat">${ch.category}</div>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" ${isOn?'checked':''} onchange="toggleChannel('${ch.id}', this.checked)">
+          <span class="toggle-slider"></span>
+        </label>
+      `;
+      list.appendChild(row);
+    });
+  }
+
+  function toggleChannel(id, state) {
+    channelStates[id] = state;
+  }
+
+  function renderAdminUsers() {
+    const list = document.getElementById('admin-user-list');
+    list.innerHTML = '';
+    USERS.forEach(u => {
+      const row = document.createElement('div');
+      row.className = 'user-row';
+      row.innerHTML = `<div class="user-name">${u.name} <span style="color:rgba(255,255,255,.3);font-size:.8rem;">(@${u.u})</span></div><div class="user-role">${u.role}</div>`;
+      list.appendChild(row);
+    });
+  }
+
+  function saveAnnouncement() {
+    const val = document.getElementById('ann-input').value.trim();
+    if (!val) return;
+    announcement = val;
+    showAnnouncementBar();
+  }
+
+  function clearAnnouncement() {
+    announcement = '';
+    document.getElementById('ann-input').value = '';
+    const bar = document.getElementById('announcement-bar');
+    bar.classList.remove('visible');
+  }
+
+  document.addEventListener('keypress', e => {
+    if (e.key==='Enter') {
+      if (document.getElementById('login-page').style.display!=='none') attemptLogin();
+      if (document.getElementById('admin-login-overlay').style.display==='flex') checkAdminPass();
+    }
+  });
+
+  window.onload = () => lucide.createIcons();
+</script>
 </body>
 </html>
