@@ -333,7 +333,6 @@
 <script>
   const ADMIN_PASS = "mexy774";
 
-  // Kullanıcıları localStorage'dan yükle, yoksa default kullan
   const DEFAULT_USERS = [
     { u: "zm", p: "1905", name: "Z&M", role: "Üye", cats: null },
     { u: "gs", p: "1905", name: "GS",  role: "Üye", cats: null },
@@ -342,8 +341,18 @@
   function loadUsers() {
     try {
       const saved = localStorage.getItem('zm_users');
-      return saved ? JSON.parse(saved) : DEFAULT_USERS;
-    } catch(e) { return DEFAULT_USERS; }
+      if (!saved) return JSON.parse(JSON.stringify(DEFAULT_USERS));
+      const parsed = JSON.parse(saved);
+      // Default kullanıcılar her zaman listede olsun
+      const merged = JSON.parse(JSON.stringify(DEFAULT_USERS));
+      parsed.forEach(u => {
+        if (!merged.find(x => x.u === u.u)) merged.push(u);
+      });
+      return merged;
+    } catch(e) {
+      localStorage.removeItem('zm_users');
+      return JSON.parse(JSON.stringify(DEFAULT_USERS));
+    }
   }
 
   function saveUsers() {
