@@ -301,6 +301,16 @@
     </div>
 
     <div class="admin-section">
+      <div class="admin-section-title">🗂️ Kategori Yönetimi</div>
+      <div id="admin-cat-list" style="display:flex;flex-direction:column;gap:6px;margin-bottom:10px;"></div>
+      <div style="display:flex;gap:8px;">
+        <input class="admin-input" style="margin-bottom:0;flex:1;" type="text" id="new-cat-name" placeholder="Yeni kategori adı...">
+        <button class="admin-btn-gold" onclick="addCategory()">+ Ekle</button>
+      </div>
+      <p id="add-cat-error" style="color:var(--red-bright);font-size:.8rem;margin-top:6px;display:none;font-weight:700;"></p>
+    </div>
+
+    <div class="admin-section">
       <div class="admin-section-title" style="display:flex;justify-content:space-between;align-items:center;">
         <span>📺 Kanal Yönetimi</span>
         <button id="bakim-btn" onclick="toggleBakim()" style="font-family:'Rajdhani',sans-serif;font-size:.75rem;font-weight:700;letter-spacing:1px;padding:5px 12px;border-radius:8px;border:1px solid rgba(255,100,50,.3);background:rgba(255,100,50,.08);color:rgba(255,150,80,.8);cursor:pointer;transition:all .2s;">🔧 Bakım Modu</button>
@@ -311,7 +321,7 @@
         <div style="font-size:.75rem;font-weight:700;letter-spacing:2px;color:rgba(255,255,255,.3);margin-bottom:10px;">YENİ KANAL EKLE</div>
         <input class="admin-input" type="text" id="new-ch-name" placeholder="Kanal adı (ör: BeIN Sports)">
         <input class="admin-input" type="text" id="new-ch-url" placeholder="Yayın URL'si">
-        <select class="admin-input" id="new-ch-cat" style="cursor:pointer;"><option value="Z&M">Z&amp;M</option><option value="Spor">Spor</option><option value="Yabancı">Yabancı</option></select>
+        <select class="admin-input" id="new-ch-cat" style="cursor:pointer;"></select>
         <button class="admin-btn-primary" onclick="addChannel()" style="font-size:1rem;padding:10px;">+ Kanal Ekle</button>
         <p id="add-ch-error" style="color:var(--red-bright);font-size:.8rem;margin-top:8px;display:none;font-weight:700;"></p>
       </div>
@@ -330,6 +340,14 @@
         <button class="admin-btn-primary" onclick="addUser()" style="font-size:1rem;padding:10px;">+ Kullanıcı Ekle</button>
         <p id="add-user-error" style="color:var(--red-bright);font-size:.8rem;margin-top:8px;display:none;font-weight:700;"></p>
       </div>
+    </div>
+
+    <div class="admin-section">
+      <div class="admin-section-title" style="display:flex;justify-content:space-between;align-items:center;">
+        <span>📋 Giriş Geçmişi</span>
+        <button onclick="clearLoginHistory()" style="font-family:'Rajdhani',sans-serif;font-size:.7rem;font-weight:700;padding:4px 10px;border-radius:7px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:rgba(255,255,255,.3);cursor:pointer;">Temizle</button>
+      </div>
+      <div id="login-history-list" style="display:flex;flex-direction:column;gap:5px;max-height:200px;overflow-y:auto;"></div>
     </div>
 
     <button class="admin-btn-primary" onclick="closeAdminPanel()">Kapat &amp; Kaydet</button>
@@ -423,6 +441,7 @@
     const user = USERS.find(x => x.u === u && x.p === p);
     if (user) {
       currentUser = user;
+      logLogin(user);
       document.getElementById('login-page').style.display = 'none';
       document.getElementById('intro-sub-text').textContent = 'Hoş geldin, ' + user.name + '! İyi seyirler.';
       const intro = document.getElementById('intro-overlay');
@@ -458,7 +477,7 @@
   function initCategories() {
     const catList = document.getElementById('categoryList');
     catList.innerHTML = '';
-    const allCats = [...new Set(CHANNELS.map(c=>c.category))];
+    const allCats = getAllCats().filter(cat => CHANNELS.some(c => c.category === cat));
     const allowedCats = (currentUser && currentUser.cats) ? currentUser.cats : allCats;
     const categories = allCats.filter(c => allowedCats.includes(c));
     categories.forEach(function(cat, i) {
@@ -534,6 +553,8 @@
     document.getElementById('admin-panel-overlay').style.display = 'flex';
     renderAdminChannels();
     renderAdminUsers();
+    renderAdminCategories();
+    renderLoginHistory();
     document.getElementById('ann-input').value = announcement;
   }
 
@@ -541,7 +562,122 @@
     document.getElementById('admin-panel-overlay').style.display = 'none';
   }
 
-  let bakimModu = false;
+  // ── KATEGORİ YÖNETİMİ ──
+  // Sabit kategoriler silinemesin, dinamik eklenebilsin
+  const DEFAULT_CATS = ["Z&M", "Spor", "Yabancı"];
+  let EXTRA_CATS = JSON.parse(localStorage.getItem('zm_extra_cats') || '[]');
+
+  function getAllCats() {
+    return [...DEFAULT_CATS, ...EXTRA_CATS];
+  }
+
+  function saveExtraCats() {
+    localStorage.setItem('zm_extra_cats', JSON.stringify(EXTRA_CATS));
+  }
+
+  function renderAdminCategories() {
+    const list = document.getElementById('admin-cat-list');
+    list.innerHTML = '';
+    getAllCats().forEach(function(cat) {
+      const isDefault = DEFAULT_CATS.includes(cat);
+      const chCount = CHANNELS.filter(c => c.category === cat).length;
+      const row = document.createElement('div');
+      row.style.cssText = 'display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);padding:9px 14px;border-radius:10px;';
+      row.innerHTML = `
+        <div>
+          <span style="font-size:.88rem;font-weight:700;color:rgba(255,255,255,.7);">${cat}</span>
+          <span style="font-size:.7rem;color:rgba(255,255,255,.25);margin-left:8px;">${chCount} kanal</span>
+          ${isDefault ? '<span style="font-size:.6rem;color:rgba(253,185,18,.4);margin-left:6px;letter-spacing:1px;">SİSTEM</span>' : ''}
+        </div>
+        ${!isDefault ? `<button class="ch-del-btn" onclick="deleteCategory('${cat}')" title="Sil">✕</button>` : '<div style="width:28px;"></div>'}
+      `;
+      list.appendChild(row);
+    });
+    // Kanal ekle select güncelle
+    const sel = document.getElementById('new-ch-cat');
+    if (sel) {
+      sel.innerHTML = '';
+      getAllCats().forEach(function(cat) {
+        const opt = document.createElement('option');
+        opt.value = cat;
+        opt.textContent = cat;
+        sel.appendChild(opt);
+      });
+    }
+    // Kullanıcı ekle cat toggles güncelle
+    renderCatToggles();
+  }
+
+  function addCategory() {
+    const input = document.getElementById('new-cat-name');
+    const err = document.getElementById('add-cat-error');
+    const name = input.value.trim();
+    err.style.display = 'none';
+    if (!name) { err.textContent = 'Kategori adı boş olamaz!'; err.style.display = 'block'; return; }
+    if (getAllCats().find(c => c.toLowerCase() === name.toLowerCase())) {
+      err.textContent = 'Bu kategori zaten var!'; err.style.display = 'block'; return;
+    }
+    EXTRA_CATS.push(name);
+    saveExtraCats();
+    input.value = '';
+    renderAdminCategories();
+  }
+
+  function deleteCategory(cat) {
+    const count = CHANNELS.filter(c => c.category === cat).length;
+    if (count > 0) {
+      if (!confirm(cat + ' kategorisinde ' + count + ' kanal var. Kanallar da silinecek. Devam?')) return;
+      // Kanalları sil
+      for (let i = CHANNELS.length - 1; i >= 0; i--) {
+        if (CHANNELS[i].category === cat) {
+          delete channelStates[CHANNELS[i].id];
+          CHANNELS.splice(i, 1);
+        }
+      }
+    }
+    EXTRA_CATS = EXTRA_CATS.filter(c => c !== cat);
+    saveExtraCats();
+    renderAdminCategories();
+    renderAdminChannels();
+  }
+
+  // ── GİRİŞ GEÇMİŞİ ──
+  let loginHistory = JSON.parse(localStorage.getItem('zm_login_history') || '[]');
+
+  function logLogin(user) {
+    const now = new Date();
+    const entry = {
+      name: user.name,
+      u: user.u,
+      time: now.toLocaleString('tr-TR', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' })
+    };
+    loginHistory.unshift(entry);
+    if (loginHistory.length > 50) loginHistory = loginHistory.slice(0, 50);
+    try { localStorage.setItem('zm_login_history', JSON.stringify(loginHistory)); } catch(e) {}
+  }
+
+  function renderLoginHistory() {
+    const list = document.getElementById('login-history-list');
+    if (!list) return;
+    list.innerHTML = '';
+    if (loginHistory.length === 0) {
+      list.innerHTML = '<div style="color:rgba(255,255,255,.2);font-size:.8rem;text-align:center;padding:10px;">Henüz giriş yok</div>';
+      return;
+    }
+    loginHistory.forEach(function(entry) {
+      const row = document.createElement('div');
+      row.style.cssText = 'display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.05);padding:8px 12px;border-radius:9px;';
+      row.innerHTML = `<div><span style="font-size:.85rem;font-weight:700;color:rgba(255,255,255,.7);">${entry.name}</span><span style="color:rgba(255,255,255,.25);font-size:.75rem;margin-left:6px;">@${entry.u}</span></div><div style="font-size:.72rem;color:rgba(253,185,18,.5);letter-spacing:.5px;">${entry.time}</div>`;
+      list.appendChild(row);
+    });
+  }
+
+  function clearLoginHistory() {
+    if (!confirm('Giriş geçmişini temizlemek istediğine emin misin?')) return;
+    loginHistory = [];
+    localStorage.removeItem('zm_login_history');
+    renderLoginHistory();
+  }
 
   function toggleBakim() {
     bakimModu = !bakimModu;
