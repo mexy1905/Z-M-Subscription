@@ -22,9 +22,9 @@
     @keyframes marquee{from{transform:translate(0,0)}to{transform:translate(-100%,0)}}
     @keyframes brandGlow{from{filter:drop-shadow(0 0 20px rgba(169,4,50,.4))}to{filter:drop-shadow(0 0 50px rgba(253,185,18,.6))}}
     @keyframes popIn{from{opacity:0;transform:translate(-50%,-50%) scale(.85)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
-    @keyframes popOut{from{opacity:1;transform:translate(-50%,-50%) scale(1)}to{opacity:0;transform:translate(-50%,-50%) scale(.85)}}
+    @keyframes borderGlow{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
 
-    /* ── LOGIN ── */
+    /* LOGIN */
     #login-page{position:relative;z-index:10;height:100vh;display:flex;justify-content:center;align-items:center;padding:20px;}
     .login-wrap{display:flex;flex-direction:column;align-items:center;gap:2rem;animation:fadeUp .8s cubic-bezier(.16,1,.3,1) forwards;}
     .login-brand{font-family:'Bebas Neue',sans-serif;font-size:5rem;letter-spacing:6px;line-height:1;text-align:center;background:linear-gradient(135deg,var(--gold) 0%,#fff 45%,var(--red) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:brandGlow 3s ease-in-out infinite alternate;}
@@ -42,7 +42,7 @@
     .btn-login:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(169,4,50,.5);}
     .btn-login:hover::after{transform:translateX(100%);}
 
-    /* ── INTRO ── */
+    /* INTRO */
     #intro-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:#000;display:none;flex-direction:column;justify-content:center;align-items:center;z-index:10000;}
     .intro-brand{font-family:'Bebas Neue',sans-serif;font-size:4rem;letter-spacing:6px;background:linear-gradient(135deg,var(--gold),#fff,var(--red));-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:brandGlow 1.5s ease-in-out infinite alternate;}
     .intro-sub{color:rgba(255,255,255,.3);letter-spacing:5px;font-size:.8rem;margin-top:10px;text-transform:uppercase;}
@@ -51,7 +51,7 @@
     .spinner-ring::before{inset:0;border:3px solid transparent;border-top-color:var(--gold);border-bottom-color:var(--red);animation:spin .9s linear infinite;}
     .spinner-ring::after{inset:8px;border:2px solid transparent;border-left-color:rgba(253,185,18,.4);animation:spin 1.4s linear infinite reverse;}
 
-    /* ── WELCOME POPUP ── */
+    /* WELCOME POPUP */
     #welcome-popup{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:9999;display:none;animation:popIn .4s cubic-bezier(.16,1,.3,1) forwards;}
     .welcome-box{background:rgba(10,10,15,.97);backdrop-filter:blur(40px);border-radius:24px;border:1px solid rgba(253,185,18,.2);padding:2.5rem 2.5rem 2rem;text-align:center;min-width:300px;max-width:380px;position:relative;overflow:hidden;box-shadow:0 40px 80px rgba(0,0,0,.9);}
     .welcome-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),var(--red),var(--gold),transparent);}
@@ -62,12 +62,12 @@
     .welcome-close:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(169,4,50,.4);}
     #popup-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(4px);z-index:9998;display:none;}
 
-    /* ── MAIN APP ── */
-    #main-app{display:none;position:relative;z-index:10;animation:fadeUp .6s cubic-bezier(.16,1,.3,1) forwards;}
+    /* MAIN APP */
+    #main-app{display:none;position:relative;z-index:10;}
     .top-announcement{background:linear-gradient(90deg,#000,rgba(169,4,50,.5),#000);border-bottom:1px solid rgba(253,185,18,.15);padding:9px 0;overflow:hidden;white-space:nowrap;}
     .announcement-content{display:inline-block;padding-left:100%;animation:marquee 25s linear infinite;font-size:.78rem;font-weight:700;letter-spacing:3px;color:rgba(255,255,255,.6);}
 
-    /* ── HEADER ── */
+    /* HEADER */
     header{padding:.9rem 5%;background:rgba(6,6,8,.95);backdrop-filter:blur(30px);border-bottom:1px solid rgba(169,4,50,.25);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;box-shadow:0 1px 30px rgba(169,4,50,.12);}
     header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--red),var(--gold),var(--red),transparent);background-size:200%;animation:scanLine 4s linear infinite;}
     .header-brand{display:flex;align-items:center;gap:12px;}
@@ -78,16 +78,15 @@
     .nav-right{display:flex;align-items:center;gap:8px;}
     .logout-btn{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.5);padding:8px 18px;border-radius:10px;font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:1px;cursor:pointer;transition:all .3s;font-size:.9rem;}
     .logout-btn:hover{color:white;border-color:var(--red);background:rgba(169,4,50,.15);}
-    .admin-btn{background:rgba(253,185,18,.08);border:1px solid rgba(253,185,18,.2);color:rgba(253,185,18,.7);padding:8px 14px;border-radius:10px;font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:1px;cursor:pointer;transition:all .3s;font-size:.85rem;display:flex;align-items:center;gap:6px;}
+    .admin-btn{background:rgba(253,185,18,.08);border:1px solid rgba(253,185,18,.2);color:rgba(253,185,18,.7);padding:8px 14px;border-radius:10px;font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:1px;cursor:pointer;transition:all .3s;font-size:.85rem;}
     .admin-btn:hover{color:var(--gold);border-color:var(--gold);background:rgba(253,185,18,.12);}
 
-    /* ── DUYURU BANDI ── */
+    /* DUYURU */
     .announcement-bar{display:none;background:rgba(253,185,18,.06);border-bottom:1px solid rgba(253,185,18,.15);padding:10px 5%;align-items:center;gap:10px;}
     .announcement-bar.visible{display:flex;}
-    .ann-icon{color:var(--gold);flex-shrink:0;}
     .ann-text{font-size:.85rem;font-weight:700;color:rgba(255,255,255,.7);letter-spacing:.5px;flex:1;}
 
-    /* ── CATEGORIES ── */
+    /* CATEGORIES */
     #category-screen{padding:30px 5% 50px;}
     .section-title{font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:4px;color:rgba(255,255,255,.3);margin-bottom:20px;display:flex;align-items:center;gap:12px;}
     .section-title::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(169,4,50,.4),transparent);}
@@ -100,15 +99,19 @@
     .cat-card span{font-size:1.1rem;font-weight:700;letter-spacing:1px;display:block;}
     .cat-count{font-size:.72rem;color:rgba(255,255,255,.25);margin-top:6px;letter-spacing:1px;}
 
-    /* ── CHANNEL VIEW ── */
+    /* CHANNEL VIEW */
     #channel-view{display:none;}
     .back-btn{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.55);padding:10px 20px;border-radius:10px;margin:20px 5% 12px;cursor:pointer;font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:1px;transition:all .3s;display:inline-flex;align-items:center;gap:8px;font-size:.9rem;}
     .back-btn:hover{color:white;border-color:var(--gold);background:rgba(253,185,18,.06);}
     .video-section{width:90%;max-width:1000px;margin:0 auto;border-radius:20px;overflow:hidden;position:relative;box-shadow:0 0 0 1px rgba(169,4,50,.2),0 30px 80px rgba(0,0,0,.9);}
     .video-section::before{content:'';position:absolute;inset:-1px;border-radius:21px;background:linear-gradient(135deg,rgba(169,4,50,.5),rgba(253,185,18,.3),rgba(169,4,50,.5));background-size:300%;z-index:-1;animation:borderGlow 4s linear infinite;}
-    @keyframes borderGlow{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
     #video-display{aspect-ratio:16/9;background:#000;}
     #video-display iframe{width:100%;height:100%;border:none;display:block;}
+    .fullscreen-btn{position:absolute;bottom:12px;right:12px;background:rgba(0,0,0,.7);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.2);color:white;padding:8px 14px;border-radius:10px;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.85rem;letter-spacing:1px;cursor:pointer;transition:all .3s;z-index:10;}
+    .fullscreen-btn:hover{background:rgba(169,4,50,.7);border-color:rgba(169,4,50,.6);}
+    .video-section.is-fullscreen{position:fixed!important;inset:0!important;width:100%!important;max-width:100%!important;margin:0!important;border-radius:0!important;z-index:9999;}
+    .video-section.is-fullscreen #video-display{aspect-ratio:unset;height:100vh;}
+    .video-section.is-fullscreen #video-display iframe{height:100vh;}
     .status-bar{width:90%;max-width:1000px;margin:14px auto;display:flex;align-items:center;gap:10px;}
     .status-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.15);transition:all .3s;flex-shrink:0;}
     .status-dot.live{background:var(--red-bright);animation:livePulse 1.5s ease-out infinite;}
@@ -122,7 +125,7 @@
     .channel-card.disabled:hover{transform:none;box-shadow:none;border-color:rgba(255,255,255,.06);}
     .channel-card:not(.disabled):hover{border-color:rgba(169,4,50,.5);background:rgba(169,4,50,.06);transform:translateY(-5px) scale(1.02);box-shadow:0 12px 30px rgba(0,0,0,.5);}
     .channel-card.active{background:linear-gradient(135deg,rgba(169,4,50,.8),rgba(100,2,30,.9));border-color:rgba(253,185,18,.4);transform:translateY(-4px);box-shadow:0 15px 35px rgba(169,4,50,.35);}
-    .ch-logo-wrap{width:56px;height:56px;border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;overflow:hidden;position:relative;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);transition:all .3s;}
+    .ch-logo-wrap{width:56px;height:56px;border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;overflow:hidden;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);transition:all .3s;}
     .ch-logo-wrap img{width:100%;height:100%;object-fit:contain;padding:6px;}
     .ch-monogram{font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:.5px;color:white;text-shadow:0 1px 4px rgba(0,0,0,.5);}
     .channel-card:not(.disabled):hover .ch-logo-wrap{border-color:rgba(169,4,50,.4);box-shadow:0 0 15px rgba(169,4,50,.15);}
@@ -134,11 +137,12 @@
     .channel-card.active .active-pip{display:block;}
     .closed-badge{position:absolute;top:8px;left:8px;background:rgba(0,0,0,.7);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.4);font-size:.55rem;font-weight:700;letter-spacing:1px;padding:2px 6px;border-radius:5px;text-transform:uppercase;}
 
-    /* ── ADMIN PANEL ── */
+    /* ADMIN */
     #admin-login-overlay,#admin-panel-overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(10px);z-index:9000;display:none;justify-content:center;align-items:center;}
-    .admin-modal{background:rgba(10,10,15,.98);border:1px solid rgba(253,185,18,.2);border-radius:24px;padding:2.5rem;width:100%;max-width:480px;margin:20px;position:relative;overflow:hidden;max-height:90vh;overflow-y:auto;}
+    #admin-panel-overlay{align-items:flex-start;padding:20px;overflow-y:auto;}
+    .admin-modal{background:rgba(10,10,15,.98);border:1px solid rgba(253,185,18,.2);border-radius:24px;padding:2.5rem;width:100%;max-width:480px;margin:0 auto;position:relative;overflow:hidden;}
     .admin-modal::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),var(--red),var(--gold),transparent);}
-    .admin-modal h2{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:3px;color:var(--gold);margin-bottom:1.5rem;display:flex;align-items:center;gap:10px;}
+    .admin-modal h2{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:3px;color:var(--gold);margin-bottom:1.5rem;}
     .admin-close{position:absolute;top:16px;right:16px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.5);width:32px;height:32px;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .3s;}
     .admin-close:hover{color:white;border-color:var(--red);background:rgba(169,4,50,.2);}
     .admin-section{margin-bottom:1.8rem;}
@@ -147,15 +151,13 @@
     .admin-input:focus{border-color:rgba(253,185,18,.4);background:rgba(253,185,18,.03);}
     .admin-btn-primary{background:linear-gradient(135deg,var(--red),#c4053f);border:none;color:white;padding:12px 24px;border-radius:12px;font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:2px;cursor:pointer;transition:all .3s;width:100%;}
     .admin-btn-primary:hover{transform:translateY(-1px);box-shadow:0 8px 20px rgba(169,4,50,.4);}
-    .admin-btn-gold{background:linear-gradient(135deg,rgba(253,185,18,.2),rgba(253,185,18,.1));border:1px solid rgba(253,185,18,.3);color:var(--gold);padding:10px 20px;border-radius:10px;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.9rem;cursor:pointer;transition:all .3s;}
+    .admin-btn-gold{background:rgba(253,185,18,.1);border:1px solid rgba(253,185,18,.3);color:var(--gold);padding:10px 20px;border-radius:10px;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.9rem;cursor:pointer;transition:all .3s;}
     .admin-btn-gold:hover{background:rgba(253,185,18,.2);}
-    .channel-toggle-list{display:flex;flex-direction:column;gap:8px;max-height:300px;overflow-y:auto;padding-right:4px;}
-    .channel-toggle-list::-webkit-scrollbar{width:4px;}
-    .channel-toggle-list::-webkit-scrollbar-track{background:rgba(255,255,255,.04);}
-    .channel-toggle-list::-webkit-scrollbar-thumb{background:rgba(169,4,50,.4);border-radius:2px;}
-    .toggle-row{display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);padding:10px 14px;border-radius:12px;transition:all .3s;}
-    .toggle-row:hover{border-color:rgba(255,255,255,.1);}
-    .toggle-label{font-size:.88rem;font-weight:700;color:rgba(255,255,255,.7);letter-spacing:.3px;}
+    .ann-row{display:flex;gap:8px;}
+    .ann-row .admin-input{flex:1;margin-bottom:0;}
+    .channel-toggle-list{display:flex;flex-direction:column;gap:8px;max-height:260px;overflow-y:auto;}
+    .toggle-row{display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);padding:10px 14px;border-radius:12px;}
+    .toggle-label{font-size:.88rem;font-weight:700;color:rgba(255,255,255,.7);}
     .toggle-cat{font-size:.7rem;color:rgba(255,255,255,.3);letter-spacing:1px;}
     .toggle-switch{position:relative;width:44px;height:24px;flex-shrink:0;}
     .toggle-switch input{opacity:0;width:0;height:0;position:absolute;}
@@ -163,22 +165,15 @@
     .toggle-slider::before{content:'';position:absolute;width:18px;height:18px;left:3px;top:3px;background:rgba(255,255,255,.4);border-radius:50%;transition:.3s;}
     .toggle-switch input:checked+.toggle-slider{background:rgba(52,211,153,.3);border:1px solid rgba(52,211,153,.4);}
     .toggle-switch input:checked+.toggle-slider::before{transform:translateX(20px);background:#34d399;}
-    .ann-row{display:flex;gap:8px;}
-    .ann-row .admin-input{flex:1;margin-bottom:0;}
     .user-list{display:flex;flex-direction:column;gap:6px;}
     .user-row{display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);padding:10px 14px;border-radius:10px;}
     .user-name{font-size:.9rem;font-weight:700;color:rgba(255,255,255,.7);}
-    .user-role{font-size:.65rem;letter-spacing:2px;color:rgba(253,185,18,.6);text-transform:uppercase;}
-
-    .fullscreen-btn{position:absolute;bottom:12px;right:12px;background:rgba(0,0,0,.7);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.15);color:white;padding:8px 14px;border-radius:10px;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.85rem;letter-spacing:1px;cursor:pointer;transition:all .3s;z-index:10;}
-    .fullscreen-btn:hover{background:rgba(169,4,50,.7);border-color:rgba(169,4,50,.6);transform:scale(1.05);}
-    .video-section.is-fullscreen{position:fixed!important;inset:0!important;width:100%!important;max-width:100%!important;margin:0!important;border-radius:0!important;z-index:9999;}
-    .video-section.is-fullscreen #video-display{aspect-ratio:unset;height:100vh;}
-    .video-section.is-fullscreen #video-display iframe{height:100vh;}
-    .video-section.is-fullscreen .fullscreen-btn{bottom:20px;right:20px;}border-radius:8px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:rgba(255,255,255,.4);font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.8rem;letter-spacing:1px;cursor:pointer;transition:all .2s;}
-    .cat-toggle-btn.selected{background:rgba(169,4,50,.25);border-color:rgba(169,4,50,.5);color:white;}
     .user-del-btn{background:rgba(169,4,50,.1);border:1px solid rgba(169,4,50,.2);color:rgba(255,100,100,.7);width:28px;height:28px;border-radius:7px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;}
     .user-del-btn:hover{background:rgba(169,4,50,.3);color:white;}
+    .cat-toggle-btn{padding:6px 12px;border-radius:8px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:rgba(255,255,255,.4);font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.8rem;letter-spacing:1px;cursor:pointer;transition:all .2s;}
+    .cat-toggle-btn.selected{background:rgba(169,4,50,.25);border-color:rgba(169,4,50,.5);color:white;}
+
+    @media(max-width:600px){
       .login-brand{font-size:3.5rem;}
       .header-title{font-size:1.3rem;}
       .category-grid{grid-template-columns:repeat(2,1fr);}
@@ -193,7 +188,7 @@
 <div id="login-page">
   <div class="login-wrap">
     <div style="text-align:center;">
-      <div class="login-brand">Z&M STREAM</div>
+      <div class="login-brand">Z&amp;M STREAM</div>
     </div>
     <div class="login-card">
       <div class="input-group">
@@ -211,7 +206,7 @@
 
 <!-- INTRO -->
 <div id="intro-overlay">
-  <div class="intro-brand">Z&M STREAM</div>
+  <div class="intro-brand">Z&amp;M STREAM</div>
   <div class="intro-sub" id="intro-sub-text">İyi Seyirler Diler</div>
   <div class="spinner-ring"></div>
 </div>
@@ -222,7 +217,7 @@
   <div class="welcome-box">
     <span class="welcome-emoji">👋</span>
     <div class="welcome-title" id="welcome-title">HOŞ GELDİN!</div>
-    <div class="welcome-msg" id="welcome-msg">Z&M Stream'e bağlandın. İyi seyirler!</div>
+    <div class="welcome-msg" id="welcome-msg">Z&amp;M Stream'e bağlandın. İyi seyirler!</div>
     <button class="welcome-close" onclick="closeWelcome()">Hadi Başlayalım</button>
   </div>
 </div>
@@ -230,27 +225,22 @@
 <!-- MAIN APP -->
 <div id="main-app">
   <div class="top-announcement">
-    <div class="announcement-content" id="ticker-text">
-      ✦ Z&M STREAM PORTALINA HOŞ GELDİNİZ &nbsp;&nbsp;&nbsp; ✦ KEYİFLİ SEYİRLER DİLERİZ &nbsp;&nbsp;&nbsp; ✦ Z&M STREAM PORTALINA HOŞ GELDİNİZ &nbsp;&nbsp;&nbsp; ✦ KEYİFLİ SEYİRLER DİLERİZ
-    </div>
+    <div class="announcement-content">✦ Z&amp;M STREAM PORTALINA HOŞ GELDİNİZ &nbsp;&nbsp;&nbsp; ✦ KEYİFLİ SEYİRLER DİLERİZ &nbsp;&nbsp;&nbsp; ✦ Z&amp;M STREAM PORTALINA HOŞ GELDİNİZ &nbsp;&nbsp;&nbsp; ✦ KEYİFLİ SEYİRLER DİLERİZ</div>
   </div>
 
-  <!-- Duyuru Bandı -->
   <div class="announcement-bar" id="announcement-bar">
-    <i data-lucide="megaphone" size="16" class="ann-icon"></i>
+    <span style="color:var(--gold);font-size:1rem;">📢</span>
     <div class="ann-text" id="announcement-text"></div>
   </div>
 
   <header>
     <div class="header-brand">
       <div class="live-dot"></div>
-      <div class="header-title">Z&M <span>STREAM</span></div>
+      <div class="header-title">Z&amp;M <span>STREAM</span></div>
       <div class="live-badge">CANLI</div>
     </div>
     <div class="nav-right">
-      <button class="admin-btn" id="admin-btn" onclick="openAdminLogin()">
-        ⚙ Yönetim
-      </button>
+      <button class="admin-btn" onclick="openAdminLogin()">⚙ Yönetim</button>
       <button class="logout-btn" onclick="location.reload()">Çıkış</button>
     </div>
   </header>
@@ -265,8 +255,8 @@
       <i data-lucide="arrow-left" size="16"></i> Kategoriler
     </button>
     <div class="video-section">
-        <div id="video-display"></div>
-        <button class="fullscreen-btn" onclick="toggleFullscreen()" id="fs-btn">⛶ Tam Ekran</button>
+      <div id="video-display"></div>
+      <button class="fullscreen-btn" onclick="toggleFullscreen()" id="fs-btn">⛶ Tam Ekran</button>
     </div>
     <div class="status-bar">
       <div class="status-dot" id="statusDot"></div>
@@ -277,24 +267,23 @@
   </div>
 </div>
 
-<!-- ADMIN ŞİFRE GİRİŞİ -->
-<div id="admin-login-overlay" style="display:none;justify-content:center;align-items:center;">
+<!-- ADMIN ŞİFRE -->
+<div id="admin-login-overlay">
   <div class="admin-modal" style="max-width:340px;">
-    <button class="admin-close" onclick="closeAdminLogin()"><i data-lucide="x" size="14"></i></button>
-    <h2><i data-lucide="shield" size="22"></i> Yönetici Girişi</h2>
+    <button class="admin-close" onclick="closeAdminLogin()">✕</button>
+    <h2>🔒 Yönetici Girişi</h2>
     <input class="admin-input" type="password" id="admin-pass-input" placeholder="Admin Şifresi">
     <button class="admin-btn-primary" onclick="checkAdminPass()">Giriş Yap</button>
     <p id="admin-pass-error" style="color:var(--red-bright);font-size:.8rem;margin-top:10px;display:none;text-align:center;font-weight:700;">Şifre yanlış!</p>
   </div>
 </div>
 
-<!-- ADMİN PANELİ -->
-<div id="admin-panel-overlay" style="display:none;justify-content:center;align-items:flex-start;padding:20px;">
+<!-- ADMIN PANELİ -->
+<div id="admin-panel-overlay">
   <div class="admin-modal">
-    <button class="admin-close" onclick="closeAdminPanel()"><i data-lucide="x" size="14"></i></button>
-    <h2><i data-lucide="settings-2" size="22"></i> Yönetici Paneli</h2>
+    <button class="admin-close" onclick="closeAdminPanel()">✕</button>
+    <h2>⚙ Yönetici Paneli</h2>
 
-    <!-- Duyuru -->
     <div class="admin-section">
       <div class="admin-section-title">📢 Duyuru Yönetimi</div>
       <div class="ann-row">
@@ -304,13 +293,11 @@
       <button class="admin-btn-gold" style="margin-top:8px;width:100%;background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.1);color:rgba(255,255,255,.4);" onclick="clearAnnouncement()">Duyuruyu Kaldır</button>
     </div>
 
-    <!-- Kanal Aç/Kapa -->
     <div class="admin-section">
       <div class="admin-section-title">📺 Kanal Yönetimi</div>
       <div class="channel-toggle-list" id="admin-channel-list"></div>
     </div>
 
-    <!-- Kullanıcılar -->
     <div class="admin-section">
       <div class="admin-section-title">👥 Kullanıcı Yönetimi</div>
       <div class="user-list" id="admin-user-list"></div>
@@ -326,7 +313,7 @@
       </div>
     </div>
 
-    <button class="admin-btn-primary" onclick="closeAdminPanel()">Kapat & Kaydet</button>
+    <button class="admin-btn-primary" onclick="closeAdminPanel()">Kapat &amp; Kaydet</button>
   </div>
 </div>
 
@@ -343,11 +330,8 @@
       const saved = localStorage.getItem('zm_users');
       if (!saved) return JSON.parse(JSON.stringify(DEFAULT_USERS));
       const parsed = JSON.parse(saved);
-      // Default kullanıcılar her zaman listede olsun
       const merged = JSON.parse(JSON.stringify(DEFAULT_USERS));
-      parsed.forEach(u => {
-        if (!merged.find(x => x.u === u.u)) merged.push(u);
-      });
+      parsed.forEach(u => { if (!merged.find(x => x.u === u.u)) merged.push(u); });
       return merged;
     } catch(e) {
       localStorage.removeItem('zm_users');
@@ -360,23 +344,22 @@
   }
 
   let USERS = loadUsers();
-
-  let channelStates = {}; // id → true/false (açık/kapalı)
+  let channelStates = {};
   let announcement = "";
   let currentUser = null;
 
   const CHANNELS = [
-    { id:"zm_ozel",    name:"Z&M ÖZEL YAYIN", url:"https://vdo.ninja/?view=AuJ7Zh4&autoplay&clean&videobitrate=10000&shutup&label=0&codec=av1", category:"Z&M",    logo:null },
-    { id:"zm_s1",      name:"Z&M Sports 1",   url:"https://test-streams.mux.dev/x36xhzz/url_6/193039199_mp4_h264_aac_hd_7.m3u8", category:"Spor",   logo:null },
-    { id:"zm_s2",      name:"Z&M Sports 2",   url:"https://test-streams.mux.dev/x36xhzz/url_6/193039199_mp4_h264_aac_hd_7.m3u8", category:"Spor",   logo:null },
-    { id:"zm_s3",      name:"Z&M Sports 3",   url:"https://test-streams.mux.dev/x36xhzz/url_6/193039199_mp4_h264_aac_hd_7.m3u8", category:"Spor",   logo:null },
-    { id:"zm_s4",      name:"Z&M Sports 4",   url:"https://test-streams.mux.dev/x36xhzz/url_6/193039199_mp4_h264_aac_hd_7.m3u8", category:"Spor",   logo:null },
-    { id:"zm_s5",      name:"Z&M Sports 5",   url:"https://test-streams.mux.dev/x36xhzz/url_6/193039199_mp4_h264_aac_hd_7.m3u8", category:"Spor",   logo:null },
-    { id:"trt_spor",   name:"TRT Spor",        url:"https://test-streams.mux.dev/x36xhzz/url_6/193039199_mp4_h264_aac_hd_7.m3u8", category:"Spor",   logo:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/TRT_Spor_logo_%282017%29.svg/240px-TRT_Spor_logo_%282017%29.svg.png" },
-    { id:"trt_yhd",    name:"TRT Spor YHD",    url:"https://test-streams.mux.dev/x36xhzz/url_6/193039199_mp4_h264_aac_hd_7.m3u8", category:"Spor",   logo:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/TRT_Spor_logo_%282017%29.svg/240px-TRT_Spor_logo_%282017%29.svg.png" },
-    { id:"s_sport",    name:"S Sport",         url:"https://test-streams.mux.dev/x36xhzz/url_6/193039199_mp4_h264_aac_hd_7.m3u8", category:"Spor",   logo:"https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/S_Sport_logo.svg/240px-S_Sport_logo.svg.png" },
-    { id:"s_plus",     name:"S Sport Plus",    url:"https://test-streams.mux.dev/x36xhzz/url_6/193039199_mp4_h264_aac_hd_7.m3u8", category:"Spor",   logo:"https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/S_Sport_logo.svg/240px-S_Sport_logo.svg.png" },
-    { id:"tabii",      name:"Tabii Sports",    url:"https://test-streams.mux.dev/x36xhzz/url_6/193039199_mp4_h264_aac_hd_7.m3u8", category:"Spor",   logo:"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Tabii_logo.svg/240px-Tabii_logo.svg.png" },
+    { id:"zm_ozel",  name:"Z&M ÖZEL YAYIN", url:"https://vdo.ninja/?view=AuJ7Zh4&autoplay&clean&videobitrate=10000&shutup&label=0&codec=av1", category:"Z&M",    logo:null },
+    { id:"zm_s1",    name:"Z&M Sports 1",   url:"https://test-streams.mux.dev/x36xhzz/url_6/193039199_mp4_h264_aac_hd_7.m3u8", category:"Spor",   logo:null },
+    { id:"zm_s2",    name:"Z&M Sports 2",   url:"https://test-streams.mux.dev/x36xhzz/url_6/193039199_mp4_h264_aac_hd_7.m3u8", category:"Spor",   logo:null },
+    { id:"zm_s3",    name:"Z&M Sports 3",   url:"https://test-streams.mux.dev/x36xhzz/url_6/193039199_mp4_h264_aac_hd_7.m3u8", category:"Spor",   logo:null },
+    { id:"zm_s4",    name:"Z&M Sports 4",   url:"https://test-streams.mux.dev/x36xhzz/url_6/193039199_mp4_h264_aac_hd_7.m3u8", category:"Spor",   logo:null },
+    { id:"zm_s5",    name:"Z&M Sports 5",   url:"https://test-streams.mux.dev/x36xhzz/url_6/193039199_mp4_h264_aac_hd_7.m3u8", category:"Spor",   logo:null },
+    { id:"trt_spor", name:"TRT Spor",        url:"https://test-streams.mux.dev/x36xhzz/url_6/193039199_mp4_h264_aac_hd_7.m3u8", category:"Spor",   logo:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/TRT_Spor_logo_%282017%29.svg/240px-TRT_Spor_logo_%282017%29.svg.png" },
+    { id:"trt_yhd",  name:"TRT Spor YHD",   url:"https://test-streams.mux.dev/x36xhzz/url_6/193039199_mp4_h264_aac_hd_7.m3u8", category:"Spor",   logo:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/TRT_Spor_logo_%282017%29.svg/240px-TRT_Spor_logo_%282017%29.svg.png" },
+    { id:"s_sport",  name:"S Sport",         url:"https://test-streams.mux.dev/x36xhzz/url_6/193039199_mp4_h264_aac_hd_7.m3u8", category:"Spor",   logo:"https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/S_Sport_logo.svg/240px-S_Sport_logo.svg.png" },
+    { id:"s_plus",   name:"S Sport Plus",    url:"https://test-streams.mux.dev/x36xhzz/url_6/193039199_mp4_h264_aac_hd_7.m3u8", category:"Spor",   logo:"https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/S_Sport_logo.svg/240px-S_Sport_logo.svg.png" },
+    { id:"tabii",    name:"Tabii Sports",    url:"https://test-streams.mux.dev/x36xhzz/url_6/193039199_mp4_h264_aac_hd_7.m3u8", category:"Spor",   logo:"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Tabii_logo.svg/240px-Tabii_logo.svg.png" },
     { id:"yab1",  name:"Yabancı Kanal 1",  url:"https://test-streams.mux.dev/x36xhzz/url_6/193039199_mp4_h264_aac_hd_7.m3u8", category:"Yabancı", logo:null },
     { id:"yab2",  name:"Yabancı Kanal 2",  url:"https://test-streams.mux.dev/x36xhzz/url_6/193039199_mp4_h264_aac_hd_7.m3u8", category:"Yabancı", logo:null },
     { id:"yab3",  name:"Yabancı Kanal 3",  url:"https://test-streams.mux.dev/x36xhzz/url_6/193039199_mp4_h264_aac_hd_7.m3u8", category:"Yabancı", logo:null },
@@ -389,7 +372,6 @@
     { id:"yab10", name:"Yabancı Kanal 10", url:"https://test-streams.mux.dev/x36xhzz/url_6/193039199_mp4_h264_aac_hd_7.m3u8", category:"Yabancı", logo:null },
   ];
 
-  // Tüm kanallar başlangıçta açık
   CHANNELS.forEach(ch => channelStates[ch.id] = true);
 
   const CAT_ICONS = { "Z&M":"star","Spor":"award","Yabancı":"globe","Haber":"radio","Film & Dizi":"film","Müzik":"music" };
@@ -406,44 +388,45 @@
   }
 
   function buildLogoHTML(ch) {
-    if (ch.logo) return `<div class="ch-logo-wrap"><img src="${ch.logo}" alt="${ch.name}" onerror="this.parentElement.innerHTML='<span class=ch-monogram>${getMonogram(ch.name)}</span>';this.parentElement.style.background='linear-gradient(135deg,${getMonoColor(ch.name).join(',')})';"></div>`;
+    if (ch.logo) {
+      const mono = getMonogram(ch.name);
+      const [c1,c2] = getMonoColor(ch.name);
+      return `<div class="ch-logo-wrap"><img src="${ch.logo}" alt="${ch.name}" onerror="this.parentElement.innerHTML='<span class=ch-monogram>${mono}</span>';this.parentElement.style.background='linear-gradient(135deg,${c1},${c2})';"></div>`;
+    }
     const [c1,c2]=getMonoColor(ch.name);
     return `<div class="ch-logo-wrap" style="background:linear-gradient(135deg,${c1},${c2})"><span class="ch-monogram">${getMonogram(ch.name)}</span></div>`;
   }
 
-  /* ── LOGIN ── */
+  /* LOGIN */
   function attemptLogin() {
     const u = document.getElementById('username').value.trim();
     const p = document.getElementById('password').value.trim();
-    const user = USERS.find(x => x.u===u && x.p===p);
+    const user = USERS.find(x => x.u === u && x.p === p);
     if (user) {
       currentUser = user;
       document.getElementById('login-page').style.display = 'none';
-      document.getElementById('intro-sub-text').textContent = `Hoş geldin, ${user.name}! İyi seyirler.`;
+      document.getElementById('intro-sub-text').textContent = 'Hoş geldin, ' + user.name + '! İyi seyirler.';
       const intro = document.getElementById('intro-overlay');
       intro.style.display = 'flex';
-      setTimeout(() => {
+      setTimeout(function() {
         intro.style.display = 'none';
         document.getElementById('main-app').style.display = 'block';
         initCategories();
         showWelcomePopup(user);
         if (announcement) showAnnouncementBar();
-        // Admin butonu her zaman görünür
         lucide.createIcons();
       }, 2200);
     } else {
       const card = document.querySelector('.login-card');
-      card.style.transition = 'box-shadow .3s, border-color .3s';
       card.style.borderColor = 'rgba(255,8,68,.6)';
       card.style.boxShadow = '0 0 30px rgba(255,8,68,.2)';
-      setTimeout(() => { card.style.borderColor=''; card.style.boxShadow=''; }, 1500);
+      setTimeout(function() { card.style.borderColor=''; card.style.boxShadow=''; }, 1500);
     }
   }
 
-  /* ── WELCOME POPUP ── */
   function showWelcomePopup(user) {
-    document.getElementById('welcome-title').textContent = `HOŞ GELDİN, ${user.name.toUpperCase()}!`;
-    document.getElementById('welcome-msg').textContent = `Z&M Stream'e bağlandın. Harika seyirler!`;
+    document.getElementById('welcome-title').textContent = 'HOŞ GELDİN, ' + user.name.toUpperCase() + '!';
+    document.getElementById('welcome-msg').textContent = "Z&M Stream'e bağlandın. Harika seyirler!";
     document.getElementById('popup-overlay').style.display = 'block';
     document.getElementById('welcome-popup').style.display = 'block';
   }
@@ -453,22 +436,20 @@
     document.getElementById('welcome-popup').style.display = 'none';
   }
 
-  /* ── CATEGORIES ── */
   function initCategories() {
     const catList = document.getElementById('categoryList');
     catList.innerHTML = '';
-    let allCats = [...new Set(CHANNELS.map(c=>c.category))];
-    // Kullanıcının erişebildiği kategorileri filtrele
+    const allCats = [...new Set(CHANNELS.map(c=>c.category))];
     const allowedCats = (currentUser && currentUser.cats) ? currentUser.cats : allCats;
     const categories = allCats.filter(c => allowedCats.includes(c));
-    categories.forEach((cat,i) => {
+    categories.forEach(function(cat, i) {
       const count = CHANNELS.filter(c=>c.category===cat).length;
-      const icon = CAT_ICONS[cat]||'tv';
+      const icon = CAT_ICONS[cat] || 'tv';
       const card = document.createElement('div');
       card.className = 'cat-card';
-      card.style.animationDelay = (i*.1)+'s';
-      card.innerHTML = `<div class="cat-icon"><i data-lucide="${icon}" size="24"></i></div><span>${cat}</span><div class="cat-count">${count} kanal</div>`;
-      card.onclick = () => showChannels(cat);
+      card.style.animationDelay = (i * .1) + 's';
+      card.innerHTML = '<div class="cat-icon"><i data-lucide="' + icon + '" size="24"></i></div><span>' + cat + '</span><div class="cat-count">' + count + ' kanal</div>';
+      card.onclick = function() { showChannels(cat); };
       catList.appendChild(card);
     });
     lucide.createIcons();
@@ -479,18 +460,13 @@
     document.getElementById('channel-view').style.display = 'block';
     const grid = document.getElementById('channelList');
     grid.innerHTML = '';
-    CHANNELS.filter(c=>c.category===category).forEach((ch,i) => {
+    CHANNELS.filter(c=>c.category===category).forEach(function(ch, i) {
       const isOn = channelStates[ch.id];
       const card = document.createElement('div');
       card.className = 'channel-card' + (isOn ? '' : ' disabled');
-      card.style.animationDelay = (i*.07)+'s';
-      card.innerHTML = `
-        <div class="active-pip"></div>
-        ${!isOn ? '<div class="closed-badge">Kapalı</div>' : ''}
-        ${buildLogoHTML(ch)}
-        <span>${ch.name}</span>
-      `;
-      if (isOn) card.onclick = () => playStream(ch, card);
+      card.style.animationDelay = (i * .07) + 's';
+      card.innerHTML = '<div class="active-pip"></div>' + (!isOn ? '<div class="closed-badge">Kapalı</div>' : '') + buildLogoHTML(ch) + '<span>' + ch.name + '</span>';
+      if (isOn) card.onclick = function() { playStream(ch, card); };
       grid.appendChild(card);
     });
   }
@@ -507,19 +483,15 @@
     document.getElementById('statusDot').className = 'status-dot live';
     const lbl = document.getElementById('statusLabel');
     lbl.className = 'live';
-    lbl.textContent = 'Oynatılıyor: '+ch.name;
-    document.getElementById('video-display').innerHTML = `<iframe src="${ch.url}" allow="autoplay; fullscreen; camera; microphone"></iframe>`;
+    lbl.textContent = 'Oynatılıyor: ' + ch.name;
+    document.getElementById('video-display').innerHTML = '<iframe src="' + ch.url + '" allow="autoplay; fullscreen; camera; microphone"></iframe>';
   }
 
-  /* ── DUYURU ── */
   function showAnnouncementBar() {
-    const bar = document.getElementById('announcement-bar');
     document.getElementById('announcement-text').textContent = announcement;
-    bar.classList.add('visible');
-    lucide.createIcons();
+    document.getElementById('announcement-bar').classList.add('visible');
   }
 
-  /* ── ADMIN GİRİŞ ── */
   function openAdminLogin() {
     document.getElementById('admin-login-overlay').style.display = 'flex';
     document.getElementById('admin-pass-input').value = '';
@@ -531,8 +503,7 @@
   }
 
   function checkAdminPass() {
-    const val = document.getElementById('admin-pass-input').value;
-    if (val === ADMIN_PASS) {
+    if (document.getElementById('admin-pass-input').value === ADMIN_PASS) {
       closeAdminLogin();
       openAdminPanel();
     } else {
@@ -540,64 +511,39 @@
     }
   }
 
-  /* ── ADMIN PANELİ ── */
   function openAdminPanel() {
     document.getElementById('admin-panel-overlay').style.display = 'flex';
     renderAdminChannels();
     renderAdminUsers();
     document.getElementById('ann-input').value = announcement;
-    lucide.createIcons();
   }
 
   function closeAdminPanel() {
     document.getElementById('admin-panel-overlay').style.display = 'none';
-    // Kanal listesini güncelle (eğer açık durumdaysa)
-    const cv = document.getElementById('channel-view');
-    if (cv.style.display !== 'none') {
-      const currentCat = document.querySelector('.back-btn')?.dataset?.cat;
-      if (currentCat) showChannels(currentCat);
-    }
   }
 
   function renderAdminChannels() {
     const list = document.getElementById('admin-channel-list');
     list.innerHTML = '';
-    CHANNELS.forEach(ch => {
+    CHANNELS.forEach(function(ch) {
+      const isOn = channelStates[ch.id];
       const row = document.createElement('div');
       row.className = 'toggle-row';
-      const isOn = channelStates[ch.id];
-      row.innerHTML = `
-        <div>
-          <div class="toggle-label">${ch.name}</div>
-          <div class="toggle-cat">${ch.category}</div>
-        </div>
-        <label class="toggle-switch">
-          <input type="checkbox" ${isOn?'checked':''} onchange="toggleChannel('${ch.id}', this.checked)">
-          <span class="toggle-slider"></span>
-        </label>
-      `;
+      row.innerHTML = '<div><div class="toggle-label">' + ch.name + '</div><div class="toggle-cat">' + ch.category + '</div></div><label class="toggle-switch"><input type="checkbox" ' + (isOn?'checked':'') + ' onchange="toggleChannel(\'' + ch.id + '\', this.checked)"><span class="toggle-slider"></span></label>';
       list.appendChild(row);
     });
   }
 
-  function toggleChannel(id, state) {
-    channelStates[id] = state;
-  }
+  function toggleChannel(id, state) { channelStates[id] = state; }
 
   function renderAdminUsers() {
     const list = document.getElementById('admin-user-list');
     list.innerHTML = '';
-    USERS.forEach((u, idx) => {
+    USERS.forEach(function(u, idx) {
       const row = document.createElement('div');
       row.className = 'user-row';
       const catsLabel = u.cats ? u.cats.join(', ') : 'Tümü';
-      row.innerHTML = `
-        <div style="flex:1;">
-          <div class="user-name">${u.name} <span style="color:rgba(255,255,255,.3);font-size:.8rem;">(@${u.u})</span></div>
-          <div style="font-size:.7rem;color:rgba(253,185,18,.5);letter-spacing:.5px;margin-top:2px;">📺 ${catsLabel}</div>
-        </div>
-        <button class="user-del-btn" onclick="deleteUser(${idx})" title="Sil">✕</button>
-      `;
+      row.innerHTML = '<div style="flex:1;"><div class="user-name">' + u.name + ' <span style="color:rgba(255,255,255,.3);font-size:.8rem;">(@' + u.u + ')</span></div><div style="font-size:.7rem;color:rgba(253,185,18,.5);margin-top:2px;">📺 ' + catsLabel + '</div></div><button class="user-del-btn" onclick="deleteUser(' + idx + ')">✕</button>';
       list.appendChild(row);
     });
     renderCatToggles();
@@ -607,13 +553,12 @@
     const wrap = document.getElementById('new-user-cats');
     if (!wrap) return;
     wrap.innerHTML = '';
-    const allCats = [...new Set(CHANNELS.map(c=>c.category))];
-    allCats.forEach(cat => {
+    [...new Set(CHANNELS.map(c=>c.category))].forEach(function(cat) {
       const btn = document.createElement('button');
       btn.className = 'cat-toggle-btn selected';
       btn.textContent = cat;
       btn.dataset.cat = cat;
-      btn.onclick = () => btn.classList.toggle('selected');
+      btn.onclick = function() { btn.classList.toggle('selected'); };
       wrap.appendChild(btn);
     });
   }
@@ -624,15 +569,11 @@
     const name = document.getElementById('new-name').value.trim();
     const err  = document.getElementById('add-user-error');
     err.style.display = 'none';
-
     if (!u || !p || !name) { err.textContent='Tüm alanları doldurun!'; err.style.display='block'; return; }
     if (USERS.find(x=>x.u===u)) { err.textContent='Bu kullanıcı adı zaten var!'; err.style.display='block'; return; }
-
-    // Seçili kategorileri al
     const selected = [...document.querySelectorAll('#new-user-cats .cat-toggle-btn.selected')].map(b=>b.dataset.cat);
     const allCats  = [...new Set(CHANNELS.map(c=>c.category))];
-    const cats     = selected.length === allCats.length ? null : (selected.length ? selected : allCats);
-
+    const cats = selected.length === allCats.length ? null : (selected.length ? selected : allCats);
     USERS.push({ u, p, name, role:'Üye', cats });
     saveUsers();
     document.getElementById('new-u').value = '';
@@ -642,7 +583,7 @@
   }
 
   function deleteUser(idx) {
-    if (USERS[idx].u === currentUser?.u) { alert('Kendi hesabını silemezsin!'); return; }
+    if (USERS[idx].u === currentUser.u) { alert('Kendi hesabını silemezsin!'); return; }
     USERS.splice(idx, 1);
     saveUsers();
     renderAdminUsers();
@@ -658,8 +599,7 @@
   function clearAnnouncement() {
     announcement = '';
     document.getElementById('ann-input').value = '';
-    const bar = document.getElementById('announcement-bar');
-    bar.classList.remove('visible');
+    document.getElementById('announcement-bar').classList.remove('visible');
   }
 
   function toggleFullscreen() {
@@ -670,20 +610,18 @@
     document.body.style.overflow = isFs ? 'hidden' : '';
   }
 
-  // ESC ile tam ekrandan çık
-  document.addEventListener('keydown', e => {
+  document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') {
       const vs = document.querySelector('.video-section');
       if (vs && vs.classList.contains('is-fullscreen')) toggleFullscreen();
     }
-  });
-    if (e.key==='Enter') {
-      if (document.getElementById('login-page').style.display!=='none') attemptLogin();
-      if (document.getElementById('admin-login-overlay').style.display==='flex') checkAdminPass();
+    if (e.key === 'Enter') {
+      if (document.getElementById('login-page').style.display !== 'none') attemptLogin();
+      if (document.getElementById('admin-login-overlay').style.display === 'flex') checkAdminPass();
     }
   });
 
-  window.onload = () => lucide.createIcons();
+  window.onload = function() { lucide.createIcons(); };
 </script>
 </body>
 </html>
