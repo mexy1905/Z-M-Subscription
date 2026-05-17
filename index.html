@@ -1,925 +1,844 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="tr" class="h-full">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Z&M Stream</title>
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <title>IMPERA Stream</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/lucide@latest"></script>
-  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-  <style>
-    :root { --red:#A90432; --red-bright:#ff0844; --gold:#FDB912; --bg:#060608; }
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-    body{background:var(--bg);color:white;font-family:'Rajdhani',sans-serif;min-height:100vh;overflow-x:hidden;}
-    body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 80% 50% at 10% 10%,rgba(169,4,50,.18) 0%,transparent 60%),radial-gradient(ellipse 60% 40% at 90% 90%,rgba(253,185,18,.12) 0%,transparent 60%);animation:bgPulse 8s ease-in-out infinite alternate;pointer-events:none;z-index:0;}
-    body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(169,4,50,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(169,4,50,.04) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0;}
-    @keyframes bgPulse{from{opacity:.6;transform:scale(1)}to{opacity:1;transform:scale(1.05)}}
-    @keyframes fadeUp{from{opacity:0;transform:translateY(40px) scale(.95)}to{opacity:1;transform:translateY(0) scale(1)}}
-    @keyframes scanLine{0%{background-position:-200% 0}100%{background-position:200% 0}}
-    @keyframes spin{to{transform:rotate(360deg)}}
-    @keyframes livePulse{0%{box-shadow:0 0 0 0 rgba(255,8,68,.7)}70%{box-shadow:0 0 0 10px rgba(255,8,68,0)}100%{box-shadow:0 0 0 0 rgba(255,8,68,0)}}
-    @keyframes badgePulse{0%,100%{opacity:1}50%{opacity:.6}}
-    @keyframes cardReveal{to{opacity:1;transform:translateY(0)}}
-    @keyframes marquee{from{transform:translate(0,0)}to{transform:translate(-100%,0)}}
-    @keyframes brandGlow{from{filter:drop-shadow(0 0 20px rgba(169,4,50,.4))}to{filter:drop-shadow(0 0 50px rgba(253,185,18,.6))}}
-    @keyframes popIn{from{opacity:0;transform:translate(-50%,-50%) scale(.85)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
-    @keyframes borderGlow{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
 
-    /* LOGIN */
-    #login-page{position:relative;z-index:10;height:100vh;display:flex;justify-content:center;align-items:center;padding:20px;}
-    .login-wrap{display:flex;flex-direction:column;align-items:center;gap:2rem;animation:fadeUp .8s cubic-bezier(.16,1,.3,1) forwards;}
-    .login-brand{font-family:'Bebas Neue',sans-serif;font-size:5rem;letter-spacing:6px;line-height:1;text-align:center;background:linear-gradient(135deg,var(--gold) 0%,#fff 45%,var(--red) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:brandGlow 3s ease-in-out infinite alternate;}
-    .login-card{width:100%;max-width:360px;background:rgba(10,10,15,.85);backdrop-filter:blur(40px);border-radius:28px;border:1px solid rgba(255,255,255,.08);padding:2.5rem 2rem;position:relative;overflow:hidden;}
-    .login-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--red),var(--gold),var(--red),transparent);background-size:200%;animation:scanLine 3s linear infinite;}
-    .login-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),var(--red),transparent);}
-    .input-group{position:relative;margin-bottom:1rem;}
-    .input-group i{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:rgba(255,255,255,.25);transition:color .3s;pointer-events:none;}
-    .input-group:focus-within i{color:var(--gold);}
-    .login-card input{width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);padding:15px 16px 15px 44px;border-radius:14px;color:white;outline:none;font-family:'Rajdhani',sans-serif;font-size:1rem;font-weight:600;letter-spacing:1px;transition:all .3s;}
-    .login-card input::placeholder{color:rgba(255,255,255,.2);}
-    .login-card input:focus{border-color:rgba(253,185,18,.4);background:rgba(253,185,18,.04);box-shadow:0 0 0 3px rgba(253,185,18,.08);}
-    .btn-login{width:100%;background:linear-gradient(135deg,var(--red) 0%,#c4053f 100%);color:white;border:none;padding:17px;border-radius:14px;font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:3px;cursor:pointer;transition:all .4s;margin-top:.5rem;position:relative;overflow:hidden;}
-    .btn-login::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,transparent 40%,rgba(255,255,255,.15) 50%,transparent 60%);transform:translateX(-100%);transition:transform .5s;}
-    .btn-login:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(169,4,50,.5);}
-    .btn-login:hover::after{transform:translateX(100%);}
-
-    /* INTRO */
-    #intro-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:#000;display:none;flex-direction:column;justify-content:center;align-items:center;z-index:10000;}
-    .intro-brand{font-family:'Bebas Neue',sans-serif;font-size:4rem;letter-spacing:6px;background:linear-gradient(135deg,var(--gold),#fff,var(--red));-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:brandGlow 1.5s ease-in-out infinite alternate;}
-    .intro-sub{color:rgba(255,255,255,.3);letter-spacing:5px;font-size:.8rem;margin-top:10px;text-transform:uppercase;}
-    .spinner-ring{width:56px;height:56px;position:relative;margin-top:30px;}
-    .spinner-ring::before,.spinner-ring::after{content:'';position:absolute;border-radius:50%;}
-    .spinner-ring::before{inset:0;border:3px solid transparent;border-top-color:var(--gold);border-bottom-color:var(--red);animation:spin .9s linear infinite;}
-    .spinner-ring::after{inset:8px;border:2px solid transparent;border-left-color:rgba(253,185,18,.4);animation:spin 1.4s linear infinite reverse;}
-
-    /* WELCOME POPUP */
-    #welcome-popup{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:9999;display:none;animation:popIn .4s cubic-bezier(.16,1,.3,1) forwards;}
-    .welcome-box{background:rgba(10,10,15,.97);backdrop-filter:blur(40px);border-radius:24px;border:1px solid rgba(253,185,18,.2);padding:2.5rem 2.5rem 2rem;text-align:center;min-width:300px;max-width:380px;position:relative;overflow:hidden;box-shadow:0 40px 80px rgba(0,0,0,.9);}
-    .welcome-box::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),var(--red),var(--gold),transparent);}
-    .welcome-emoji{font-size:2.5rem;margin-bottom:1rem;display:block;}
-    .welcome-title{font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:3px;color:var(--gold);margin-bottom:.4rem;}
-    .welcome-msg{color:rgba(255,255,255,.6);font-size:.95rem;font-weight:600;letter-spacing:.5px;margin-bottom:1.5rem;}
-    .welcome-close{background:linear-gradient(135deg,var(--red),#c4053f);border:none;color:white;padding:12px 30px;border-radius:12px;font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:2px;cursor:pointer;transition:all .3s;}
-    .welcome-close:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(169,4,50,.4);}
-    #popup-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(4px);z-index:9998;display:none;}
-
-    /* MAIN APP */
-    #main-app{display:none;position:relative;z-index:10;}
-    .top-announcement{background:linear-gradient(90deg,#000,rgba(169,4,50,.5),#000);border-bottom:1px solid rgba(253,185,18,.15);padding:9px 0;overflow:hidden;white-space:nowrap;}
-    .announcement-content{display:inline-block;padding-left:100%;animation:marquee 25s linear infinite;font-size:.78rem;font-weight:700;letter-spacing:3px;color:rgba(255,255,255,.6);}
-
-    /* HEADER */
-    header{padding:.9rem 5%;background:rgba(6,6,8,.95);backdrop-filter:blur(30px);border-bottom:1px solid rgba(169,4,50,.25);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:100;box-shadow:0 1px 30px rgba(169,4,50,.12);}
-    header::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--red),var(--gold),var(--red),transparent);background-size:200%;animation:scanLine 4s linear infinite;}
-    .header-brand{display:flex;align-items:center;gap:12px;}
-    .live-dot{width:10px;height:10px;background:var(--red-bright);border-radius:50%;animation:livePulse 1.5s ease-out infinite;}
-    .header-title{font-family:'Bebas Neue',sans-serif;font-size:1.7rem;letter-spacing:3px;}
-    .header-title span{color:var(--gold);}
-    .live-badge{background:rgba(169,4,50,.2);border:1px solid rgba(169,4,50,.4);color:var(--red-bright);font-size:.7rem;font-weight:700;letter-spacing:3px;padding:4px 10px;border-radius:6px;animation:badgePulse 2s ease-in-out infinite;}
-    .nav-right{display:flex;align-items:center;gap:8px;}
-    .logout-btn{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.5);padding:8px 18px;border-radius:10px;font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:1px;cursor:pointer;transition:all .3s;font-size:.9rem;}
-    .logout-btn:hover{color:white;border-color:var(--red);background:rgba(169,4,50,.15);}
-    .admin-btn{background:rgba(253,185,18,.08);border:1px solid rgba(253,185,18,.2);color:rgba(253,185,18,.7);padding:8px 14px;border-radius:10px;font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:1px;cursor:pointer;transition:all .3s;font-size:.85rem;}
-    .admin-btn:hover{color:var(--gold);border-color:var(--gold);background:rgba(253,185,18,.12);}
-
-    /* DUYURU */
-    .announcement-bar{display:none;background:rgba(253,185,18,.06);border-bottom:1px solid rgba(253,185,18,.15);padding:10px 5%;align-items:center;gap:10px;}
-    .announcement-bar.visible{display:flex;}
-    .ann-text{font-size:.85rem;font-weight:700;color:rgba(255,255,255,.7);letter-spacing:.5px;flex:1;}
-
-    /* CATEGORIES */
-    #category-screen{padding:30px 5% 50px;}
-    .section-title{font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:4px;color:rgba(255,255,255,.3);margin-bottom:20px;display:flex;align-items:center;gap:12px;}
-    .section-title::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(169,4,50,.4),transparent);}
-    .category-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:16px;}
-    .cat-card{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);padding:36px 20px;border-radius:20px;text-align:center;cursor:pointer;transition:all .35s cubic-bezier(.175,.885,.32,1.275);position:relative;overflow:hidden;opacity:0;transform:translateY(20px);animation:cardReveal .5s cubic-bezier(.16,1,.3,1) forwards;}
-    .cat-card:hover{border-color:rgba(169,4,50,.5);transform:translateY(-6px) scale(1.02);box-shadow:0 15px 35px rgba(0,0,0,.5);background:rgba(169,4,50,.05);}
-    .cat-icon{width:56px;height:56px;border-radius:14px;background:rgba(169,4,50,.1);border:1px solid rgba(169,4,50,.2);display:flex;align-items:center;justify-content:center;margin:0 auto 14px;transition:all .3s;}
-    .cat-card:hover .cat-icon{background:rgba(169,4,50,.2);border-color:rgba(169,4,50,.4);box-shadow:0 0 20px rgba(169,4,50,.15);}
-    .cat-card i{color:var(--gold);}
-    .cat-card span{font-size:1.1rem;font-weight:700;letter-spacing:1px;display:block;}
-    .cat-count{font-size:.72rem;color:rgba(255,255,255,.25);margin-top:6px;letter-spacing:1px;}
-
-    /* CHANNEL VIEW */
-    #channel-view{display:none;}
-    .back-btn{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.55);padding:10px 20px;border-radius:10px;margin:20px 5% 12px;cursor:pointer;font-family:'Rajdhani',sans-serif;font-weight:700;letter-spacing:1px;transition:all .3s;display:inline-flex;align-items:center;gap:8px;font-size:.9rem;}
-    .back-btn:hover{color:white;border-color:var(--gold);background:rgba(253,185,18,.06);}
-    .video-section{width:90%;max-width:1000px;margin:0 auto;border-radius:20px;overflow:hidden;position:relative;box-shadow:0 0 0 1px rgba(169,4,50,.2),0 30px 80px rgba(0,0,0,.9);}
-    .video-section::before{content:'';position:absolute;inset:-1px;border-radius:21px;background:linear-gradient(135deg,rgba(169,4,50,.5),rgba(253,185,18,.3),rgba(169,4,50,.5));background-size:300%;z-index:-1;animation:borderGlow 4s linear infinite;}
-    #video-display{aspect-ratio:16/9;background:#000;}
-    #video-display iframe{width:100%;height:100%;border:none;display:block;}
-    #video-display video{width:100%;height:100%;display:block;background:#000;outline:none;}
-    .video-section.is-fullscreen #video-display video{height:100vh;}
-    .player-error{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:10px;color:rgba(255,255,255,.3);padding:20px;}
-    .player-error span{font-size:2.5rem;}
-    .player-error p{font-size:.8rem;font-weight:700;letter-spacing:1px;text-align:center;}
-    .fullscreen-btn{position:absolute;bottom:12px;right:12px;background:rgba(0,0,0,.7);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.2);color:white;padding:8px 14px;border-radius:10px;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.85rem;letter-spacing:1px;cursor:pointer;transition:all .3s;z-index:10;}
-    .fullscreen-btn:hover{background:rgba(169,4,50,.7);border-color:rgba(169,4,50,.6);}
-    .video-section.is-fullscreen{position:fixed!important;inset:0!important;width:100%!important;max-width:100%!important;margin:0!important;border-radius:0!important;z-index:9999;}
-    .video-section.is-fullscreen #video-display{aspect-ratio:unset;height:100vh;}
-    .video-section.is-fullscreen #video-display iframe{height:100vh;}
-    .status-bar{width:90%;max-width:1000px;margin:14px auto;display:flex;align-items:center;gap:10px;}
-    .status-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.15);transition:all .3s;flex-shrink:0;}
-    .status-dot.live{background:var(--red-bright);animation:livePulse 1.5s ease-out infinite;}
-    #statusLabel{font-size:.78rem;font-weight:700;letter-spacing:2.5px;color:rgba(255,255,255,.35);text-transform:uppercase;transition:color .3s;}
-    #statusLabel.live{color:var(--gold);}
-    .ch-header{width:90%;max-width:1000px;margin:4px auto 14px;font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:4px;color:rgba(255,255,255,.3);display:flex;align-items:center;gap:12px;}
-    .ch-header::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(169,4,50,.3),transparent);}
-    .grid-channels{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;width:90%;max-width:1000px;margin:0 auto;padding-bottom:50px;}
-    .channel-card{background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.06);padding:20px 10px 16px;border-radius:16px;cursor:pointer;text-align:center;transition:all .35s cubic-bezier(.175,.885,.32,1.275);position:relative;overflow:hidden;opacity:0;transform:translateY(20px);animation:cardReveal .5s cubic-bezier(.16,1,.3,1) forwards;}
-    .channel-card.disabled{opacity:.35;cursor:not-allowed;filter:grayscale(.8);}
-    .channel-card.disabled:hover{transform:none;box-shadow:none;border-color:rgba(255,255,255,.06);}
-    .channel-card:not(.disabled):hover{border-color:rgba(169,4,50,.5);background:rgba(169,4,50,.06);transform:translateY(-5px) scale(1.02);box-shadow:0 12px 30px rgba(0,0,0,.5);}
-    .channel-card.active{background:linear-gradient(135deg,rgba(169,4,50,.8),rgba(100,2,30,.9));border-color:rgba(253,185,18,.4);transform:translateY(-4px);box-shadow:0 15px 35px rgba(169,4,50,.35);}
-    .ch-logo-wrap{width:56px;height:56px;border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 10px;overflow:hidden;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.04);transition:all .3s;}
-    .ch-logo-wrap img{width:100%;height:100%;object-fit:contain;padding:6px;}
-    .ch-monogram{font-family:'Bebas Neue',sans-serif;font-size:1rem;letter-spacing:.5px;color:white;text-shadow:0 1px 4px rgba(0,0,0,.5);}
-    .channel-card:not(.disabled):hover .ch-logo-wrap{border-color:rgba(169,4,50,.4);box-shadow:0 0 15px rgba(169,4,50,.15);}
-    .channel-card.active .ch-logo-wrap{border-color:rgba(253,185,18,.4);box-shadow:0 0 15px rgba(253,185,18,.2);}
-    .channel-card span{font-size:.75rem;font-weight:700;letter-spacing:.3px;color:rgba(255,255,255,.45);transition:color .3s;display:block;line-height:1.3;}
-    .channel-card:not(.disabled):hover span{color:rgba(255,255,255,.9);}
-    .channel-card.active span{color:white;}
-    .active-pip{position:absolute;top:9px;right:9px;width:7px;height:7px;border-radius:50%;background:var(--gold);display:none;animation:livePulse 1.5s ease-out infinite;}
-    .channel-card.active .active-pip{display:block;}
-    .closed-badge{position:absolute;top:8px;left:8px;background:rgba(0,0,0,.7);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.4);font-size:.55rem;font-weight:700;letter-spacing:1px;padding:2px 6px;border-radius:5px;text-transform:uppercase;}
-
-    /* ADMIN */
-    #admin-login-overlay,#admin-panel-overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(10px);z-index:9000;display:none;justify-content:center;align-items:center;}
-    #admin-panel-overlay{align-items:flex-start;padding:20px;overflow-y:auto;}
-    .admin-modal{background:rgba(10,10,15,.98);border:1px solid rgba(253,185,18,.2);border-radius:24px;padding:2.5rem;width:100%;max-width:480px;margin:0 auto;position:relative;overflow:hidden;}
-    .admin-modal::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),var(--red),var(--gold),transparent);}
-    .admin-modal h2{font-family:'Bebas Neue',sans-serif;font-size:1.8rem;letter-spacing:3px;color:var(--gold);margin-bottom:1.5rem;}
-    .admin-close{position:absolute;top:16px;right:16px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.5);width:32px;height:32px;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .3s;}
-    .admin-close:hover{color:white;border-color:var(--red);background:rgba(169,4,50,.2);}
-    .admin-section{margin-bottom:1.8rem;}
-    .admin-section-title{font-size:.75rem;font-weight:700;letter-spacing:3px;color:rgba(255,255,255,.3);text-transform:uppercase;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,.06);}
-    .admin-input{width:100%;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.1);padding:12px 16px;border-radius:12px;color:white;outline:none;font-family:'Rajdhani',sans-serif;font-size:.95rem;font-weight:600;margin-bottom:8px;transition:all .3s;}
-    .admin-input:focus{border-color:rgba(253,185,18,.4);background:rgba(253,185,18,.03);}
-    .admin-btn-primary{background:linear-gradient(135deg,var(--red),#c4053f);border:none;color:white;padding:12px 24px;border-radius:12px;font-family:'Bebas Neue',sans-serif;font-size:1.1rem;letter-spacing:2px;cursor:pointer;transition:all .3s;width:100%;}
-    .admin-btn-primary:hover{transform:translateY(-1px);box-shadow:0 8px 20px rgba(169,4,50,.4);}
-    .admin-btn-gold{background:rgba(253,185,18,.1);border:1px solid rgba(253,185,18,.3);color:var(--gold);padding:10px 20px;border-radius:10px;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.9rem;cursor:pointer;transition:all .3s;}
-    .admin-btn-gold:hover{background:rgba(253,185,18,.2);}
-    .ann-row{display:flex;gap:8px;}
-    .ann-row .admin-input{flex:1;margin-bottom:0;}
-    .channel-toggle-list{display:flex;flex-direction:column;gap:8px;max-height:260px;overflow-y:auto;}
-    .toggle-row{display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);padding:10px 14px;border-radius:12px;}
-    .toggle-label{font-size:.88rem;font-weight:700;color:rgba(255,255,255,.7);}
-    .toggle-cat{font-size:.7rem;color:rgba(255,255,255,.3);letter-spacing:1px;}
-    .toggle-switch{position:relative;width:44px;height:24px;flex-shrink:0;}
-    .toggle-switch input{opacity:0;width:0;height:0;position:absolute;}
-    .toggle-slider{position:absolute;inset:0;background:rgba(255,255,255,.1);border-radius:12px;cursor:pointer;transition:.3s;}
-    .toggle-slider::before{content:'';position:absolute;width:18px;height:18px;left:3px;top:3px;background:rgba(255,255,255,.4);border-radius:50%;transition:.3s;}
-    .toggle-switch input:checked+.toggle-slider{background:rgba(52,211,153,.3);border:1px solid rgba(52,211,153,.4);}
-    .toggle-switch input:checked+.toggle-slider::before{transform:translateX(20px);background:#34d399;}
-    .user-list{display:flex;flex-direction:column;gap:6px;}
-    .user-row{display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);padding:10px 14px;border-radius:10px;}
-    .user-name{font-size:.9rem;font-weight:700;color:rgba(255,255,255,.7);}
-    .user-del-btn{background:rgba(169,4,50,.1);border:1px solid rgba(169,4,50,.2);color:rgba(255,100,100,.7);width:28px;height:28px;border-radius:7px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0;}
-    .user-del-btn:hover{background:rgba(169,4,50,.3);color:white;}
-    .toggle-row.editing{border-color:rgba(253,185,18,.3);background:rgba(253,185,18,.04);}
-    .ch-edit-btn{background:rgba(253,185,18,.08);border:1px solid rgba(253,185,18,.2);color:rgba(253,185,18,.7);width:28px;height:28px;border-radius:7px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.8rem;transition:all .2s;flex-shrink:0;}
-    .ch-edit-btn:hover{background:rgba(253,185,18,.2);color:var(--gold);}
-    .ch-del-btn{background:rgba(169,4,50,.1);border:1px solid rgba(169,4,50,.2);color:rgba(255,100,100,.7);width:28px;height:28px;border-radius:7px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.8rem;transition:all .2s;flex-shrink:0;}
-    .ch-del-btn:hover{background:rgba(169,4,50,.3);color:white;}
-    .ch-edit-form{margin-top:8px;padding:10px;background:rgba(0,0,0,.3);border-radius:10px;border:1px solid rgba(253,185,18,.15);}
-    .bakim-active{border-color:rgba(255,100,50,.6)!important;background:rgba(255,100,50,.15)!important;color:rgba(255,180,80,1)!important;}
-    .cat-toggle-btn{padding:6px 12px;border-radius:8px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:rgba(255,255,255,.4);font-family:'Rajdhani',sans-serif;font-weight:700;font-size:.8rem;letter-spacing:1px;cursor:pointer;transition:all .2s;}
-    .cat-toggle-btn.selected{background:rgba(169,4,50,.25);border-color:rgba(169,4,50,.5);color:white;}
-
-    @media(max-width:600px){
-      .login-brand{font-size:3.5rem;}
-      .header-title{font-size:1.3rem;}
-      .category-grid{grid-template-columns:repeat(2,1fr);}
-      .grid-channels{grid-template-columns:repeat(2,1fr);}
-      .admin-modal{padding:1.5rem;}
-    }
-  </style>
-</head>
-<body>
-
-<!-- LOGIN -->
-<div id="login-page">
-  <div class="login-wrap">
-    <div style="text-align:center;">
-      <div class="login-brand">Z&amp;M STREAM</div>
-    </div>
-    <div class="login-card">
-      <div class="input-group">
-        <i data-lucide="user" size="16"></i>
-        <input type="text" id="username" placeholder="Kullanıcı Adı" autocomplete="off">
-      </div>
-      <div class="input-group">
-        <i data-lucide="lock" size="16"></i>
-        <input type="password" id="password" placeholder="Şifre">
-      </div>
-      <button class="btn-login" onclick="attemptLogin()">Sisteme Giriş</button>
-    </div>
-  </div>
-</div>
-
-<!-- INTRO -->
-<div id="intro-overlay">
-  <div class="intro-brand">Z&amp;M STREAM</div>
-  <div class="intro-sub" id="intro-sub-text">İyi Seyirler Diler</div>
-  <div class="spinner-ring"></div>
-</div>
-
-<!-- WELCOME POPUP -->
-<div id="popup-overlay" onclick="closeWelcome()"></div>
-<div id="welcome-popup">
-  <div class="welcome-box">
-    <span class="welcome-emoji">👋</span>
-    <div class="welcome-title" id="welcome-title">HOŞ GELDİN!</div>
-    <div class="welcome-msg" id="welcome-msg">Z&amp;M Stream'e bağlandın. İyi seyirler!</div>
-    <button class="welcome-close" onclick="closeWelcome()">Hadi Başlayalım</button>
-  </div>
-</div>
-
-<!-- MAIN APP -->
-<div id="main-app">
-  <div class="top-announcement">
-    <div class="announcement-content">✦ Z&amp;M STREAM PORTALINA HOŞ GELDİNİZ &nbsp;&nbsp;&nbsp; ✦ KEYİFLİ SEYİRLER DİLERİZ &nbsp;&nbsp;&nbsp; ✦ Z&amp;M STREAM PORTALINA HOŞ GELDİNİZ &nbsp;&nbsp;&nbsp; ✦ KEYİFLİ SEYİRLER DİLERİZ</div>
-  </div>
-
-  <div class="announcement-bar" id="announcement-bar">
-    <span style="color:var(--gold);font-size:1rem;">📢</span>
-    <div class="ann-text" id="announcement-text"></div>
-  </div>
-
-  <header>
-    <div class="header-brand">
-      <div class="live-dot"></div>
-      <div class="header-title">Z&amp;M <span>STREAM</span></div>
-      <div class="live-badge">CANLI</div>
-    </div>
-    <div class="nav-right">
-      <button class="admin-btn" onclick="openAdminLogin()">⚙ Yönetim</button>
-      <button class="logout-btn" onclick="location.reload()">Çıkış</button>
-    </div>
-  </header>
-
-  <div id="category-screen">
-    <div style="padding:30px 5% 0;"><div class="section-title">Kategoriler</div></div>
-    <div style="padding:0 5%;"><div class="category-grid" id="categoryList"></div></div>
-  </div>
-
-  <div id="channel-view">
-    <button class="back-btn" onclick="backToCategories()">
-      <i data-lucide="arrow-left" size="16"></i> Kategoriler
-    </button>
-    <div class="video-section">
-      <div id="video-display"></div>
-      <button class="fullscreen-btn" onclick="toggleFullscreen()" id="fs-btn">⛶ Tam Ekran</button>
-    </div>
-    <div class="status-bar">
-      <div class="status-dot" id="statusDot"></div>
-      <div id="statusLabel">Kanal seçiniz</div>
-    </div>
-    <div class="ch-header">Kanallar</div>
-    <div class="grid-channels" id="channelList"></div>
-  </div>
-</div>
-
-<!-- ADMIN ŞİFRE -->
-<div id="admin-login-overlay">
-  <div class="admin-modal" style="max-width:340px;">
-    <button class="admin-close" onclick="closeAdminLogin()">✕</button>
-    <h2>🔒 Yönetici Girişi</h2>
-    <input class="admin-input" type="password" id="admin-pass-input" placeholder="Admin Şifresi">
-    <button class="admin-btn-primary" onclick="checkAdminPass()">Giriş Yap</button>
-    <p id="admin-pass-error" style="color:var(--red-bright);font-size:.8rem;margin-top:10px;display:none;text-align:center;font-weight:700;">Şifre yanlış!</p>
-  </div>
-</div>
-
-<!-- ADMIN PANELİ -->
-<div id="admin-panel-overlay">
-  <div class="admin-modal">
-    <button class="admin-close" onclick="closeAdminPanel()">✕</button>
-    <h2>⚙ Yönetici Paneli</h2>
-
-    <div class="admin-section">
-      <div class="admin-section-title">📢 Duyuru Yönetimi</div>
-      <div class="ann-row">
-        <input class="admin-input" type="text" id="ann-input" placeholder="Duyuru metnini girin...">
-        <button class="admin-btn-gold" onclick="saveAnnouncement()">Yayınla</button>
-      </div>
-      <button class="admin-btn-gold" style="margin-top:8px;width:100%;background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.1);color:rgba(255,255,255,.4);" onclick="clearAnnouncement()">Duyuruyu Kaldır</button>
-    </div>
-
-    <div class="admin-section">
-      <div class="admin-section-title">🗂️ Kategori Yönetimi</div>
-      <div id="admin-cat-list" style="display:flex;flex-direction:column;gap:6px;margin-bottom:10px;"></div>
-      <div style="display:flex;gap:8px;">
-        <input class="admin-input" style="margin-bottom:0;flex:1;" type="text" id="new-cat-name" placeholder="Yeni kategori adı...">
-        <button class="admin-btn-gold" onclick="addCategory()">+ Ekle</button>
-      </div>
-      <p id="add-cat-error" style="color:var(--red-bright);font-size:.8rem;margin-top:6px;display:none;font-weight:700;"></p>
-    </div>
-
-    <div class="admin-section">
-      <div class="admin-section-title" style="display:flex;justify-content:space-between;align-items:center;">
-        <span>📺 Kanal Yönetimi</span>
-        <button id="bakim-btn" onclick="toggleBakim()" style="font-family:'Rajdhani',sans-serif;font-size:.75rem;font-weight:700;letter-spacing:1px;padding:5px 12px;border-radius:8px;border:1px solid rgba(255,100,50,.3);background:rgba(255,100,50,.08);color:rgba(255,150,80,.8);cursor:pointer;transition:all .2s;">🔧 Bakım Modu</button>
-      </div>
-      <div class="channel-toggle-list" id="admin-channel-list"></div>
-      <!-- Yeni kanal ekle -->
-      <div style="margin-top:12px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:14px;">
-        <div style="font-size:.75rem;font-weight:700;letter-spacing:2px;color:rgba(255,255,255,.3);margin-bottom:10px;">YENİ KANAL EKLE</div>
-        <input class="admin-input" type="text" id="new-ch-name" placeholder="Kanal adı (ör: BeIN Sports)">
-        <input class="admin-input" type="text" id="new-ch-url" placeholder="Yayın URL'si">
-        <select class="admin-input" id="new-ch-cat" style="cursor:pointer;"></select>
-        <button class="admin-btn-primary" onclick="addChannel()" style="font-size:1rem;padding:10px;">+ Kanal Ekle</button>
-        <p id="add-ch-error" style="color:var(--red-bright);font-size:.8rem;margin-top:8px;display:none;font-weight:700;"></p>
-      </div>
-    </div>
-
-    <div class="admin-section">
-      <div class="admin-section-title">👥 Kullanıcı Yönetimi</div>
-      <div class="user-list" id="admin-user-list"></div>
-      <div style="margin-top:14px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:14px;">
-        <div style="font-size:.75rem;font-weight:700;letter-spacing:2px;color:rgba(255,255,255,.3);margin-bottom:10px;">YENİ KULLANICI EKLE</div>
-        <input class="admin-input" type="text" id="new-u" placeholder="Kullanıcı adı">
-        <input class="admin-input" type="text" id="new-p" placeholder="Şifre">
-        <input class="admin-input" type="text" id="new-name" placeholder="Görünen isim (ör: Ahmet)">
-        <div style="font-size:.72rem;color:rgba(255,255,255,.3);margin-bottom:8px;letter-spacing:1px;">KATEGORİ ERİŞİMİ</div>
-        <div id="new-user-cats" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;"></div>
-        <button class="admin-btn-primary" onclick="addUser()" style="font-size:1rem;padding:10px;">+ Kullanıcı Ekle</button>
-        <p id="add-user-error" style="color:var(--red-bright);font-size:.8rem;margin-top:8px;display:none;font-weight:700;"></p>
-      </div>
-    </div>
-
-    <div class="admin-section">
-      <div class="admin-section-title" style="display:flex;justify-content:space-between;align-items:center;">
-        <span>📋 Giriş Geçmişi</span>
-        <button onclick="clearLoginHistory()" style="font-family:'Rajdhani',sans-serif;font-size:.7rem;font-weight:700;padding:4px 10px;border-radius:7px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:rgba(255,255,255,.3);cursor:pointer;">Temizle</button>
-      </div>
-      <div id="login-history-list" style="display:flex;flex-direction:column;gap:5px;max-height:200px;overflow-y:auto;"></div>
-    </div>
-
-    <button class="admin-btn-primary" onclick="closeAdminPanel()">Kapat &amp; Kaydet</button>
-  </div>
-</div>
-
-<script>
-  const ADMIN_PASS = "mexy774";
-
-  const DEFAULT_USERS = [
-    { u: "zm", p: "1905", name: "Z&M", role: "Üye", cats: null },
-    { u: "gs", p: "1905", name: "GS",  role: "Üye", cats: null },
-  ];
-
-  function loadUsers() {
-    try {
-      const saved = localStorage.getItem('zm_users');
-      if (!saved) return JSON.parse(JSON.stringify(DEFAULT_USERS));
-      const parsed = JSON.parse(saved);
-      const merged = JSON.parse(JSON.stringify(DEFAULT_USERS));
-      parsed.forEach(u => { if (!merged.find(x => x.u === u.u)) merged.push(u); });
-      return merged;
-    } catch(e) {
-      localStorage.removeItem('zm_users');
-      return JSON.parse(JSON.stringify(DEFAULT_USERS));
-    }
-  }
-
-  function saveUsers() {
-    try { localStorage.setItem('zm_users', JSON.stringify(USERS)); } catch(e) {}
-  }
-
-  let USERS = loadUsers();
-  let channelStates = {};
-  let announcement = "";
-  let currentUser = null;
-
-  const CHANNELS = [
-    { id:"zm_ozel",  name:"Z&M ÖZEL YAYIN", url:"https://vdo.ninja/?view=AuJ7Zh4&autoplay&clean&videobitrate=10000&shutup&label=0&codec=av1", category:"Z&M",    logo:null },
-    { id:"zm_s1",    name:"Z&M Sports 1",   url:"http://benstvapk.com:2095/live/vdt1351/4WAT45p72nz6/214050.m3u8", category:"Spor",   logo:null },
-    { id:"zm_s2",    name:"Z&M Sports 2",   url:"https://test-streams.mux.dev/x36xhzz/url_6/193039199_mp4_h264_aac_hd_7.m3u8", category:"Spor",   logo:null },
-    { id:"zm_s3",    name:"Z&M Sports 3",   url:"https://test-streams.mux.dev/x36xhzz/url_6/193039199_mp4_h264_aac_hd_7.m3u8", category:"Spor",   logo:null },
-    { id:"zm_s4",    name:"Z&M Sports 4",   url:"https://test-streams.mux.dev/x36xhzz/url_6/193039199_mp4_h264_aac_hd_7.m3u8", category:"Spor",   logo:null },
-    { id:"zm_s5",    name:"Z&M Sports 5",   url:"https://test-streams.mux.dev/x36xhzz/url_6/193039199_mp4_h264_aac_hd_7.m3u8", category:"Spor",   logo:null },
-    { id:"trt_spor", name:"TRT Spor",        url:"https://test-streams.mux.dev/x36xhzz/url_6/193039199_mp4_h264_aac_hd_7.m3u8", category:"Spor",   logo:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/TRT_Spor_logo_%282017%29.svg/240px-TRT_Spor_logo_%282017%29.svg.png" },
-    { id:"trt_yhd",  name:"TRT Spor YHD",   url:"https://test-streams.mux.dev/x36xhzz/url_6/193039199_mp4_h264_aac_hd_7.m3u8", category:"Spor",   logo:"https://upload.wikimedia.org/wikipedia/commons/thumb/8/85/TRT_Spor_logo_%282017%29.svg/240px-TRT_Spor_logo_%282017%29.svg.png" },
-    { id:"s_sport",  name:"S Sport",         url:"https://test-streams.mux.dev/x36xhzz/url_6/193039199_mp4_h264_aac_hd_7.m3u8", category:"Spor",   logo:"https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/S_Sport_logo.svg/240px-S_Sport_logo.svg.png" },
-    { id:"s_plus",   name:"S Sport Plus",    url:"https://test-streams.mux.dev/x36xhzz/url_6/193039199_mp4_h264_aac_hd_7.m3u8", category:"Spor",   logo:"https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/S_Sport_logo.svg/240px-S_Sport_logo.svg.png" },
-    { id:"tabii",    name:"Tabii Sports",    url:"https://test-streams.mux.dev/x36xhzz/url_6/193039199_mp4_h264_aac_hd_7.m3u8", category:"Spor",   logo:"https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Tabii_logo.svg/240px-Tabii_logo.svg.png" },
-    { id:"yab1",  name:"Yabancı Kanal 1",  url:"https://test-streams.mux.dev/x36xhzz/url_6/193039199_mp4_h264_aac_hd_7.m3u8", category:"Yabancı", logo:null },
-    { id:"yab2",  name:"Yabancı Kanal 2",  url:"https://test-streams.mux.dev/x36xhzz/url_6/193039199_mp4_h264_aac_hd_7.m3u8", category:"Yabancı", logo:null },
-    { id:"yab3",  name:"Yabancı Kanal 3",  url:"https://test-streams.mux.dev/x36xhzz/url_6/193039199_mp4_h264_aac_hd_7.m3u8", category:"Yabancı", logo:null },
-    { id:"yab4",  name:"Yabancı Kanal 4",  url:"https://test-streams.mux.dev/x36xhzz/url_6/193039199_mp4_h264_aac_hd_7.m3u8", category:"Yabancı", logo:null },
-    { id:"yab5",  name:"Yabancı Kanal 5",  url:"https://test-streams.mux.dev/x36xhzz/url_6/193039199_mp4_h264_aac_hd_7.m3u8", category:"Yabancı", logo:null },
-    { id:"yab6",  name:"Yabancı Kanal 6",  url:"https://test-streams.mux.dev/x36xhzz/url_6/193039199_mp4_h264_aac_hd_7.m3u8", category:"Yabancı", logo:null },
-    { id:"yab7",  name:"Yabancı Kanal 7",  url:"https://test-streams.mux.dev/x36xhzz/url_6/193039199_mp4_h264_aac_hd_7.m3u8", category:"Yabancı", logo:null },
-    { id:"yab8",  name:"Yabancı Kanal 8",  url:"https://test-streams.mux.dev/x36xhzz/url_6/193039199_mp4_h264_aac_hd_7.m3u8", category:"Yabancı", logo:null },
-    { id:"yab9",  name:"Yabancı Kanal 9",  url:"https://test-streams.mux.dev/x36xhzz/url_6/193039199_mp4_h264_aac_hd_7.m3u8", category:"Yabancı", logo:null },
-    { id:"yab10", name:"Yabancı Kanal 10", url:"https://test-streams.mux.dev/x36xhzz/url_6/193039199_mp4_h264_aac_hd_7.m3u8", category:"Yabancı", logo:null },
-  ];
-
-  CHANNELS.forEach(ch => channelStates[ch.id] = true);
-
-  const CAT_ICONS = { "Z&M":"star","Spor":"award","Yabancı":"globe","Haber":"radio","Film & Dizi":"film","Müzik":"music" };
-  const MONO_COLORS = [['#A90432','#ff0844'],['#1a6ef5','#5ba4ff'],['#7c3aed','#a855f7'],['#0891b2','#22d3ee'],['#059669','#34d399'],['#d97706','#fbbf24'],['#dc2626','#f87171'],['#0f766e','#2dd4bf']];
-
-  function getMonogram(name) {
-    const words = name.replace(/[^a-zA-ZğüşıöçĞÜŞİÖÇ0-9\s]/g,'').trim().split(/\s+/);
-    return words.length >= 2 ? (words[0][0]+words[1][0]).toUpperCase() : words[0].substring(0,2).toUpperCase();
-  }
-
-  function getMonoColor(name) {
-    let h=0; for(let c of name) h=(h*31+c.charCodeAt(0))&0xffffffff;
-    return MONO_COLORS[Math.abs(h)%MONO_COLORS.length];
-  }
-
-  function buildLogoHTML(ch) {
-    if (ch.logo) {
-      const mono = getMonogram(ch.name);
-      const [c1,c2] = getMonoColor(ch.name);
-      return `<div class="ch-logo-wrap"><img src="${ch.logo}" alt="${ch.name}" onerror="this.parentElement.innerHTML='<span class=ch-monogram>${mono}</span>';this.parentElement.style.background='linear-gradient(135deg,${c1},${c2})';"></div>`;
-    }
-    const [c1,c2]=getMonoColor(ch.name);
-    return `<div class="ch-logo-wrap" style="background:linear-gradient(135deg,${c1},${c2})"><span class="ch-monogram">${getMonogram(ch.name)}</span></div>`;
-  }
-
-  /* LOGIN */
-  function attemptLogin() {
-    const u = document.getElementById('username').value.trim();
-    const p = document.getElementById('password').value.trim();
-    const user = USERS.find(x => x.u === u && x.p === p);
-    if (user) {
-      currentUser = user;
-      logLogin(user);
-      document.getElementById('login-page').style.display = 'none';
-      document.getElementById('intro-sub-text').textContent = 'Hoş geldin, ' + user.name + '! İyi seyirler.';
-      const intro = document.getElementById('intro-overlay');
-      intro.style.display = 'flex';
-      setTimeout(function() {
-        intro.style.display = 'none';
-        document.getElementById('main-app').style.display = 'block';
-        initCategories();
-        showWelcomePopup(user);
-        if (announcement) showAnnouncementBar();
-        lucide.createIcons();
-      }, 2200);
-    } else {
-      const card = document.querySelector('.login-card');
-      card.style.borderColor = 'rgba(255,8,68,.6)';
-      card.style.boxShadow = '0 0 30px rgba(255,8,68,.2)';
-      setTimeout(function() { card.style.borderColor=''; card.style.boxShadow=''; }, 1500);
-    }
-  }
-
-  function showWelcomePopup(user) {
-    document.getElementById('welcome-title').textContent = 'HOŞ GELDİN, ' + user.name.toUpperCase() + '!';
-    document.getElementById('welcome-msg').textContent = "Z&M Stream'e bağlandın. Harika seyirler!";
-    document.getElementById('popup-overlay').style.display = 'block';
-    document.getElementById('welcome-popup').style.display = 'block';
-  }
-
-  function closeWelcome() {
-    document.getElementById('popup-overlay').style.display = 'none';
-    document.getElementById('welcome-popup').style.display = 'none';
-  }
-
-  function initCategories() {
-    const catList = document.getElementById('categoryList');
-    catList.innerHTML = '';
-    const allCats = getAllCats().filter(cat => CHANNELS.some(c => c.category === cat));
-    const allowedCats = (currentUser && currentUser.cats) ? currentUser.cats : allCats;
-    const categories = allCats.filter(c => allowedCats.includes(c));
-    categories.forEach(function(cat, i) {
-      const count = CHANNELS.filter(c=>c.category===cat).length;
-      const icon = CAT_ICONS[cat] || 'tv';
-      const card = document.createElement('div');
-      card.className = 'cat-card';
-      card.style.animationDelay = (i * .1) + 's';
-      card.innerHTML = '<div class="cat-icon"><i data-lucide="' + icon + '" size="24"></i></div><span>' + cat + '</span><div class="cat-count">' + count + ' kanal</div>';
-      card.onclick = function() { showChannels(cat); };
-      catList.appendChild(card);
-    });
-    lucide.createIcons();
-  }
-
-  function showChannels(category) {
-    document.getElementById('category-screen').style.display = 'none';
-    document.getElementById('channel-view').style.display = 'block';
-    const grid = document.getElementById('channelList');
-    grid.innerHTML = '';
-    CHANNELS.filter(c=>c.category===category).forEach(function(ch, i) {
-      const isOn = channelStates[ch.id];
-      const card = document.createElement('div');
-      card.className = 'channel-card' + (isOn ? '' : ' disabled');
-      card.style.animationDelay = (i * .07) + 's';
-      card.innerHTML = '<div class="active-pip"></div>' + (!isOn ? '<div class="closed-badge">Kapalı</div>' : '') + buildLogoHTML(ch) + '<span>' + ch.name + '</span>';
-      if (isOn) card.onclick = function() { playStream(ch, card); };
-      grid.appendChild(card);
-    });
-  }
-
-  function backToCategories() {
-    if (hlsInstance) { hlsInstance.destroy(); hlsInstance = null; }
-    document.getElementById('channel-view').style.display = 'none';
-    document.getElementById('category-screen').style.display = 'block';
-    document.getElementById('video-display').innerHTML = '';
-  }
-
-  let hlsInstance = null;
-
-  function playStream(ch, el) {
-    document.querySelectorAll('.channel-card').forEach(c=>c.classList.remove('active'));
-    el.classList.add('active');
-    document.getElementById('statusDot').className = 'status-dot live';
-    const lbl = document.getElementById('statusLabel');
-    lbl.className = 'live';
-    lbl.textContent = 'Oynatılıyor: ' + ch.name;
-
-    // Önceki HLS instance'ı temizle
-    if (hlsInstance) { hlsInstance.destroy(); hlsInstance = null; }
-
-    const display = document.getElementById('video-display');
-    const url = ch.url;
-    const isHLS = url.includes('.m3u8') || url.includes('.ts');
-    const isIframe = !isHLS || url.includes('vdo.ninja') || url.includes('iframe');
-
-    if (!isHLS || isIframe) {
-      // iframe ile oynat (vdo.ninja ve diğer embed linkler)
-      display.innerHTML = '<iframe src="' + url + '" allow="autoplay; fullscreen; camera; microphone"></iframe>';
-      return;
-    }
-
-    // HLS / .ts linkleri için native video + HLS.js
-    display.innerHTML = '<video id="hls-video" controls autoplay playsinline></video>';
-    const video = document.getElementById('hls-video');
-
-    // .ts linkini .m3u8'e çevir
-    const streamUrl = url.endsWith('.ts') ? url.replace(/\.ts$/, '.m3u8') : url;
-
-    if (Hls.isSupported()) {
-      hlsInstance = new Hls({
-        enableWorker: true,
-        lowLatencyMode: true,
-        backBufferLength: 90,
-      });
-      hlsInstance.loadSource(streamUrl);
-      hlsInstance.attachMedia(video);
-      hlsInstance.on(Hls.Events.MANIFEST_PARSED, function() {
-        video.play().catch(function(){});
-      });
-      hlsInstance.on(Hls.Events.ERROR, function(event, data) {
-        if (data.fatal) {
-          display.innerHTML = '<div class="player-error"><span>📡</span><p>YAYIN ALINAMADI<br><span style="color:rgba(255,255,255,.2);font-size:.7rem;">Sunucu yanıt vermiyor veya link hatalı</span></p></div>';
-        }
-      });
-    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-      // Safari native HLS desteği
-      video.src = streamUrl;
-      video.play().catch(function(){});
-    } else {
-      display.innerHTML = '<div class="player-error"><span>⚠️</span><p>TARAYICI HLS DESTEKLEMİYOR</p></div>';
-    }
-  }
-
-  function showAnnouncementBar() {
-    document.getElementById('announcement-text').textContent = announcement;
-    document.getElementById('announcement-bar').classList.add('visible');
-  }
-
-  function openAdminLogin() {
-    document.getElementById('admin-login-overlay').style.display = 'flex';
-    document.getElementById('admin-pass-input').value = '';
-    document.getElementById('admin-pass-error').style.display = 'none';
-  }
-
-  function closeAdminLogin() {
-    document.getElementById('admin-login-overlay').style.display = 'none';
-  }
-
-  function checkAdminPass() {
-    if (document.getElementById('admin-pass-input').value === ADMIN_PASS) {
-      closeAdminLogin();
-      openAdminPanel();
-    } else {
-      document.getElementById('admin-pass-error').style.display = 'block';
-    }
-  }
-
-  function openAdminPanel() {
-    document.getElementById('admin-panel-overlay').style.display = 'flex';
-    renderAdminChannels();
-    renderAdminUsers();
-    renderAdminCategories();
-    renderLoginHistory();
-    document.getElementById('ann-input').value = announcement;
-  }
-
-  function closeAdminPanel() {
-    document.getElementById('admin-panel-overlay').style.display = 'none';
-  }
-
-  // ── KATEGORİ YÖNETİMİ ──
-  // Sabit kategoriler silinemesin, dinamik eklenebilsin
-  const DEFAULT_CATS = ["Z&M", "Spor", "Yabancı"];
-  let EXTRA_CATS = JSON.parse(localStorage.getItem('zm_extra_cats') || '[]');
-
-  function getAllCats() {
-    return [...DEFAULT_CATS, ...EXTRA_CATS];
-  }
-
-  function saveExtraCats() {
-    localStorage.setItem('zm_extra_cats', JSON.stringify(EXTRA_CATS));
-  }
-
-  function renderAdminCategories() {
-    const list = document.getElementById('admin-cat-list');
-    list.innerHTML = '';
-    getAllCats().forEach(function(cat) {
-      const isDefault = DEFAULT_CATS.includes(cat);
-      const chCount = CHANNELS.filter(c => c.category === cat).length;
-      const row = document.createElement('div');
-      row.style.cssText = 'display:flex;align-items:center;justify-content:space-between;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);padding:9px 14px;border-radius:10px;';
-      row.innerHTML = `
-        <div>
-          <span style="font-size:.88rem;font-weight:700;color:rgba(255,255,255,.7);">${cat}</span>
-          <span style="font-size:.7rem;color:rgba(255,255,255,.25);margin-left:8px;">${chCount} kanal</span>
-          ${isDefault ? '<span style="font-size:.6rem;color:rgba(253,185,18,.4);margin-left:6px;letter-spacing:1px;">SİSTEM</span>' : ''}
-        </div>
-        ${!isDefault ? `<button class="ch-del-btn" onclick="deleteCategory('${cat}')" title="Sil">✕</button>` : '<div style="width:28px;"></div>'}
-      `;
-      list.appendChild(row);
-    });
-    // Kanal ekle select güncelle
-    const sel = document.getElementById('new-ch-cat');
-    if (sel) {
-      sel.innerHTML = '';
-      getAllCats().forEach(function(cat) {
-        const opt = document.createElement('option');
-        opt.value = cat;
-        opt.textContent = cat;
-        sel.appendChild(opt);
-      });
-    }
-    // Kullanıcı ekle cat toggles güncelle
-    renderCatToggles();
-  }
-
-  function addCategory() {
-    const input = document.getElementById('new-cat-name');
-    const err = document.getElementById('add-cat-error');
-    const name = input.value.trim();
-    err.style.display = 'none';
-    if (!name) { err.textContent = 'Kategori adı boş olamaz!'; err.style.display = 'block'; return; }
-    if (getAllCats().find(c => c.toLowerCase() === name.toLowerCase())) {
-      err.textContent = 'Bu kategori zaten var!'; err.style.display = 'block'; return;
-    }
-    EXTRA_CATS.push(name);
-    saveExtraCats();
-    input.value = '';
-    renderAdminCategories();
-  }
-
-  function deleteCategory(cat) {
-    const count = CHANNELS.filter(c => c.category === cat).length;
-    if (count > 0) {
-      if (!confirm(cat + ' kategorisinde ' + count + ' kanal var. Kanallar da silinecek. Devam?')) return;
-      // Kanalları sil
-      for (let i = CHANNELS.length - 1; i >= 0; i--) {
-        if (CHANNELS[i].category === cat) {
-          delete channelStates[CHANNELS[i].id];
-          CHANNELS.splice(i, 1);
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Montserrat', 'sans-serif'],
+          },
+          colors: {
+            accentRed: {
+              DEFAULT: '#A90432',
+              hover: '#C20539',
+              light: '#E21B53'
+            },
+            accentGold: {
+              DEFAULT: '#FDB912',
+              hover: '#E4A50B',
+              light: '#FFE296'
+            },
+            bgDark: '#050507',
+            panelDark: '#0d0d11',
+          }
         }
       }
     }
-    EXTRA_CATS = EXTRA_CATS.filter(c => c !== cat);
-    saveExtraCats();
-    renderAdminCategories();
-    renderAdminChannels();
-  }
+  </script>
 
-  // ── GİRİŞ GEÇMİŞİ ──
-  let loginHistory = JSON.parse(localStorage.getItem('zm_login_history') || '[]');
+  <style>
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #050507;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #222;
+      border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #A90432;
+    }
 
-  function logLogin(user) {
-    const now = new Date();
-    const entry = {
-      name: user.name,
-      u: user.u,
-      time: now.toLocaleString('tr-TR', { day:'2-digit', month:'2-digit', year:'numeric', hour:'2-digit', minute:'2-digit' })
+    @keyframes floatLightOne {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(40px, -60px) scale(1.2); }
+    }
+    @keyframes floatLightTwo {
+      0%, 100% { transform: translate(0, 0) scale(1.1); }
+      50% { transform: translate(-50px, 50px) scale(0.9); }
+    }
+    
+    .ambient-light-1 {
+      animation: floatLightOne 12s ease-in-out infinite;
+    }
+    .ambient-light-2 {
+      animation: floatLightTwo 16s ease-in-out infinite;
+    }
+
+    @keyframes shimmerEffect {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+    .shimmer-btn {
+      background: linear-gradient(90deg, #A90432 0%, #C20539 40%, #E21B53 50%, #C20539 60%, #A90432 100%);
+      background-size: 200% auto;
+      animation: shimmerEffect 4s linear infinite;
+    }
+    .shimmer-btn:hover {
+      background-size: 100% auto;
+      animation: none;
+      background-color: #C20539;
+    }
+
+    .glow-box {
+      box-shadow: 0 0 40px rgba(169, 4, 50, 0.15), inset 0 0 20px rgba(255, 255, 255, 0.02);
+    }
+    .glow-box:focus-within {
+      box-shadow: 0 0 45px rgba(253, 185, 18, 0.2), inset 0 0 20px rgba(253, 185, 18, 0.05);
+    }
+    
+    .transition-all-300 {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .glow-crown {
+      filter: drop-shadow(0px 0px 20px rgba(253, 185, 18, 0.6));
+    }
+  </style>
+</head>
+<body class="bg-bgDark text-white font-sans h-full min-h-screen flex flex-col justify-between overflow-x-hidden antialiased">
+
+  <!-- LOGIN CONTAINER -->
+  <div id="login-page" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-bgDark overflow-hidden">
+    
+    <!-- Dynamic Ambient Background Lights -->
+    <div class="absolute inset-0 z-0 pointer-events-none">
+      <div class="absolute top-1/4 left-1/3 w-[450px] h-[450px] bg-accentRed/10 rounded-full blur-[110px] ambient-light-1"></div>
+      <div class="absolute bottom-1/4 right-1/3 w-[500px] h-[500px] bg-accentGold/10 rounded-full blur-[130px] ambient-light-2"></div>
+      <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_40%,_#050507_90%)]"></div>
+    </div>
+
+    <!-- Login Glassmorphic Card -->
+    <div class="relative w-full max-w-md p-10 bg-panelDark/70 backdrop-blur-3xl border border-white/5 rounded-[32px] glow-box transition-all-300 z-10 duration-500 scale-95 opacity-0 animate-[fadeIn_0.6s_ease-out_forwards]">
+      
+      <!-- Premium Glowing Frame Edge Indicator -->
+      <div class="absolute -inset-px bg-gradient-to-r from-accentRed/40 via-accentGold/20 to-accentRed/40 rounded-[32px] -z-10 opacity-70 blur-[1px]"></div>
+
+      <!-- Header Logo inside Login -->
+      <div class="text-center mb-10 flex flex-col items-center">
+        <!-- Golden Glowing Crown Logo inside the box area highlighted by user -->
+        <div class="mb-4 bg-gradient-to-b from-accentGold to-amber-500 p-4 rounded-full shadow-[0_0_30px_rgba(253,185,18,0.3)] animate-pulse">
+          <i data-lucide="crown" class="w-10 h-10 text-black glow-crown"></i>
+        </div>
+        <h1 class="text-3xl md:text-4xl font-extrabold tracking-wider bg-gradient-to-r from-accentGold via-white to-accentRed bg-clip-text text-transparent select-none">
+          IMPERA <span class="font-black bg-gradient-to-r from-accentRed to-accentRed-light bg-clip-text">STREAM</span>
+        </h1>
+        <p class="text-xs text-gray-400/80 tracking-[0.4em] uppercase mt-3">Premium Streaming</p>
+      </div>
+
+      <!-- Custom In-Card Error Box -->
+      <div id="login-error-box" class="hidden mb-6 p-4 bg-accentRed/10 border border-accentRed/30 rounded-2xl flex items-center gap-3 text-red-300 text-sm animate-pulse">
+        <i data-lucide="alert-triangle" class="w-5 h-5 flex-shrink-0 text-accentRed-light"></i>
+        <span id="login-error-text">Hatalı kullanıcı adı veya şifre!</span>
+      </div>
+
+      <!-- Inputs Form -->
+      <div class="space-y-5">
+        <div>
+          <label class="block text-[11px] font-bold text-gray-400 uppercase tracking-[0.15em] mb-2.5 ml-1" for="username">Kullanıcı Adı</label>
+          <div class="relative group">
+            <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-500 group-focus-within:text-accentGold transition-colors">
+              <i data-lucide="user" class="w-5 h-5"></i>
+            </span>
+            <input type="text" id="username" class="w-full pl-12 pr-4 py-4 bg-black/40 border border-white/5 rounded-2xl text-white placeholder-gray-500 focus:outline-none focus:border-accentGold/40 focus:bg-black/60 transition-all-300 text-sm" placeholder="Kullanıcı adınızı girin">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-[11px] font-bold text-gray-400 uppercase tracking-[0.15em] mb-2.5 ml-1" for="password">Şifre</label>
+          <div class="relative group">
+            <span class="absolute inset-y-0 left-0 flex items-center pl-4 text-gray-500 group-focus-within:text-accentRed-light transition-colors">
+              <i data-lucide="lock" class="w-5 h-5"></i>
+            </span>
+            <input type="password" id="password" class="w-full pl-12 pr-4 py-4 bg-black/40 border border-white/5 rounded-2xl text-white placeholder-gray-500 focus:outline-none focus:border-accentRed/40 focus:bg-black/60 transition-all-300 text-sm" placeholder="Şifrenizi girin" onkeydown="if(event.key === 'Enter') attemptLogin()">
+          </div>
+        </div>
+
+        <button onclick="attemptLogin()" class="w-full mt-8 py-4 shimmer-btn text-white font-bold tracking-[0.15em] rounded-2xl shadow-[0_0_30px_rgba(169,4,50,0.3)] hover:shadow-[0_0_40px_rgba(169,4,50,0.5)] transition-all-300 transform active:scale-95 flex items-center justify-center gap-2 text-sm">
+          <span>GİRİŞ YAP</span>
+          <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        </button>
+      </div>
+
+      <div class="mt-10 text-center text-xs text-gray-500/80 tracking-wider font-medium">
+        © 2026 IMPERA Inc. Tüm Hakları Saklıdır.
+      </div>
+    </div>
+  </div>
+
+  <!-- INTRO LOAD / SPLASH OVERLAY (Üst Düzey Yenilenmiş Modern Tasarım) -->
+  <div id="intro-overlay" class="fixed inset-0 z-[100] bg-bgDark flex flex-col justify-center items-center p-6 hidden opacity-100 transition-opacity duration-500 overflow-hidden">
+    
+    <!-- Background Ambient Glow Nodes specifically for Splash -->
+    <div class="absolute inset-0 z-0 pointer-events-none">
+      <div class="absolute top-1/3 left-1/4 w-[350px] h-[350px] bg-accentGold/10 rounded-full blur-[100px] animate-pulse"></div>
+      <div class="absolute bottom-1/3 right-1/4 w-[350px] h-[350px] bg-accentRed/10 rounded-full blur-[100px] [animation-delay:1s] animate-pulse"></div>
+      <div class="absolute inset-0 bg-black/40"></div>
+    </div>
+
+    <div class="relative z-10 flex flex-col items-center">
+      
+      <!-- Deluxe Rotating Crown Shield Emblem -->
+      <div class="relative mb-8">
+        <!-- Glow rings -->
+        <div class="absolute -inset-6 bg-accentGold/15 rounded-full blur-2xl animate-pulse"></div>
+        <div class="absolute -inset-2 bg-gradient-to-tr from-accentGold via-accentRed/40 to-accentGold rounded-full animate-spin [animation-duration:12s] opacity-40"></div>
+        
+        <!-- Embossed central ring -->
+        <div class="relative bg-gradient-to-b from-neutral-900 to-black border border-white/10 p-6 rounded-full shadow-[0_0_50px_rgba(253,185,18,0.3)] flex items-center justify-center">
+          <i data-lucide="crown" class="w-14 h-14 text-accentGold glow-crown"></i>
+        </div>
+      </div>
+      
+      <!-- Branding Text -->
+      <div class="text-center space-y-1">
+        <h1 class="text-4xl md:text-5xl font-black tracking-[0.25em] bg-gradient-to-r from-accentGold via-white to-accentRed bg-clip-text text-transparent select-none">
+          IMPERA
+        </h1>
+        <p class="text-accentRed-light font-black tracking-[0.6em] text-[11px] uppercase pl-2">
+          STREAM
+        </p>
+      </div>
+
+      <!-- Dynamic System Load Unit -->
+      <div class="w-72 mt-10 p-1.5 bg-panelDark/60 backdrop-blur-xl border border-white/5 rounded-2xl shadow-2xl space-y-3">
+        <div class="flex justify-between items-center text-[10px] text-gray-400 font-bold uppercase tracking-widest px-1.5 pt-1">
+          <span id="intro-status-text" class="text-gray-300">Sistem başlatılıyor...</span>
+          <span id="intro-progress-text" class="text-accentGold">0%</span>
+        </div>
+        <div class="h-2 w-full bg-black/60 rounded-xl overflow-hidden p-[1.5px] border border-white/5">
+          <div id="intro-progress-fill" class="h-full w-0 bg-gradient-to-r from-accentRed via-accentGold to-accentRed-light rounded-full transition-all duration-100 shadow-[0_0_15px_rgba(253,185,18,0.4)]"></div>
+        </div>
+        <div class="text-[9px] text-center text-gray-500 uppercase tracking-[0.3em] pb-0.5">
+          Premium Entertainment Engine
+        </div>
+      </div>
+
+      <p class="text-xs text-gray-500/85 tracking-widest mt-12 font-medium">İyi Seyirler Diler</p>
+    </div>
+  </div>
+
+  <!-- MAIN APP WRAPPER -->
+  <div id="main-app" class="hidden flex-col min-h-screen flex-grow">
+    
+    <!-- ANNOUNCEMENT TICKER -->
+    <div class="w-full bg-gradient-to-r from-black via-accentRed/90 to-black border-b border-accentGold/20 py-2.5 overflow-hidden whitespace-nowrap">
+      <div class="inline-block pl-[100%] animate-[marquee_30s_linear_infinite] font-semibold text-xs text-accentGold-light uppercase tracking-wider">
+        🚀 IMPERA STREAM Dünyasına Hoş Geldiniz! • Favoriler Sistemi Aktif • Kesintisiz Keyifli Seyirler Dileriz.
+      </div>
+    </div>
+
+    <!-- MAIN APP HEADER -->
+    <header class="bg-black/80 backdrop-blur-md border-b border-white/5 py-4 px-6 md:px-12 flex items-center justify-between sticky top-0 z-40">
+      <div class="flex items-center gap-3">
+        <div class="bg-accentRed p-2 rounded-xl">
+          <i data-lucide="play" class="w-6 h-6 text-white"></i>
+        </div>
+        <span class="font-black text-xl tracking-wider text-white">
+          IMPERA <span class="text-accentGold">STREAM</span>
+        </span>
+      </div>
+
+      <!-- Center Dynamic Clock Widget -->
+      <div class="hidden md:flex items-center gap-2 px-4 py-2 bg-white/5 rounded-xl border border-white/5 text-xs text-gray-400">
+        <i data-lucide="clock" class="w-4 h-4 text-accentGold"></i>
+        <span id="live-clock">--:--:--</span>
+      </div>
+
+      <!-- Action Button (Exit) -->
+      <button onclick="logout()" class="px-4 py-2 bg-white/5 hover:bg-accentRed hover:text-white border border-white/10 rounded-xl text-gray-300 font-semibold text-sm transition-all duration-200 flex items-center gap-2">
+        <i data-lucide="log-out" class="w-4 h-4"></i>
+        <span>ÇIKIŞ</span>
+      </button>
+    </header>
+
+    <!-- MAIN CONTENT SPACE -->
+    <main class="flex-grow container mx-auto px-4 md:px-8 py-6 flex flex-col justify-start">
+      
+      <!-- SCREEN 1: CATEGORIES & DASHBOARD -->
+      <div id="category-screen" class="space-y-8 animate-fadeIn">
+        
+        <!-- NEW DYNAMIC KONTROL PANELİ -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          
+          <!-- Card 1: User & Session Info -->
+          <div class="bg-gradient-to-br from-panelDark to-black border border-white/5 p-6 rounded-3xl glow-box flex items-center gap-4">
+            <div class="p-4 bg-accentGold/10 text-accentGold rounded-2xl">
+              <i data-lucide="shield-check" class="w-8 h-8"></i>
+            </div>
+            <div>
+              <span class="text-[10px] text-accentGold font-black uppercase tracking-widest block">OTURUM SAHİBİ</span>
+              <h3 id="panel-username" class="text-lg font-bold text-white uppercase">MİSAFİR</h3>
+              <span class="text-xs text-green-400 flex items-center gap-1.5 mt-0.5">
+                <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                Premium Üye
+              </span>
+            </div>
+          </div>
+
+          <!-- Card 2: Server Status & Dynamic Ping -->
+          <div class="bg-gradient-to-br from-panelDark to-black border border-white/5 p-6 rounded-3xl glow-box flex items-center gap-4">
+            <div class="p-4 bg-accentRed/10 text-accentRed-light rounded-2xl">
+              <i data-lucide="server" class="w-8 h-8"></i>
+            </div>
+            <div class="flex-grow">
+              <span class="text-[10px] text-gray-400 font-black uppercase tracking-widest block">SUNUCU DURUMU</span>
+              <div class="flex items-center justify-between">
+                <span class="text-lg font-bold text-white">ONLINE</span>
+                <span class="text-xs bg-white/5 border border-white/10 px-2 py-0.5 rounded-md text-accentGold" id="simulated-ping">-- ms</span>
+              </div>
+              <span class="text-xs text-gray-500 block mt-0.5">Avrupa / Türkiye Lokasyon</span>
+            </div>
+          </div>
+
+          <!-- Card 3: Quick Notice / Broadcast Alert -->
+          <div class="bg-gradient-to-br from-panelDark to-black border border-white/5 p-6 rounded-3xl glow-box flex items-center gap-4">
+            <div class="p-4 bg-purple-500/10 text-purple-400 rounded-2xl">
+              <i data-lucide="sparkles" class="w-8 h-8"></i>
+            </div>
+            <div>
+              <span class="text-[10px] text-purple-400 font-black uppercase tracking-widest block">GÜNCEL BİLGİ</span>
+              <p class="text-xs text-gray-300 mt-1 leading-relaxed">
+                IMPERA yayın sunucusu %100 kapasite ile kesintisiz aktiftir.
+              </p>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Quick Universal Search Input -->
+        <div class="max-w-md mx-auto relative">
+          <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+            <i data-lucide="search" class="w-5 h-5"></i>
+          </span>
+          <input type="text" id="global-search" oninput="handleGlobalSearch()" class="w-full pl-11 pr-4 py-3 bg-panelDark border border-white/10 rounded-2xl text-white placeholder-gray-400 focus:outline-none focus:border-accentGold/60 transition-colors shadow-xl" placeholder="Kanal ara...">
+        </div>
+
+        <!-- Category Grid Section -->
+        <div>
+          <h3 class="text-lg font-bold text-gray-400 uppercase tracking-widest mb-4 flex items-center gap-2">
+            <i data-lucide="layers" class="w-5 h-5 text-accentRed"></i>
+            Kategoriler
+          </h3>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" id="categoryList">
+            <!-- Dynamic Category Cards Inserted Here -->
+          </div>
+        </div>
+      </div>
+
+      <!-- SCREEN 2: CHANNELS VIEW & PLAYER -->
+      <div id="channel-view" class="hidden space-y-6 animate-fadeIn">
+        
+        <!-- Navigation back button & search inside page -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/5 pb-4">
+          <button onclick="backToCategories()" class="flex items-center gap-2 px-4 py-2 text-accentGold hover:text-accentGold-light font-bold transition-colors">
+            <i data-lucide="arrow-left" class="w-5 h-5"></i>
+            <span>KATEGORİLERE DÖN</span>
+          </button>
+          
+          <div class="relative w-full sm:w-72">
+            <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+              <i data-lucide="filter" class="w-4 h-4"></i>
+            </span>
+            <input type="text" id="category-search" oninput="handleCategorySearch()" class="w-full pl-9 pr-4 py-2 bg-panelDark border border-white/10 rounded-xl text-white text-sm placeholder-gray-400 focus:outline-none focus:border-accentRed/60 transition-colors" placeholder="Kategori içinde ara...">
+          </div>
+        </div>
+
+        <!-- Master Viewport Container -->
+        <div class="max-w-5xl mx-auto w-full space-y-4">
+          
+          <!-- Dynamic Video Display Box (No Full Screen Button to prevent sandbox bypass) -->
+          <div class="relative w-full aspect-video bg-black rounded-3xl border border-white/10 overflow-hidden shadow-2xl flex items-center justify-center">
+            
+            <!-- Loader inside Video Section while waiting -->
+            <div id="player-placeholder" class="absolute inset-0 z-30 flex flex-col items-center justify-center bg-panelDark text-center p-6">
+              <div class="p-4 bg-white/5 rounded-full mb-3 text-accentGold animate-bounce">
+                <i data-lucide="play-circle" class="w-12 h-12"></i>
+              </div>
+              <h4 class="text-xl font-bold">Lütfen Bir Kanal Seçin</h4>
+              <p class="text-gray-400 text-sm mt-1 max-w-xs">Aşağıdaki kanallar listesinden dilediğiniz yayına tıklayıp hemen izlemeye başlayın.</p>
+            </div>
+
+            <!-- Video Frame -->
+            <div id="video-display" class="w-full h-full">
+              <!-- Live iframe will be rendered here dynamically -->
+            </div>
+          </div>
+
+          <!-- Current Video Information Board -->
+          <div class="flex items-center justify-between p-4 bg-panelDark border border-white/5 rounded-2xl shadow-lg">
+            <div>
+              <span class="text-xs text-accentGold uppercase font-black tracking-widest block">ŞU AN OYNATILIYOR</span>
+              <span id="statusLabel" class="text-lg font-bold text-white tracking-wide">KANAL SEÇİNİZ</span>
+            </div>
+            <button id="favorite-toggle-btn" onclick="toggleCurrentFavorite()" class="hidden p-3 bg-white/5 hover:bg-white/10 border border-white/5 text-gray-400 hover:text-yellow-400 rounded-xl transition-all-300">
+              <i data-lucide="star" class="w-6 h-6 fill-transparent" id="fav-icon-svg"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Channels Grid List under player -->
+        <div class="space-y-4 pt-4">
+          <h3 class="text-lg font-bold text-gray-400 uppercase tracking-widest flex items-center gap-2">
+            <i data-lucide="play-square" class="w-5 h-5 text-accentGold"></i>
+            Kanal Seçimi
+          </h3>
+          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3" id="channelList">
+            <!-- Dynamically populated Category Channels -->
+          </div>
+        </div>
+
+      </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-black py-6 border-t border-white/5 mt-12 text-center text-xs text-gray-500 space-y-2">
+      <p>IMPERA Stream v3.0.0 Premium Edition</p>
+      <p class="text-gray-600">Bu sistem sadece yetkilendirilmiş personeller ve özel kullanıcılar içindir.</p>
+    </footer>
+  </div>
+
+  <!-- MODAL / CUSTOM TOAST CONTAINER FOR NOTIFICATIONS -->
+  <div id="toast-message" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+    <div class="bg-panelDark border border-accentGold/30 p-4 rounded-2xl shadow-2xl flex items-center gap-3">
+      <div class="p-2 bg-accentGold/10 text-accentGold rounded-lg">
+        <i data-lucide="bell" class="w-5 h-5"></i>
+      </div>
+      <div>
+        <h5 class="font-bold text-xs text-accentGold uppercase tracking-wider">Bilgi</h5>
+        <p id="toast-text" class="text-sm text-gray-200">Değişiklik kaydedildi.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Authorized Users List
+    const USERS = [
+      { u: "zm", p: "1905" }, 
+      { u: "gs", p: "1905" }
+    ];
+
+    // IMPERA KANAL LİSTESİ
+    // Buradaki URL'leri kendi kanallarına göre güncelleyebilirsin!
+    const CHANNELS = [
+      // IMPERA VIP Kategorisi
+      { id: "imp_vip_1", name: "Impera VIP 1", url: "https://dlhd.link/stream/stream-62.php", category: "IMPERA VIP" },
+      { id: "imp_vip_2", name: "Impera VIP 2", url: "https://dlhd.link/stream/stream-64.php", category: "IMPERA VIP" },
+      { id: "imp_vip_3", name: "Impera VIP 3", url: "https://dlhd.link/stream/stream-67.php", category: "IMPERA VIP" },
+
+      // IMPERA Sports Kategorisi
+      { id: "imp_sport_1", name: "Impera Sports 1 (Maç Saati Aktif olur)", url: "https://dlhd.link/stream/stream-31.php", category: "IMPERA Sports" },
+      { id: "imp_sport_2", name: "Impera Sports 2 (Maç Saati Aktif olur)", url: "https://dlhd.link/stream/stream-122.php", category: "IMPERA Sports" },
+      { id: "imp_sport_3", name: "Impera Sports 3 (Maç Saati Aktif olur)", url: "https://dlhd.link/stream/stream-100.php", category: "IMPERA Sports" },
+      { id: "imp_sport_4", name: "Impera Sports 4 (Maç Saati Aktif olur)", url: "https://dlhd.link/stream/stream-49.php", category: "IMPERA Sports" },
+      { id: "imp_sport_5", name: "Impera Sports 5 (Maç Saati Aktif olur)", url: "https://dlhd.link/stream/stream-74.php", category: "IMPERA Sports" },
+
+      // IMPERA Ulusal Kategorisi
+      { id: "imp_ulusal_1", name: "TRT 1 HD", url: "https://dlhd.link/stream/stream-1012.php", category: "IMPERA Ulusal" },
+      { id: "imp_ulusal_2", name: "Kanal D HD (Düzenlenebilir)", url: "https://dlhd.link/stream/stream-740.php", category: "IMPERA Ulusal" },
+      { id: "imp_ulusal_3", name: "ATV HD (Düzenlenebilir)", url: "https://dlhd.link/stream/stream-5.php", category: "IMPERA Ulusal" }
+    ];
+
+    // Global Application State Variables
+    let activeCategory = null;
+    let activeChannel = null;
+    let favoritesList = [];
+
+    // Bootloader sequence
+    window.onload = function() {
+      // Create Lucide Icons
+      lucide.createIcons();
+
+      // Read persistent state
+      const savedFavorites = localStorage.getItem('impera_stream_favorites');
+      if (savedFavorites) {
+        favoritesList = JSON.parse(savedFavorites);
+      }
+
+      // Start clock tick-tock
+      setInterval(updateClock, 1000);
+      updateClock();
+
+      // Start simulated server ping variation
+      setInterval(simulatePing, 4000);
+      simulatePing();
+
+      // Auto login detection
+      const sessionUser = sessionStorage.getItem('impera_session_user');
+      if (sessionUser) {
+        document.getElementById('panel-username').innerText = sessionUser;
+        document.getElementById('login-page').style.display = 'none';
+        runBootSequence(true); // Hızlı oturum açma animasyonu
+      } else {
+        setTimeout(() => {
+          const card = document.querySelector('.glow-box');
+          if (card) {
+            card.classList.remove('scale-95', 'opacity-0');
+            card.classList.add('scale-100', 'opacity-100');
+          }
+        }, 100);
+      }
     };
-    loginHistory.unshift(entry);
-    if (loginHistory.length > 50) loginHistory = loginHistory.slice(0, 50);
-    try { localStorage.setItem('zm_login_history', JSON.stringify(loginHistory)); } catch(e) {}
-  }
 
-  function renderLoginHistory() {
-    const list = document.getElementById('login-history-list');
-    if (!list) return;
-    list.innerHTML = '';
-    if (loginHistory.length === 0) {
-      list.innerHTML = '<div style="color:rgba(255,255,255,.2);font-size:.8rem;text-align:center;padding:10px;">Henüz giriş yok</div>';
-      return;
+    // Dynamic Clock Widget Functionality
+    function updateClock() {
+      const clockEl = document.getElementById('live-clock');
+      if (clockEl) {
+        const d = new Date();
+        clockEl.innerText = d.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      }
     }
-    loginHistory.forEach(function(entry) {
-      const row = document.createElement('div');
-      row.style.cssText = 'display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.05);padding:8px 12px;border-radius:9px;';
-      row.innerHTML = `<div><span style="font-size:.85rem;font-weight:700;color:rgba(255,255,255,.7);">${entry.name}</span><span style="color:rgba(255,255,255,.25);font-size:.75rem;margin-left:6px;">@${entry.u}</span></div><div style="font-size:.72rem;color:rgba(253,185,18,.5);letter-spacing:.5px;">${entry.time}</div>`;
-      list.appendChild(row);
-    });
-  }
 
-  function clearLoginHistory() {
-    if (!confirm('Giriş geçmişini temizlemek istediğine emin misin?')) return;
-    loginHistory = [];
-    localStorage.removeItem('zm_login_history');
-    renderLoginHistory();
-  }
-
-  function toggleBakim() {
-    bakimModu = !bakimModu;
-    CHANNELS.forEach(ch => channelStates[ch.id] = !bakimModu);
-    const btn = document.getElementById('bakim-btn');
-    if (bakimModu) {
-      btn.textContent = '✅ Bakım Aktif';
-      btn.classList.add('bakim-active');
-    } else {
-      btn.textContent = '🔧 Bakım Modu';
-      btn.classList.remove('bakim-active');
+    // Server latency simulation
+    function simulatePing() {
+      const pingEl = document.getElementById('simulated-ping');
+      if (pingEl) {
+        const pingVal = Math.floor(Math.random() * (45 - 18 + 1)) + 18;
+        pingEl.innerText = pingVal + " ms";
+      }
     }
-    renderAdminChannels();
-  }
 
-  function renderAdminChannels() {
-    const list = document.getElementById('admin-channel-list');
-    list.innerHTML = '';
-    CHANNELS.forEach(function(ch, idx) {
-      const isOn = channelStates[ch.id];
-      const row = document.createElement('div');
-      row.className = 'toggle-row';
-      row.id = 'ch-row-' + ch.id;
-      row.innerHTML = `
-        <div style="flex:1;min-width:0;">
-          <div class="toggle-label" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${ch.name}</div>
-          <div class="toggle-cat">${ch.category}</div>
-        </div>
-        <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
-          <button class="ch-edit-btn" onclick="toggleEditForm('${ch.id}')" title="URL Düzenle">✏️</button>
-          <button class="ch-del-btn" onclick="deleteChannel('${ch.id}')" title="Sil">✕</button>
-          <label class="toggle-switch">
-            <input type="checkbox" ${isOn?'checked':''} onchange="toggleChannel('${ch.id}', this.checked)">
-            <span class="toggle-slider"></span>
-          </label>
-        </div>
+    // Verify login credentials
+    function attemptLogin() {
+      const u = document.getElementById('username').value.trim();
+      const p = document.getElementById('password').value.trim();
+      const errorBox = document.getElementById('login-error-box');
+
+      if (!u || !p) {
+        showLoginError("Lütfen tüm alanları doldurunuz!");
+        return;
+      }
+
+      const match = USERS.find(user => user.u === u.toLowerCase() && user.p === p);
+      if (match) {
+        errorBox.classList.add('hidden');
+        sessionStorage.setItem('impera_session_user', match.u);
+        document.getElementById('panel-username').innerText = match.u;
+        
+        document.getElementById('login-page').classList.add('opacity-0');
+        setTimeout(() => {
+          document.getElementById('login-page').style.display = 'none';
+          runBootSequence(false); // Detaylı normal yükleme animasyonu
+        }, 300);
+
+      } else {
+        showLoginError("Kullanıcı adı veya şifre hatalı!");
+      }
+    }
+
+    // Deluxe Boot / Splash Loader Animation Sequence
+    function runBootSequence(isFast) {
+      const intro = document.getElementById('intro-overlay');
+      intro.classList.remove('hidden');
+      intro.style.display = 'flex';
+      intro.style.opacity = '1';
+      lucide.createIcons();
+
+      let progress = 0;
+      const progressFill = document.getElementById('intro-progress-fill');
+      const progressText = document.getElementById('intro-progress-text');
+      const statusText = document.getElementById('intro-status-text');
+
+      const statusPhrases = [
+        "Güvenli bağlantı kuruluyor...",
+        "Kullanıcı kimliği doğrulanıyor...",
+        "Medya sunucuları optimize ediliyor...",
+        "Yayın kanalları yükleniyor...",
+        "Sistem hazırlandı!"
+      ];
+
+      // Hızlı yüklemede her adım daha seri akar
+      const stepInterval = isFast ? 55 : 120;
+
+      const interval = setInterval(() => {
+        progress += Math.floor(Math.random() * 12) + 6;
+        if (progress >= 100) {
+          progress = 100;
+          clearInterval(interval);
+
+          setTimeout(() => {
+            intro.style.opacity = '0';
+            setTimeout(() => {
+              intro.style.display = 'none';
+              intro.classList.add('hidden');
+              document.getElementById('main-app').classList.remove('hidden');
+              document.getElementById('main-app').style.display = 'flex';
+              initCategories();
+              showToast(isFast ? "Tekrar hoş geldiniz!" : "Sisteme başarıyla giriş yapıldı.");
+            }, 500);
+          }, 400);
+        }
+
+        if (progressFill) progressFill.style.width = `${progress}%`;
+        if (progressText) progressText.innerText = `${progress}%`;
+
+        if (statusText) {
+          const phraseIndex = Math.min(Math.floor((progress / 100) * statusPhrases.length), statusPhrases.length - 1);
+          statusText.innerText = statusPhrases[phraseIndex];
+        }
+      }, stepInterval);
+    }
+
+    // Display inline error inside login block
+    function showLoginError(msg) {
+      const errorBox = document.getElementById('login-error-box');
+      const errorText = document.getElementById('login-error-text');
+      errorText.innerText = msg;
+      errorBox.classList.remove('hidden');
+    }
+
+    // Clear session and return to login page
+    function logout() {
+      sessionStorage.removeItem('impera_session_user');
+      location.reload();
+    }
+
+    // Dynamic Category List Generation
+    function initCategories() {
+      const catList = document.getElementById('categoryList');
+      catList.innerHTML = '';
+
+      // Set explicit order for categories
+      const rawCategories = ["IMPERA VIP", "IMPERA Sports", "IMPERA Ulusal"];
+      let processedCategories = [...rawCategories];
+      if (favoritesList.length > 0) {
+        processedCategories.unshift("Sık Kullanılanlar");
+      }
+
+      processedCategories.forEach(cat => {
+        const count = cat === "Sık Kullanılanlar" 
+          ? favoritesList.length 
+          : CHANNELS.filter(c => c.category === cat).length;
+
+        let catIcon = "tv";
+        let cardBg = "from-accentRed/30 to-panelDark";
+        
+        // Dynamic styling for defined categories
+        if (cat === "IMPERA VIP") {
+          catIcon = "crown";
+          cardBg = "from-accentGold/20 to-panelDark";
+        } else if (cat === "IMPERA Sports") {
+          catIcon = "trophy";
+          cardBg = "from-red-600/20 to-panelDark";
+        } else if (cat === "IMPERA Ulusal") {
+          catIcon = "globe";
+          cardBg = "from-blue-600/20 to-panelDark";
+        } else if (cat === "Sık Kullanılanlar") {
+          catIcon = "star";
+          cardBg = "from-yellow-500/20 to-panelDark";
+        }
+
+        const card = document.createElement('div');
+        card.className = `cat-card relative bg-gradient-to-br ${cardBg} border border-white/10 p-6 rounded-3xl hover:border-accentGold/50 cursor-pointer transform hover:-translate-y-1.5 transition-all duration-300 group overflow-hidden shadow-lg`;
+        card.innerHTML = `
+          <div class="absolute -right-6 -bottom-6 text-white/5 group-hover:text-white/10 group-hover:scale-125 transition-transform duration-300">
+            <i data-lucide="${catIcon}" class="w-24 h-24"></i>
+          </div>
+          <div class="flex flex-col h-full justify-between gap-8 relative z-10">
+            <div class="p-3 bg-white/5 rounded-2xl w-fit group-hover:bg-accentGold group-hover:text-black transition-colors duration-300">
+              <i data-lucide="${catIcon}" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <h4 class="text-xl font-bold tracking-wider text-white group-hover:text-accentGold transition-colors">${cat}</h4>
+              <p class="text-xs text-gray-400 mt-1">${count} adet yayın mevcut</p>
+            </div>
+          </div>
+        `;
+        card.onclick = () => showChannels(cat);
+        catList.appendChild(card);
+      });
+      lucide.createIcons();
+    }
+
+    // Back track to dashboard view
+    function backToCategories() {
+      document.getElementById('channel-view').classList.add('hidden');
+      document.getElementById('category-screen').classList.remove('hidden');
+      document.getElementById('video-display').innerHTML = '';
+      
+      document.getElementById('player-placeholder').classList.remove('hidden');
+      document.getElementById('favorite-toggle-btn').classList.add('hidden');
+      document.getElementById('statusLabel').innerText = "KANAL SEÇİNİZ";
+      
+      initCategories();
+    }
+
+    // Dashboard universal query filtering
+    function handleGlobalSearch() {
+      const q = document.getElementById('global-search').value.toLowerCase().trim();
+      const cards = document.querySelectorAll('.cat-card');
+      
+      if (!q) {
+        cards.forEach(c => c.style.display = 'block');
+        return;
+      }
+
+      cards.forEach(card => {
+        const catName = card.querySelector('h4').innerText;
+        let hasMatch = false;
+
+        if (catName === "Sık Kullanılanlar") {
+          hasMatch = favoritesList.some(id => {
+            const ch = CHANNELS.find(x => x.id === id);
+            return ch && ch.name.toLowerCase().includes(q);
+          });
+        } else {
+          hasMatch = CHANNELS.filter(c => c.category === catName).some(ch => ch.name.toLowerCase().includes(q));
+        }
+
+        card.style.display = hasMatch ? 'block' : 'none';
+      });
+    }
+
+    // Category view search input filter
+    function handleCategorySearch() {
+      const q = document.getElementById('category-search').value.toLowerCase().trim();
+      const cards = document.querySelectorAll('.channel-btn');
+      
+      cards.forEach(card => {
+        const text = card.querySelector('.ch-name').innerText.toLowerCase();
+        if (text.includes(q)) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    // Dynamic transition into category view
+    function showChannels(category) {
+      activeCategory = category;
+      document.getElementById('category-screen').classList.add('hidden');
+      document.getElementById('channel-view').classList.remove('hidden');
+      document.getElementById('category-search').value = '';
+      renderChannelGrid();
+    }
+
+    // Draw active category channel items
+    function renderChannelGrid() {
+      const grid = document.getElementById('channelList');
+      grid.innerHTML = '';
+
+      let list = [];
+      if (activeCategory === "Sık Kullanılanlar") {
+        list = CHANNELS.filter(c => favoritesList.includes(c.id));
+      } else {
+        list = CHANNELS.filter(c => c.category === activeCategory);
+      }
+
+      if (list.length === 0) {
+        grid.innerHTML = `<div class="col-span-full text-center py-8 text-gray-500 text-sm">Bu kategoride hiç yayın bulunmuyor.</div>`;
+        return;
+      }
+
+      list.forEach(ch => {
+        const isActive = activeChannel && activeChannel.id === ch.id;
+        const isFav = favoritesList.includes(ch.id);
+
+        const card = document.createElement('div');
+        card.className = `channel-btn flex items-center justify-between p-3.5 rounded-xl cursor-pointer transition-all-300 border text-left ${
+          isActive 
+            ? 'bg-accentRed border-accentRed text-white glow-red font-bold' 
+            : 'bg-black/40 hover:bg-white/5 border-white/5 text-gray-300 hover:text-white'
+        }`;
+        
+        card.innerHTML = `
+          <div class="flex items-center gap-2 overflow-hidden mr-1">
+            <i data-lucide="tv" class="w-4 h-4 flex-shrink-0 text-accentGold"></i>
+            <span class="ch-name text-xs md:text-sm truncate">${ch.name}</span>
+          </div>
+          <button onclick="event.stopPropagation(); toggleFavorite('${ch.id}')" class="p-1 hover:scale-110 transition-transform">
+            <i data-lucide="star" class="w-4 h-4 ${isFav ? 'fill-yellow-400 text-yellow-400' : 'text-gray-500'}"></i>
+          </button>
+        `;
+
+        card.onclick = () => playStream(ch);
+        grid.appendChild(card);
+      });
+      lucide.createIcons();
+    }
+
+    // Execute live video stream mapping (No Fullscreen / Censorship Controls)
+    function playStream(ch) {
+      activeChannel = ch;
+      renderChannelGrid();
+
+      document.getElementById('player-placeholder').classList.add('hidden');
+      document.getElementById('statusLabel').innerText = ch.name;
+      
+      const favBtn = document.getElementById('favorite-toggle-btn');
+      favBtn.classList.remove('hidden');
+      updateFavoriteButtonUI();
+
+      const display = document.getElementById('video-display');
+      display.innerHTML = `
+        <iframe 
+          src="${ch.url}" 
+          allow="autoplay" 
+          class="w-full h-full border-none rounded-2xl bg-black"
+          referrerpolicy="no-referrer"
+          sandbox="allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation">
+        </iframe>
       `;
-      // Edit form (gizli)
-      const editDiv = document.createElement('div');
-      editDiv.className = 'ch-edit-form';
-      editDiv.id = 'edit-form-' + ch.id;
-      editDiv.style.display = 'none';
-      editDiv.innerHTML = `
-        <input class="admin-input" style="margin-bottom:6px;" type="text" id="edit-name-${ch.id}" value="${ch.name}" placeholder="Kanal adı">
-        <input class="admin-input" style="margin-bottom:6px;" type="text" id="edit-url-${ch.id}" value="${ch.url}" placeholder="URL">
-        <div style="display:flex;gap:6px;">
-          <button class="admin-btn-gold" style="flex:1;font-size:.8rem;padding:8px;" onclick="saveChannelEdit('${ch.id}')">💾 Kaydet</button>
-          <button class="admin-btn-gold" style="font-size:.8rem;padding:8px;background:rgba(255,255,255,.04);border-color:rgba(255,255,255,.1);color:rgba(255,255,255,.4);" onclick="toggleEditForm('${ch.id}')">İptal</button>
-        </div>
-      `;
-      const wrap = document.createElement('div');
-      wrap.style.cssText = 'background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:10px 14px;margin-bottom:2px;';
-      wrap.appendChild(row);
-      wrap.appendChild(editDiv);
-      list.appendChild(wrap);
-    });
-  }
-
-  function toggleEditForm(id) {
-    const form = document.getElementById('edit-form-' + id);
-    const isOpen = form.style.display !== 'none';
-    form.style.display = isOpen ? 'none' : 'block';
-  }
-
-  function saveChannelEdit(id) {
-    const ch = CHANNELS.find(x => x.id === id);
-    if (!ch) return;
-    const newName = document.getElementById('edit-name-' + id).value.trim();
-    const newUrl  = document.getElementById('edit-url-' + id).value.trim();
-    if (!newName || !newUrl) return;
-    ch.name = newName;
-    ch.url  = newUrl;
-    toggleEditForm(id);
-    renderAdminChannels();
-  }
-
-  function deleteChannel(id) {
-    if (!confirm('Bu kanalı silmek istediğine emin misin?')) return;
-    const idx = CHANNELS.findIndex(x => x.id === id);
-    if (idx > -1) {
-      CHANNELS.splice(idx, 1);
-      delete channelStates[id];
     }
-    renderAdminChannels();
-  }
 
-  function addChannel() {
-    const name = document.getElementById('new-ch-name').value.trim();
-    const url  = document.getElementById('new-ch-url').value.trim();
-    const cat  = document.getElementById('new-ch-cat').value;
-    const err  = document.getElementById('add-ch-error');
-    err.style.display = 'none';
-    if (!name || !url) { err.textContent = 'Ad ve URL zorunlu!'; err.style.display = 'block'; return; }
-    const id = 'ch_' + Date.now();
-    CHANNELS.push({ id, name, url, category: cat, logo: null });
-    channelStates[id] = true;
-    document.getElementById('new-ch-name').value = '';
-    document.getElementById('new-ch-url').value = '';
-    renderAdminChannels();
-  }
+    // Toggle catalog entries in favorites
+    function toggleFavorite(chId) {
+      const idx = favoritesList.indexOf(chId);
+      if (idx > -1) {
+        favoritesList.splice(idx, 1);
+        showToast("Kanal favorilerden çıkarıldı.");
+      } else {
+        favoritesList.push(chId);
+        showToast("Kanal favorilere eklendi.");
+      }
 
-  function toggleChannel(id, state) { channelStates[id] = state; }
-
-  function renderAdminUsers() {
-    const list = document.getElementById('admin-user-list');
-    list.innerHTML = '';
-    USERS.forEach(function(u, idx) {
-      const row = document.createElement('div');
-      row.className = 'user-row';
-      const catsLabel = u.cats ? u.cats.join(', ') : 'Tümü';
-      row.innerHTML = '<div style="flex:1;"><div class="user-name">' + u.name + ' <span style="color:rgba(255,255,255,.3);font-size:.8rem;">(@' + u.u + ')</span></div><div style="font-size:.7rem;color:rgba(253,185,18,.5);margin-top:2px;">📺 ' + catsLabel + '</div></div><button class="user-del-btn" onclick="deleteUser(' + idx + ')">✕</button>';
-      list.appendChild(row);
-    });
-    renderCatToggles();
-  }
-
-  function renderCatToggles() {
-    const wrap = document.getElementById('new-user-cats');
-    if (!wrap) return;
-    wrap.innerHTML = '';
-    [...new Set(CHANNELS.map(c=>c.category))].forEach(function(cat) {
-      const btn = document.createElement('button');
-      btn.className = 'cat-toggle-btn selected';
-      btn.textContent = cat;
-      btn.dataset.cat = cat;
-      btn.onclick = function() { btn.classList.toggle('selected'); };
-      wrap.appendChild(btn);
-    });
-  }
-
-  function addUser() {
-    const u    = document.getElementById('new-u').value.trim();
-    const p    = document.getElementById('new-p').value.trim();
-    const name = document.getElementById('new-name').value.trim();
-    const err  = document.getElementById('add-user-error');
-    err.style.display = 'none';
-    if (!u || !p || !name) { err.textContent='Tüm alanları doldurun!'; err.style.display='block'; return; }
-    if (USERS.find(x=>x.u===u)) { err.textContent='Bu kullanıcı adı zaten var!'; err.style.display='block'; return; }
-    const selected = [...document.querySelectorAll('#new-user-cats .cat-toggle-btn.selected')].map(b=>b.dataset.cat);
-    const allCats  = [...new Set(CHANNELS.map(c=>c.category))];
-    const cats = selected.length === allCats.length ? null : (selected.length ? selected : allCats);
-    USERS.push({ u, p, name, role:'Üye', cats });
-    saveUsers();
-    document.getElementById('new-u').value = '';
-    document.getElementById('new-p').value = '';
-    document.getElementById('new-name').value = '';
-    renderAdminUsers();
-  }
-
-  function deleteUser(idx) {
-    if (USERS[idx].u === currentUser.u) { alert('Kendi hesabını silemezsin!'); return; }
-    USERS.splice(idx, 1);
-    saveUsers();
-    renderAdminUsers();
-  }
-
-  function saveAnnouncement() {
-    const val = document.getElementById('ann-input').value.trim();
-    if (!val) return;
-    announcement = val;
-    showAnnouncementBar();
-  }
-
-  function clearAnnouncement() {
-    announcement = '';
-    document.getElementById('ann-input').value = '';
-    document.getElementById('announcement-bar').classList.remove('visible');
-  }
-
-  function toggleFullscreen() {
-    const vs = document.querySelector('.video-section');
-    const btn = document.getElementById('fs-btn');
-    const isFs = vs.classList.toggle('is-fullscreen');
-    btn.textContent = isFs ? '✕ Çıkış' : '⛶ Tam Ekran';
-    document.body.style.overflow = isFs ? 'hidden' : '';
-  }
-
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape') {
-      const vs = document.querySelector('.video-section');
-      if (vs && vs.classList.contains('is-fullscreen')) toggleFullscreen();
+      localStorage.setItem('impera_stream_favorites', JSON.stringify(favoritesList));
+      renderChannelGrid();
+      updateFavoriteButtonUI();
     }
-    if (e.key === 'Enter') {
-      if (document.getElementById('login-page').style.display !== 'none') attemptLogin();
-      if (document.getElementById('admin-login-overlay').style.display === 'flex') checkAdminPass();
-    }
-  });
 
-  window.onload = function() { lucide.createIcons(); };
-</script>
+    // Toggle favorite on current playing item
+    function toggleCurrentFavorite() {
+      if (activeChannel) {
+        toggleFavorite(activeChannel.id);
+      }
+    }
+
+    // Update active star visual styles
+    function updateFavoriteButtonUI() {
+      const favIcon = document.getElementById('fav-icon-svg');
+      if (activeChannel && favoritesList.includes(activeChannel.id)) {
+        favIcon.classList.add('fill-yellow-400', 'text-yellow-400');
+        favIcon.classList.remove('text-gray-400');
+      } else {
+        favIcon.classList.remove('fill-yellow-400', 'text-yellow-400');
+        favIcon.classList.add('text-gray-400');
+      }
+    }
+
+    // Notify user with action feedback
+    let toastTimeout = null;
+    function showToast(text) {
+      const toast = document.getElementById('toast-message');
+      const toastText = document.getElementById('toast-text');
+      
+      toastText.innerText = text;
+      
+      if (toastTimeout) {
+        clearTimeout(toastTimeout);
+      }
+
+      toast.classList.remove('translate-y-20', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100');
+
+      toastTimeout = setTimeout(() => {
+        toast.classList.remove('translate-y-0', 'opacity-100');
+        toast.classList.add('translate-y-20', 'opacity-0');
+      }, 3000);
+    }
+  </script>
 </body>
 </html>
