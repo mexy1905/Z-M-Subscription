@@ -424,16 +424,16 @@
     // Buradaki URL'leri kendi kanallarına göre güncelleyebilirsin!
     const CHANNELS = [
       // IMPERA VIP Kategorisi
-      { id: "imp_vip_1", name: "Impera VIP 1", url: "https://dlhd.link/stream/stream-62.php", category: "IMPERA VIP" },
-      { id: "imp_vip_2", name: "Impera VIP 2", url: "https://dlhd.link/stream/stream-64.php", category: "IMPERA VIP" },
-      { id: "imp_vip_3", name: "Impera VIP 3", url: "https://dlhd.link/stream/stream-67.php", category: "IMPERA VIP" },
+      { id: "imp_vip_1", name: "Impera VIP 1", url: "https://vdo.ninja/?effects&push=AuJ7Zh4", category: "IMPERA VIP" },
+      { id: "imp_vip_2", name: "Impera VIP 2", url: "https://vdo.ninja/?effects&push=AuJ7Zh4", category: "IMPERA VIP" },
+      { id: "imp_vip_3", name: "Impera VIP 3", url: "https://vdo.ninja/?effects&push=AuJ7Zh4", category: "IMPERA VIP" },
 
       // IMPERA Sports Kategorisi
-      { id: "imp_sport_1", name: "Impera Sports 1 (Maç Saati Aktif olur)", url: "https://dlhd.link/stream/stream-31.php", category: "IMPERA Sports" },
-      { id: "imp_sport_2", name: "Impera Sports 2 (Maç Saati Aktif olur)", url: "https://dlhd.link/stream/stream-122.php", category: "IMPERA Sports" },
-      { id: "imp_sport_3", name: "Impera Sports 3 (Maç Saati Aktif olur)", url: "https://dlhd.link/stream/stream-100.php", category: "IMPERA Sports" },
-      { id: "imp_sport_4", name: "Impera Sports 4 (Maç Saati Aktif olur)", url: "https://dlhd.link/stream/stream-49.php", category: "IMPERA Sports" },
-      { id: "imp_sport_5", name: "Impera Sports 5 (Maç Saati Aktif olur)", url: "https://dlhd.link/stream/stream-74.php", category: "IMPERA Sports" },
+      { id: "imp_sport_1", name: "Impera Sports 1 (Maç Saati Aktif olur)", url: "https://wcast.easilycdn.com/play/5341e90ca25ad9b2cba3afadd1915e62cc2af4fcc40beabf29c1ba459f70054d/423c194f7b3bb9f3ee42416187c26fb0/16.m3u8?eHFxRlExdU9lODhWb3N2OTg0SjdZQU9VTGVDZjM0azE2SXoxUzZGL3Q1TnRPZXhuTUN5TDJGSTVoZ3NsTUo3YWZYYTZzVjdVemRGWWZrakpQMWpUSnlSd3M0R2daaFJPYzRUQkM4aWdiTFowVzVDMUhRSTRhSk5Ub0hWT1U5SW5vQ1o5OUk3cGRwVkE2OUtOVTZHWGZqdjFldTNBYWRacnpqb2tzbFlHYkk0PQ==", category: "IMPERA Sports" },
+      { id: "imp_sport_2", name: "Impera Sports 2 (Maç Saati Aktif olur)", url: "https://wcast.easilycdn.com/play/5341e90ca25ad9b2cba3afadd1915e62cc2af4fcc40beabf29c1ba459f70054d/423c194f7b3bb9f3ee42416187c26fb0/17.m3u8?WG9NLzZyYXI2UzFQNnc0NWc3bko0R3F4MjlVNHY2Ui9XS25vbzQ3clBFWStrZWs4MTRiOXUrRFd4L1lCRFQzK3BWdnFHcm0rZE5SaEJvUE1kb1hZdTk1cGdZTENrMlFnOEFDUFI2QVNlRWhoTktxTGNmaFhFYm1GcWtrWGJ6YVdwdWNySU5zTjZQVzdzcTVxYXlMN3FicW9JSVB2UzJ4RXdCSU04NVREZW04PQ==", category: "IMPERA Sports" },
+      { id: "imp_sport_3", name: "Impera Sports 3 (Maç Saati Aktif olur)", url: "https://wcast.easilycdn.com/play/5341e90ca25ad9b2cba3afadd1915e62cc2af4fcc40beabf29c1ba459f70054d/423c194f7b3bb9f3ee42416187c26fb0/18.m3u8?bWw4eFp3aUErZVZxMDN0cFJFU2hFeTNOSUhEMS92ZFBNbTk4U1dIOUxPMWlPdTk4ZFZSTW5QdmE3SkwraVNDVVJHTnM3blk3NW1mQnFwbi9lUHlMTVl1b2g0ekVCRDRBTEZKTmlBZDNNbjRQTmxuT0Z2K1hyL3pDM1N5M085TG9JRnBPa0krc2Rmb0wxeHBMNnFlc2hiWXJDamdTd3p2Nlg4SEU5K09JMGlRPQ==", category: "IMPERA Sports" },
+      { id: "imp_sport_4", name: "Impera Sports 4 (Maç Saati Aktif olur)", url: "https://wcast.easilycdn.com/play/5341e90ca25ad9b2cba3afadd1915e62cc2af4fcc40beabf29c1ba459f70054d/423c194f7b3bb9f3ee42416187c26fb0/19.m3u8?RGVnSDkvcXYzR202RWVrQkZ3OWQ1cFJJZVZuV05Gbk56SFlYbUh0Rmhyb09PTWRjSTVLeis5VXZuUkVhUUtQU3EwWWFqakgxbkN0YTh1Syt2V05FM1VXZWJRYmVIZ1ZKUlljazF0VnowOFBjZzdIMC9JWjBVOTZVaWFBUEFBMHFOZUZTTWhpWkRvWnl2dzVLMTJmVGlIbE9WL1FPd3dpcFVkRDZ6cEtad3FJPQ==", category: "IMPERA Sports" },
+      { id: "imp_sport_5", name: "Impera Sports 5 (Maç Saati Aktif olur)", url: "https://wcast.easilycdn.com/play/5341e90ca25ad9b2cba3afadd1915e62cc2af4fcc40beabf29c1ba459f70054d/423c194f7b3bb9f3ee42416187c26fb0/68629.m3u8?a3BKVlR6Ny9SVmlUcGduWVA4TnRaUEVzSTFzNWJtNXUyTGVpZGFHdHBLUVVvZTcxM2xQOE1nUEtCanZXWXMvWmJxZVFJOGI5T1BES3JmeG5Wc2VPY1FqUS9va09lZFkxQ3Z6alBvQWQvS2pCUW8zejVWN01jL3c1aTZjMml2c09wNm1JeDdDQm41MnczNzMwbEtIN1A4R3pwUmJtK1VMdUhpWkl3MGFqb2lvPQ==", category: "IMPERA Sports" },
 
       // IMPERA Ulusal Kategorisi
       { id: "imp_ulusal_1", name: "TRT 1 HD", url: "https://dlhd.link/stream/stream-1012.php", category: "IMPERA Ulusal" },
