@@ -100,25 +100,19 @@
 </head>
 <body class="bg-bgDark text-white font-sans h-full min-h-screen flex flex-col justify-between overflow-x-hidden antialiased">
 
-  <!-- LOGIN CONTAINER -->
   <div id="login-page" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-bgDark overflow-hidden">
     
-    <!-- Dynamic Ambient Background Lights -->
     <div class="absolute inset-0 z-0 pointer-events-none">
       <div class="absolute top-1/4 left-1/3 w-[450px] h-[450px] bg-accentRed/10 rounded-full blur-[110px] ambient-light-1"></div>
       <div class="absolute bottom-1/4 right-1/3 w-[500px] h-[500px] bg-accentGold/10 rounded-full blur-[130px] ambient-light-2"></div>
       <div class="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_40%,_#050507_90%)]"></div>
     </div>
 
-    <!-- Login Glassmorphic Card -->
     <div class="relative w-full max-w-md p-10 bg-panelDark/70 backdrop-blur-3xl border border-white/5 rounded-[32px] glow-box transition-all-300 z-10 duration-500 scale-95 opacity-0 animate-[fadeIn_0.6s_ease-out_forwards]">
       
-      <!-- Premium Glowing Frame Edge Indicator -->
       <div class="absolute -inset-px bg-gradient-to-r from-accentRed/40 via-accentGold/20 to-accentRed/40 rounded-[32px] -z-10 opacity-70 blur-[1px]"></div>
 
-      <!-- Header Logo inside Login -->
       <div class="text-center mb-10 flex flex-col items-center">
-        <!-- Golden Glowing Crown Logo -->
         <div class="mb-4 bg-gradient-to-b from-accentGold to-amber-500 p-4 rounded-full shadow-[0_0_30px_rgba(253,185,18,0.3)] animate-pulse">
           <i data-lucide="crown" class="w-10 h-10 text-black glow-crown"></i>
         </div>
@@ -128,13 +122,11 @@
         <p class="text-xs text-gray-400/80 tracking-[0.4em] uppercase mt-3">Premium Streaming</p>
       </div>
 
-      <!-- Custom In-Card Error Box -->
       <div id="login-error-box" class="hidden mb-6 p-4 bg-accentRed/10 border border-accentRed/30 rounded-2xl flex items-center gap-3 text-red-300 text-sm animate-pulse">
         <i data-lucide="alert-triangle" class="w-5 h-5 flex-shrink-0 text-accentRed-light"></i>
         <span id="login-error-text">Hatalı kullanıcı adı veya şifre!</span>
       </div>
 
-      <!-- Inputs Form -->
       <div class="space-y-5">
         <div>
           <label class="block text-[11px] font-bold text-gray-400 uppercase tracking-[0.15em] mb-2.5 ml-1" for="username">Kullanıcı Adı</label>
@@ -168,10 +160,8 @@
     </div>
   </div>
 
-  <!-- INTRO LOAD / SPLASH OVERLAY (Gelişmiş Modern Tasarım) -->
   <div id="intro-overlay" class="fixed inset-0 z-[100] bg-bgDark flex flex-col justify-center items-center p-6 hidden opacity-100 transition-opacity duration-500 overflow-hidden">
     
-    <!-- Background Ambient Glow Nodes -->
     <div class="absolute inset-0 z-0 pointer-events-none">
       <div class="absolute top-1/3 left-1/4 w-[350px] h-[350px] bg-accentGold/10 rounded-full blur-[100px] animate-pulse"></div>
       <div class="absolute bottom-1/3 right-1/4 w-[350px] h-[350px] bg-accentRed/10 rounded-full blur-[100px] [animation-delay:1s] animate-pulse"></div>
@@ -180,19 +170,15 @@
 
     <div class="relative z-10 flex flex-col items-center">
       
-      <!-- Deluxe Rotating Crown Shield Emblem -->
       <div class="relative mb-8">
-        <!-- Glow rings -->
         <div class="absolute -inset-6 bg-accentGold/15 rounded-full blur-2xl animate-pulse"></div>
         <div class="absolute -inset-2 bg-gradient-to-tr from-accentGold via-accentRed/40 to-accentGold rounded-full animate-spin [animation-duration:12s] opacity-40"></div>
         
-        <!-- Embossed central ring -->
         <div class="relative bg-gradient-to-b from-neutral-900 to-black border border-white/10 p-6 rounded-full shadow-[0_0_50px_rgba(253,185,18,0.3)] flex items-center justify-center">
           <i data-lucide="crown" class="w-14 h-14 text-accentGold glow-crown"></i>
         </div>
       </div>
       
-      <!-- Branding Text -->
       <div class="text-center space-y-1">
         <h1 class="text-4xl md:text-5xl font-black tracking-[0.25em] bg-gradient-to-r from-accentGold via-white to-accentRed bg-clip-text text-transparent select-none">
           IMPERA
@@ -202,7 +188,6 @@
         </p>
       </div>
 
-      <!-- Dynamic System Load Unit -->
       <div class="w-72 mt-10 p-1.5 bg-panelDark/60 backdrop-blur-xl border border-white/5 rounded-2xl shadow-2xl space-y-3">
         <div class="flex justify-between items-center text-[10px] text-gray-400 font-bold uppercase tracking-widest px-1.5 pt-1">
           <span id="intro-status-text" class="text-gray-300">Sistem başlatılıyor...</span>
@@ -220,17 +205,14 @@
     </div>
   </div>
 
-  <!-- MAIN APP WRAPPER -->
   <div id="main-app" class="hidden flex-col min-h-screen flex-grow">
     
-    <!-- ANNOUNCEMENT TICKER -->
     <div class="w-full bg-gradient-to-r from-black via-accentRed/90 to-black border-b border-accentGold/20 py-2.5 overflow-hidden whitespace-nowrap">
       <div class="inline-block pl-[100%] animate-[marquee_30s_linear_infinite] font-semibold text-xs text-accentGold-light uppercase tracking-wider">
         🚀 IMPERA STREAM Dünyasına Hoş Geldiniz! • Favoriler Sistemi Aktif • Kesintisiz Keyifli Seyirler Dileriz.
       </div>
     </div>
 
-    <!-- MAIN APP HEADER -->
     <header class="bg-black/80 backdrop-blur-md border-b border-white/5 py-4 px-6 md:px-12 flex items-center justify-between sticky top-0 z-40">
       <div class="flex items-center gap-3">
         <div class="bg-accentRed p-2 rounded-xl">
@@ -241,29 +223,23 @@
         </span>
       </div>
 
-      <!-- Center Dynamic Clock Widget -->
       <div class="hidden md:flex items-center gap-2 px-4 py-2 bg-white/5 rounded-xl border border-white/5 text-xs text-gray-400">
         <i data-lucide="clock" class="w-4 h-4 text-accentGold"></i>
         <span id="live-clock">--:--:--</span>
       </div>
 
-      <!-- Action Button (Exit) -->
       <button onclick="logout()" class="px-4 py-2 bg-white/5 hover:bg-accentRed hover:text-white border border-white/10 rounded-xl text-gray-300 font-semibold text-sm transition-all duration-200 flex items-center gap-2">
         <i data-lucide="log-out" class="w-4 h-4"></i>
         <span>ÇIKIŞ</span>
       </button>
     </header>
 
-    <!-- MAIN CONTENT SPACE -->
     <main class="flex-grow container mx-auto px-4 md:px-8 py-6 flex flex-col justify-start">
       
-      <!-- SCREEN 1: CATEGORIES & DASHBOARD -->
       <div id="category-screen" class="space-y-8 animate-fadeIn">
         
-        <!-- NEW DYNAMIC KONTROL PANELİ -->
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
           
-          <!-- Card 1: User & Session Info -->
           <div class="bg-gradient-to-br from-panelDark to-black border border-white/5 p-6 rounded-3xl glow-box flex items-center gap-4">
             <div class="p-4 bg-accentGold/10 text-accentGold rounded-2xl">
               <i data-lucide="shield-check" class="w-8 h-8"></i>
@@ -278,7 +254,6 @@
             </div>
           </div>
 
-          <!-- Card 2: Server Status & Dynamic Ping -->
           <div class="bg-gradient-to-br from-panelDark to-black border border-white/5 p-6 rounded-3xl glow-box flex items-center gap-4">
             <div class="p-4 bg-accentRed/10 text-accentRed-light rounded-2xl">
               <i data-lucide="server" class="w-8 h-8"></i>
@@ -293,7 +268,6 @@
             </div>
           </div>
 
-          <!-- Card 3: Quick Notice / Broadcast Alert -->
           <div class="bg-gradient-to-br from-panelDark to-black border border-white/5 p-6 rounded-3xl glow-box flex items-center gap-4">
             <div class="p-4 bg-purple-500/10 text-purple-400 rounded-2xl">
               <i data-lucide="sparkles" class="w-8 h-8"></i>
@@ -308,7 +282,6 @@
 
         </div>
 
-        <!-- Quick Universal Search Input -->
         <div class="max-w-md mx-auto relative">
           <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
             <i data-lucide="search" class="w-5 h-5"></i>
@@ -316,22 +289,18 @@
           <input type="text" id="global-search" oninput="handleGlobalSearch()" class="w-full pl-11 pr-4 py-3 bg-panelDark border border-white/10 rounded-2xl text-white placeholder-gray-400 focus:outline-none focus:border-accentGold/60 transition-colors shadow-xl" placeholder="Kanal ara...">
         </div>
 
-        <!-- Category Grid Section -->
         <div>
           <h3 class="text-lg font-bold text-gray-400 uppercase tracking-widest mb-4 flex items-center gap-2">
             <i data-lucide="layers" class="w-5 h-5 text-accentRed"></i>
             Kategoriler
           </h3>
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" id="categoryList">
-            <!-- Dynamic Category Cards Inserted Here -->
-          </div>
+            </div>
         </div>
       </div>
 
-      <!-- SCREEN 2: CHANNELS VIEW & PLAYER -->
       <div id="channel-view" class="hidden space-y-6 animate-fadeIn">
         
-        <!-- Navigation back button & search inside page -->
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/5 pb-4">
           <button onclick="backToCategories()" class="flex items-center gap-2 px-4 py-2 text-accentGold hover:text-accentGold-light font-bold transition-colors">
             <i data-lucide="arrow-left" class="w-5 h-5"></i>
@@ -346,13 +315,10 @@
           </div>
         </div>
 
-        <!-- Master Viewport Container -->
         <div class="max-w-5xl mx-auto w-full space-y-4">
           
-          <!-- Dynamic Video Display Box (WebRTC Optimization) -->
           <div class="relative w-full aspect-video bg-black rounded-3xl border border-white/10 overflow-hidden shadow-2xl flex items-center justify-center">
             
-            <!-- Loader inside Video Section while waiting -->
             <div id="player-placeholder" class="absolute inset-0 z-30 flex flex-col items-center justify-center bg-panelDark text-center p-6">
               <div class="p-4 bg-white/5 rounded-full mb-3 text-accentGold animate-bounce">
                 <i data-lucide="play-circle" class="w-12 h-12"></i>
@@ -361,13 +327,10 @@
               <p class="text-gray-400 text-sm mt-1 max-w-xs">Aşağıdaki kanallar listesinden dilediğiniz yayına tıklayıp hemen izlemeye başlayın.</p>
             </div>
 
-            <!-- Video Frame -->
             <div id="video-display" class="w-full h-full">
-              <!-- Live iframe will be rendered here dynamically -->
-            </div>
+              </div>
           </div>
 
-          <!-- Current Video Information Board -->
           <div class="flex items-center justify-between p-4 bg-panelDark border border-white/5 rounded-2xl shadow-lg">
             <div>
               <span class="text-xs text-accentGold uppercase font-black tracking-widest block">ŞU AN OYNATILIYOR</span>
@@ -379,28 +342,24 @@
           </div>
         </div>
 
-        <!-- Channels Grid List under player -->
         <div class="space-y-4 pt-4">
           <h3 class="text-lg font-bold text-gray-400 uppercase tracking-widest flex items-center gap-2">
             <i data-lucide="play-square" class="w-5 h-5 text-accentGold"></i>
             Kanal Seçimi
           </h3>
           <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3" id="channelList">
-            <!-- Dynamically populated Category Channels -->
-          </div>
+            </div>
         </div>
 
       </div>
     </main>
 
-    <!-- FOOTER -->
     <footer class="bg-black py-6 border-t border-white/5 mt-12 text-center text-xs text-gray-500 space-y-2">
       <p>IMPERA Stream v3.0.0 Premium Edition</p>
       <p class="text-gray-600">Bu sistem sadece yetkilendirilmiş personeller ve özel kullanıcılar içindir.</p>
     </footer>
   </div>
 
-  <!-- MODAL / CUSTOM TOAST CONTAINER FOR NOTIFICATIONS -->
   <div id="toast-message" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
     <div class="bg-panelDark border border-accentGold/30 p-4 rounded-2xl shadow-2xl flex items-center gap-3">
       <div class="p-2 bg-accentGold/10 text-accentGold rounded-lg">
@@ -420,21 +379,21 @@
       { u: "gs", p: "1905" }
     ];
 
-    // IMPERA KANAL LİSTESİ (TÜMÜ VDO.NINJA ALICI FORMATINA GÜNCELLENDİ)
+    // IMPERA KANAL LİSTESİ (TÜMÜ MAKSİMUM KALİTE ALICI FORMATINA GÜNCELLENDİ)
     const CHANNELS = [
-      // IMPERA VIP Kategorisi
-      { id: "imp_vip_1", name: "Impera VIP 1", url: "https://vdo.ninja/?view=AuJ7Zh4_sport1&autoplay=1&transparent=1", category: "IMPERA VIP" },
-      { id: "imp_vip_2", name: "Impera VIP 2", url: "https://vdo.ninja/?view=AuJ7Zh4_sport1&autoplay=1&transparent=1", category: "IMPERA VIP" },
-      { id: "imp_vip_3", name: "Impera VIP 3", url: "https://vdo.ninja/?view=AuJ7Zh4_sport1&autoplay=1&transparent=1", category: "IMPERA VIP" },
+      // IMPERA VIP Kategorisi (Her biri kendine özel odalara çekildi)
+      { id: "imp_vip_1", name: "Impera VIP 1", url: "https://vdo.ninja/?view=AuJ7Zh4_vip1&autoplay=1&transparent=1", category: "IMPERA VIP" },
+      { id: "imp_vip_2", name: "Impera VIP 2", url: "https://vdo.ninja/?view=AuJ7Zh4_vip2&autoplay=1&transparent=1", category: "IMPERA VIP" },
+      { id: "imp_vip_3", name: "Impera VIP 3", url: "https://vdo.ninja/?view=AuJ7Zh4_vip3&autoplay=1&transparent=1", category: "IMPERA VIP" },
 
-      // IMPERA Sports Kategorisi
+      // IMPERA Sports Kategorisi (Maç saatleri için hazır bağımsız odalar)
       { id: "imp_sport_1", name: "Impera Sports 1 (Maç Saati Aktif olur)", url: "https://vdo.ninja/?view=AuJ7Zh4_sport1&autoplay=1&transparent=1", category: "IMPERA Sports" },
       { id: "imp_sport_2", name: "Impera Sports 2 (Maç Saati Aktif olur)", url: "https://vdo.ninja/?view=AuJ7Zh4_sport2&autoplay=1&transparent=1", category: "IMPERA Sports" },
       { id: "imp_sport_3", name: "Impera Sports 3 (Maç Saati Aktif olur)", url: "https://vdo.ninja/?view=AuJ7Zh4_sport3&autoplay=1&transparent=1", category: "IMPERA Sports" },
       { id: "imp_sport_4", name: "Impera Sports 4 (Maç Saati Aktif olur)", url: "https://vdo.ninja/?view=AuJ7Zh4_sport4&autoplay=1&transparent=1", category: "IMPERA Sports" },
       { id: "imp_sport_5", name: "Impera Sports 5 (Maç Saati Aktif olur)", url: "https://vdo.ninja/?view=AuJ7Zh4_sport5&autoplay=1&transparent=1", category: "IMPERA Sports" },
 
-      // IMPERA Ulusal Kategorisi
+      // IMPERA Ulusal Kategorisi (Ulusal kanallar için hazır bağımsız odalar)
       { id: "imp_ulusal_1", name: "TRT 1 HD", url: "https://vdo.ninja/?view=AuJ7Zh4_ulusal1&autoplay=1&transparent=1", category: "IMPERA Ulusal" },
       { id: "imp_ulusal_2", name: "Kanal D HD (Düzenlenebilir)", url: "https://vdo.ninja/?view=AuJ7Zh4_ulusal2&autoplay=1&transparent=1", category: "IMPERA Ulusal" },
       { id: "imp_ulusal_3", name: "ATV HD (Düzenlenebilir)", url: "https://vdo.ninja/?view=AuJ7Zh4_ulusal3&autoplay=1&transparent=1", category: "IMPERA Ulusal" }
@@ -447,29 +406,24 @@
 
     // Bootloader sequence
     window.onload = function() {
-      // Create Lucide Icons
       lucide.createIcons();
 
-      // Read persistent state
       const savedFavorites = localStorage.getItem('impera_stream_favorites');
       if (savedFavorites) {
         favoritesList = JSON.parse(savedFavorites);
       }
 
-      // Start clock tick-tock
       setInterval(updateClock, 1000);
       updateClock();
 
-      // Start simulated server ping variation
       setInterval(simulatePing, 4000);
       simulatePing();
 
-      // Auto login detection
       const sessionUser = sessionStorage.getItem('impera_session_user');
       if (sessionUser) {
         document.getElementById('panel-username').innerText = sessionUser;
         document.getElementById('login-page').style.display = 'none';
-        runBootSequence(true); // Hızlı oturum açma animasyonu
+        runBootSequence(true);
       } else {
         setTimeout(() => {
           const card = document.querySelector('.glow-box');
@@ -481,7 +435,6 @@
       }
     };
 
-    // Dynamic Clock Widget Functionality
     function updateClock() {
       const clockEl = document.getElementById('live-clock');
       if (clockEl) {
@@ -490,7 +443,6 @@
       }
     }
 
-    // Server latency simulation
     function simulatePing() {
       const pingEl = document.getElementById('simulated-ping');
       if (pingEl) {
@@ -499,7 +451,6 @@
       }
     }
 
-    // Verify login credentials
     function attemptLogin() {
       const u = document.getElementById('username').value.trim();
       const p = document.getElementById('password').value.trim();
@@ -519,15 +470,13 @@
         document.getElementById('login-page').classList.add('opacity-0');
         setTimeout(() => {
           document.getElementById('login-page').style.display = 'none';
-          runBootSequence(false); // Detaylı normal yükleme animasyonu
+          runBootSequence(false);
         }, 300);
-
       } else {
         showLoginError("Kullanıcı adı veya şifre hatalı!");
       }
     }
 
-    // Deluxe Boot / Splash Loader Animation Sequence
     function runBootSequence(isFast) {
       const intro = document.getElementById('intro-overlay');
       intro.classList.remove('hidden');
@@ -548,7 +497,6 @@
         "Sistem hazırlandı!"
       ];
 
-      // Hızlı yüklemede her adım daha seri akar
       const stepInterval = isFast ? 55 : 120;
 
       const interval = setInterval(() => {
@@ -580,7 +528,6 @@
       }, stepInterval);
     }
 
-    // Display inline error inside login block
     function showLoginError(msg) {
       const errorBox = document.getElementById('login-error-box');
       const errorText = document.getElementById('login-error-text');
@@ -588,18 +535,15 @@
       errorBox.classList.remove('hidden');
     }
 
-    // Clear session and return to login page
     function logout() {
       sessionStorage.removeItem('impera_session_user');
       location.reload();
     }
 
-    // Dynamic Category List Generation
     function initCategories() {
       const catList = document.getElementById('categoryList');
       catList.innerHTML = '';
 
-      // Set explicit order for categories
       const rawCategories = ["IMPERA VIP", "IMPERA Sports", "IMPERA Ulusal"];
       let processedCategories = [...rawCategories];
       if (favoritesList.length > 0) {
@@ -614,7 +558,6 @@
         let catIcon = "tv";
         let cardBg = "from-accentRed/30 to-panelDark";
         
-        // Dynamic styling for defined categories
         if (cat === "IMPERA VIP") {
           catIcon = "crown";
           cardBg = "from-accentGold/20 to-panelDark";
@@ -651,7 +594,6 @@
       lucide.createIcons();
     }
 
-    // Back track to dashboard view
     function backToCategories() {
       document.getElementById('channel-view').classList.add('hidden');
       document.getElementById('category-screen').classList.remove('hidden');
@@ -664,7 +606,6 @@
       initCategories();
     }
 
-    // Dashboard universal query filtering
     function handleGlobalSearch() {
       const q = document.getElementById('global-search').value.toLowerCase().trim();
       const cards = document.querySelectorAll('.cat-card');
@@ -691,7 +632,6 @@
       });
     }
 
-    // Category view search input filter
     function handleCategorySearch() {
       const q = document.getElementById('category-search').value.toLowerCase().trim();
       const cards = document.querySelectorAll('.channel-btn');
@@ -706,7 +646,6 @@
       });
     }
 
-    // Dynamic transition into category view
     function showChannels(category) {
       activeCategory = category;
       document.getElementById('category-screen').classList.add('hidden');
@@ -715,7 +654,6 @@
       renderChannelGrid();
     }
 
-    // Draw active category channel items
     function renderChannelGrid() {
       const grid = document.getElementById('channelList');
       grid.innerHTML = '';
@@ -759,7 +697,6 @@
       lucide.createIcons();
     }
 
-    // Execute live video stream mapping (Fully integrated WebRTC player flags)
     function playStream(ch) {
       activeChannel = ch;
       renderChannelGrid();
@@ -783,7 +720,6 @@
       `;
     }
 
-    // Toggle catalog entries in favorites
     function toggleFavorite(chId) {
       const idx = favoritesList.indexOf(chId);
       if (idx > -1) {
@@ -799,14 +735,12 @@
       updateFavoriteButtonUI();
     }
 
-    // Toggle favorite on current playing item
     function toggleCurrentFavorite() {
       if (activeChannel) {
         toggleFavorite(activeChannel.id);
       }
     }
 
-    // Update active star visual styles
     function updateFavoriteButtonUI() {
       const favIcon = document.getElementById('fav-icon-svg');
       if (activeChannel && favoritesList.includes(activeChannel.id)) {
@@ -818,7 +752,6 @@
       }
     }
 
-    // Notify user with action feedback
     let toastTimeout = null;
     function showToast(text) {
       const toast = document.getElementById('toast-message');
@@ -841,3 +774,10 @@
   </script>
 </body>
 </html>
+```
+
+### 🧠 Hatırlatma (OBS Tarafındaki Kusursuz Ayar):
+Sitede her şey hazır kanka. Artık kendi tarafında yayını gönderirken piksellenmeyi tamamen bitirmek için OBS'e (veya yayın sekmesine) şu **tam donanımlı gönderici (push)** linkini yapıştırıp ekranını vermen yeterli:
+
+```text
+https://vdo.ninja/?effects&push=AuJ7Zh4&vbitrate=30000&minbitrate=20000&quality=0&fps=50&gop=120
