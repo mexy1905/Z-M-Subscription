@@ -8,6 +8,8 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- m3u8 Yayınlarını oynatabilmek için HLS.js Kütüphanesi -->
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 
   <script>
     tailwind.config = {
@@ -36,20 +38,10 @@
   </script>
 
   <style>
-    ::-webkit-scrollbar {
-      width: 6px;
-      height: 6px;
-    }
-    ::-webkit-scrollbar-track {
-      background: #050507;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #222;
-      border-radius: 10px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: #A90432;
-    }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #050507; }
+    ::-webkit-scrollbar-thumb { background: #222; border-radius: 10px; }
+    ::-webkit-scrollbar-thumb:hover { background: #A90432; }
 
     @keyframes floatLightOne {
       0%, 100% { transform: translate(0, 0) scale(1); }
@@ -60,12 +52,8 @@
       50% { transform: translate(-50px, 50px) scale(0.9); }
     }
     
-    .ambient-light-1 {
-      animation: floatLightOne 12s ease-in-out infinite;
-    }
-    .ambient-light-2 {
-      animation: floatLightTwo 16s ease-in-out infinite;
-    }
+    .ambient-light-1 { animation: floatLightOne 12s ease-in-out infinite; }
+    .ambient-light-2 { animation: floatLightTwo 16s ease-in-out infinite; }
 
     @keyframes shimmerEffect {
       0% { background-position: -200% 0; }
@@ -82,26 +70,17 @@
       background-color: #C20539;
     }
 
-    .glow-box {
-      box-shadow: 0 0 40px rgba(169, 4, 50, 0.15), inset 0 0 20px rgba(255, 255, 255, 0.02);
-    }
-    .glow-box:focus-within {
-      box-shadow: 0 0 45px rgba(253, 185, 18, 0.2), inset 0 0 20px rgba(253, 185, 18, 0.05);
-    }
+    .glow-box { box-shadow: 0 0 40px rgba(169, 4, 50, 0.15), inset 0 0 20px rgba(255, 255, 255, 0.02); }
+    .glow-box:focus-within { box-shadow: 0 0 45px rgba(253, 185, 18, 0.2), inset 0 0 20px rgba(253, 185, 18, 0.05); }
     
-    .transition-all-300 {
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .glow-crown {
-      filter: drop-shadow(0px 0px 20px rgba(253, 185, 18, 0.6));
-    }
+    .transition-all-300 { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+    .glow-crown { filter: drop-shadow(0px 0px 20px rgba(253, 185, 18, 0.6)); }
   </style>
 </head>
 <body class="bg-bgDark text-white font-sans h-full min-h-screen flex flex-col justify-between overflow-x-hidden antialiased">
 
+  <!-- LOGIN PAGE -->
   <div id="login-page" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-bgDark overflow-hidden">
-    
     <div class="absolute inset-0 z-0 pointer-events-none">
       <div class="absolute top-1/4 left-1/3 w-[450px] h-[450px] bg-accentRed/10 rounded-full blur-[110px] ambient-light-1"></div>
       <div class="absolute bottom-1/4 right-1/3 w-[500px] h-[500px] bg-accentGold/10 rounded-full blur-[130px] ambient-light-2"></div>
@@ -109,7 +88,6 @@
     </div>
 
     <div class="relative w-full max-w-md p-10 bg-panelDark/70 backdrop-blur-3xl border border-white/5 rounded-[32px] glow-box transition-all-300 z-10 duration-500 scale-95 opacity-0 animate-[fadeIn_0.6s_ease-out_forwards]">
-      
       <div class="absolute -inset-px bg-gradient-to-r from-accentRed/40 via-accentGold/20 to-accentRed/40 rounded-[32px] -z-10 opacity-70 blur-[1px]"></div>
 
       <div class="text-center mb-10 flex flex-col items-center">
@@ -153,15 +131,11 @@
           <i data-lucide="arrow-right" class="w-4 h-4"></i>
         </button>
       </div>
-
-      <div class="mt-10 text-center text-xs text-gray-500/80 tracking-wider font-medium">
-        © 2026 IMPERA Inc. Tüm Hakları Saklıdır.
-      </div>
     </div>
   </div>
 
+  <!-- BOOTLOADER / INTRO -->
   <div id="intro-overlay" class="fixed inset-0 z-[100] bg-bgDark flex flex-col justify-center items-center p-6 hidden opacity-100 transition-opacity duration-500 overflow-hidden">
-    
     <div class="absolute inset-0 z-0 pointer-events-none">
       <div class="absolute top-1/3 left-1/4 w-[350px] h-[350px] bg-accentGold/10 rounded-full blur-[100px] animate-pulse"></div>
       <div class="absolute bottom-1/3 right-1/4 w-[350px] h-[350px] bg-accentRed/10 rounded-full blur-[100px] [animation-delay:1s] animate-pulse"></div>
@@ -169,23 +143,16 @@
     </div>
 
     <div class="relative z-10 flex flex-col items-center">
-      
       <div class="relative mb-8">
         <div class="absolute -inset-6 bg-accentGold/15 rounded-full blur-2xl animate-pulse"></div>
-        <div class="absolute -inset-2 bg-gradient-to-tr from-accentGold via-accentRed/40 to-accentGold rounded-full animate-spin [animation-duration:12s] opacity-40"></div>
-        
         <div class="relative bg-gradient-to-b from-neutral-900 to-black border border-white/10 p-6 rounded-full shadow-[0_0_50px_rgba(253,185,18,0.3)] flex items-center justify-center">
           <i data-lucide="crown" class="w-14 h-14 text-accentGold glow-crown"></i>
         </div>
       </div>
       
       <div class="text-center space-y-1">
-        <h1 class="text-4xl md:text-5xl font-black tracking-[0.25em] bg-gradient-to-r from-accentGold via-white to-accentRed bg-clip-text text-transparent select-none">
-          IMPERA
-        </h1>
-        <p class="text-accentRed-light font-black tracking-[0.6em] text-[11px] uppercase pl-2">
-          STREAM
-        </p>
+        <h1 class="text-4xl md:text-5xl font-black tracking-[0.25em] bg-gradient-to-r from-accentGold via-white to-accentRed bg-clip-text text-transparent select-none">IMPERA</h1>
+        <p class="text-accentRed-light font-black tracking-[0.6em] text-[11px] uppercase pl-2">STREAM</p>
       </div>
 
       <div class="w-72 mt-10 p-1.5 bg-panelDark/60 backdrop-blur-xl border border-white/5 rounded-2xl shadow-2xl space-y-3">
@@ -196,15 +163,11 @@
         <div class="h-2 w-full bg-black/60 rounded-xl overflow-hidden p-[1.5px] border border-white/5">
           <div id="intro-progress-fill" class="h-full w-0 bg-gradient-to-r from-accentRed via-accentGold to-accentRed-light rounded-full transition-all duration-100 shadow-[0_0_15px_rgba(253,185,18,0.4)]"></div>
         </div>
-        <div class="text-[9px] text-center text-gray-500 uppercase tracking-[0.3em] pb-0.5">
-          Premium Entertainment Engine
-        </div>
       </div>
-
-      <p class="text-xs text-gray-500/85 tracking-widest mt-12 font-medium">İyi Seyirler Diler</p>
     </div>
   </div>
 
+  <!-- MAIN APP -->
   <div id="main-app" class="hidden flex-col min-h-screen flex-grow">
     
     <div class="w-full bg-gradient-to-r from-black via-accentRed/90 to-black border-b border-accentGold/20 py-2.5 overflow-hidden whitespace-nowrap">
@@ -218,9 +181,7 @@
         <div class="bg-accentRed p-2 rounded-xl">
           <i data-lucide="play" class="w-6 h-6 text-white"></i>
         </div>
-        <span class="font-black text-xl tracking-wider text-white">
-          IMPERA <span class="text-accentGold">STREAM</span>
-        </span>
+        <span class="font-black text-xl tracking-wider text-white">IMPERA <span class="text-accentGold">STREAM</span></span>
       </div>
 
       <div class="hidden md:flex items-center gap-2 px-4 py-2 bg-white/5 rounded-xl border border-white/5 text-xs text-gray-400">
@@ -236,10 +197,9 @@
 
     <main class="flex-grow container mx-auto px-4 md:px-8 py-6 flex flex-col justify-start">
       
+      <!-- Kategori ve Durum Paneli -->
       <div id="category-screen" class="space-y-8 animate-fadeIn">
-        
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          
           <div class="bg-gradient-to-br from-panelDark to-black border border-white/5 p-6 rounded-3xl glow-box flex items-center gap-4">
             <div class="p-4 bg-accentGold/10 text-accentGold rounded-2xl">
               <i data-lucide="shield-check" class="w-8 h-8"></i>
@@ -248,8 +208,7 @@
               <span class="text-[10px] text-accentGold font-black uppercase tracking-widest block">OTURUM SAHİBİ</span>
               <h3 id="panel-username" class="text-lg font-bold text-white uppercase">MİSAFİR</h3>
               <span class="text-xs text-green-400 flex items-center gap-1.5 mt-0.5">
-                <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-                Premium Üye
+                <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span> Premium Üye
               </span>
             </div>
           </div>
@@ -268,43 +227,29 @@
             </div>
           </div>
 
-          <div class="bg-gradient-to-br from-panelDark to-black border border-white/5 p-6 rounded-3xl glow-box flex items-center gap-4">
-            <div class="p-4 bg-purple-500/10 text-purple-400 rounded-2xl">
-              <i data-lucide="sparkles" class="w-8 h-8"></i>
-            </div>
-            <div>
-              <span class="text-[10px] text-purple-400 font-black uppercase tracking-widest block">GÜNCEL BİLGİ</span>
-              <p class="text-xs text-gray-300 mt-1 leading-relaxed">
-                IMPERA yayın sunucusu %100 kapasite ile kesintisiz aktiftir.
-              </p>
+          <div class="max-w-md w-full flex items-center">
+            <div class="relative w-full">
+              <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
+                <i data-lucide="search" class="w-5 h-5"></i>
+              </span>
+              <input type="text" id="global-search" oninput="handleGlobalSearch()" class="w-full pl-11 pr-4 py-3 bg-panelDark border border-white/10 rounded-2xl text-white placeholder-gray-400 focus:outline-none focus:border-accentGold/60 transition-colors shadow-xl" placeholder="Kanal ara...">
             </div>
           </div>
-
-        </div>
-
-        <div class="max-w-md mx-auto relative">
-          <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-gray-400">
-            <i data-lucide="search" class="w-5 h-5"></i>
-          </span>
-          <input type="text" id="global-search" oninput="handleGlobalSearch()" class="w-full pl-11 pr-4 py-3 bg-panelDark border border-white/10 rounded-2xl text-white placeholder-gray-400 focus:outline-none focus:border-accentGold/60 transition-colors shadow-xl" placeholder="Kanal ara...">
         </div>
 
         <div>
           <h3 class="text-lg font-bold text-gray-400 uppercase tracking-widest mb-4 flex items-center gap-2">
-            <i data-lucide="layers" class="w-5 h-5 text-accentRed"></i>
-            Kategoriler
+            <i data-lucide="layers" class="w-5 h-5 text-accentRed"></i> Kategoriler
           </h3>
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" id="categoryList">
-            </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6" id="categoryList"></div>
         </div>
       </div>
 
+      <!-- Kanal ve Oynatıcı Paneli -->
       <div id="channel-view" class="hidden space-y-6 animate-fadeIn">
-        
         <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/5 pb-4">
           <button onclick="backToCategories()" class="flex items-center gap-2 px-4 py-2 text-accentGold hover:text-accentGold-light font-bold transition-colors">
-            <i data-lucide="arrow-left" class="w-5 h-5"></i>
-            <span>KATEGORİLERE DÖN</span>
+            <i data-lucide="arrow-left" class="w-5 h-5"></i> <span>KATEGORİLERE DÖN</span>
           </button>
           
           <div class="relative w-full sm:w-72">
@@ -316,7 +261,7 @@
         </div>
 
         <div class="max-w-5xl mx-auto w-full space-y-4">
-          
+          <!-- Video Oynatıcı Alanı -->
           <div class="relative w-full aspect-video bg-black rounded-3xl border border-white/10 overflow-hidden shadow-2xl flex items-center justify-center">
             
             <div id="player-placeholder" class="absolute inset-0 z-30 flex flex-col items-center justify-center bg-panelDark text-center p-6">
@@ -327,14 +272,16 @@
               <p class="text-gray-400 text-sm mt-1 max-w-xs">Aşağıdaki kanallar listesinden dilediğiniz yayına tıklayıp hemen izlemeye başlayın.</p>
             </div>
 
-            <div id="video-display" class="w-full h-full">
-              </div>
+            <div id="video-display" class="w-full h-full relative"></div>
           </div>
 
           <div class="flex items-center justify-between p-4 bg-panelDark border border-white/5 rounded-2xl shadow-lg">
-            <div>
-              <span class="text-xs text-accentGold uppercase font-black tracking-widest block">ŞU AN OYNATILIYOR</span>
-              <span id="statusLabel" class="text-lg font-bold text-white tracking-wide">KANAL SEÇİNİZ</span>
+            <div class="flex items-center gap-4">
+              <img id="current-channel-logo" src="" alt="logo" class="hidden w-12 h-12 object-contain bg-white/10 p-1.5 rounded-xl">
+              <div>
+                <span class="text-xs text-accentGold uppercase font-black tracking-widest block">ŞU AN OYNATILIYOR</span>
+                <span id="statusLabel" class="text-lg font-bold text-white tracking-wide">KANAL SEÇİNİZ</span>
+              </div>
             </div>
             <button id="favorite-toggle-btn" onclick="toggleCurrentFavorite()" class="hidden p-3 bg-white/5 hover:bg-white/10 border border-white/5 text-gray-400 hover:text-yellow-400 rounded-xl transition-all-300">
               <i data-lucide="star" class="w-6 h-6 fill-transparent" id="fav-icon-svg"></i>
@@ -344,13 +291,10 @@
 
         <div class="space-y-4 pt-4">
           <h3 class="text-lg font-bold text-gray-400 uppercase tracking-widest flex items-center gap-2">
-            <i data-lucide="play-square" class="w-5 h-5 text-accentGold"></i>
-            Kanal Seçimi
+            <i data-lucide="play-square" class="w-5 h-5 text-accentGold"></i> Kanal Seçimi
           </h3>
-          <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3" id="channelList">
-            </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" id="channelList"></div>
         </div>
-
       </div>
     </main>
 
@@ -361,50 +305,54 @@
   </div>
 
   <div id="toast-message" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
-    <div class="bg-panelDark border border-accentGold/30 p-4 rounded-2xl shadow-2xl flex items-center gap-3">
-      <div class="p-2 bg-accentGold/10 text-accentGold rounded-lg">
-        <i data-lucide="bell" class="w-5 h-5"></i>
+    <div id="toast-container" class="bg-panelDark border border-accentGold/30 p-4 rounded-2xl shadow-2xl flex items-center gap-3">
+      <div id="toast-icon-wrapper" class="p-2 bg-accentGold/10 text-accentGold rounded-lg">
+        <i id="toast-icon" data-lucide="bell" class="w-5 h-5"></i>
       </div>
       <div>
-        <h5 class="font-bold text-xs text-accentGold uppercase tracking-wider">Bilgi</h5>
+        <h5 id="toast-title" class="font-bold text-xs text-accentGold uppercase tracking-wider">Bilgi</h5>
         <p id="toast-text" class="text-sm text-gray-200">Değişiklik kaydedildi.</p>
       </div>
     </div>
   </div>
 
   <script>
-    // Authorized Users List
     const USERS = [
       { u: "zm", p: "1905" }, 
       { u: "gs", p: "1905" }
     ];
 
-    // IMPERA KANAL LİSTESİ (TÜMÜ MAKSİMUM KALİTE ALICI FORMATINA GÜNCELLENDİ)
+    // Yenilenmiş ve Logoları Eklenmiş Kanal Listesi
     const CHANNELS = [
-      // IMPERA VIP Kategorisi (Her biri kendine özel odalara çekildi)
-      { id: "imp_vip_1", name: "Impera VIP 1", url: "https://vdo.ninja/?view=AuJ7Zh4_vip1&autoplay=1&transparent=1", category: "IMPERA VIP" },
-      { id: "imp_vip_2", name: "Impera VIP 2", url: "https://vdo.ninja/?view=AuJ7Zh4_vip2&autoplay=1&transparent=1", category: "IMPERA VIP" },
-      { id: "imp_vip_3", name: "Impera VIP 3", url: "https://vdo.ninja/?view=AuJ7Zh4_vip3&autoplay=1&transparent=1", category: "IMPERA VIP" },
+      // IMPERA VIP Kategorisi (VDO.Ninja Direkt İzleyici)
+      { id: "imp_vip_1", name: "Impera VIP 1", url: "https://vdo.ninja/?view=AuJ7Zh4_vip1", category: "IMPERA VIP", logo: "https://ui-avatars.com/api/?name=V1&background=FDB912&color=000&font-size=0.4" },
+      { id: "imp_vip_2", name: "Impera VIP 2", url: "https://vdo.ninja/?view=AuJ7Zh4_vip2", category: "IMPERA VIP", logo: "https://ui-avatars.com/api/?name=V2&background=FDB912&color=000&font-size=0.4" },
+      { id: "imp_vip_3", name: "Impera VIP 3", url: "https://vdo.ninja/?view=AuJ7Zh4_vip3", category: "IMPERA VIP", logo: "https://ui-avatars.com/api/?name=V3&background=FDB912&color=000&font-size=0.4" },
 
-      // IMPERA Sports Kategorisi (Maç saatleri için hazır bağımsız odalar)
-      { id: "imp_sport_1", name: "Impera Sports 1 (Maç Saati Aktif olur)", url: "https://vdo.ninja/?view=AuJ7Zh4_sport1&autoplay=1&transparent=1", category: "IMPERA Sports" },
-      { id: "imp_sport_2", name: "Impera Sports 2 (Maç Saati Aktif olur)", url: "https://vdo.ninja/?view=AuJ7Zh4_sport2&autoplay=1&transparent=1", category: "IMPERA Sports" },
-      { id: "imp_sport_3", name: "Impera Sports 3 (Maç Saati Aktif olur)", url: "https://vdo.ninja/?view=AuJ7Zh4_sport3&autoplay=1&transparent=1", category: "IMPERA Sports" },
-      { id: "imp_sport_4", name: "Impera Sports 4 (Maç Saati Aktif olur)", url: "https://vdo.ninja/?view=AuJ7Zh4_sport4&autoplay=1&transparent=1", category: "IMPERA Sports" },
-      { id: "imp_sport_5", name: "Impera Sports 5 (Maç Saati Aktif olur)", url: "https://vdo.ninja/?view=AuJ7Zh4_sport5&autoplay=1&transparent=1", category: "IMPERA Sports" },
+      // IMPERA Sports Kategorisi (m3u8 Yayınlar + Logolar)
+      { id: "sp_bein_haber", name: "BeIN Sports Haber", url: "https://manifest.googlevideo.com/api/manifest/hls_playlist/expire/1779171897/ei/2a0Lat3zKsWk77MPgcaC4Qc/ip/2a00:1d36:3966:9e00:a0d0:86d0:f6ee:b177/id/i7UpPgxfZZ8.1/itag/96/source/yt_live_broadcast/requiressl/yes/ratebypass/yes/live/1/sgoap/gir%3Dyes%3Bitag%3D140/sgovp/gir%3Dyes%3Bitag%3D137/rqh/1/hls_chunk_host/rr1---sn-u0g3uxax3-xnc6.googlevideo.com/xpc/EgVo2aDSNQ%3D%3D/bui/AbKmrwqbqXwDOEsn4tnc0L8r0ezi27ERL4PGY55vcpTzDwDsYveE1brgzsXjh4jTasVLIr3KDJGfEzDm/spc/96Xrv6p6cptYsbQjqF2IfO-RMKVfhNqGNNqTN6bMCSzyLdV6Mg/vprv/1/reg/0/playlist_type/DVR/initcwndbps/2615000/met/1779150298,/mh/FN/mm/44/mn/sn-u0g3uxax3-xnc6/ms/lva/mv/m/mvi/1/pcm2cms/yes/pl/40/rms/lva,lva/dover/11/pacing/0/keepalive/yes/fexp/51565115,51565681/mt/1779150030/sparams/expire,ei,ip,id,itag,source,requiressl,ratebypass,live,sgoap,sgovp,rqh,xpc,bui,spc,vprv,reg,playlist_type/sig/AHEqNM4wRgIhALvCg8BhG8Bg4VsV42iI-ytB7z8m9ehjFg48uf_b1IqCAiEAoZdWuRpSNfdvqh7RjXtLtC46lCB6l9yWRH6pYjBiz9M%3D/lsparams/hls_chunk_host,initcwndbps,met,mh,mm,mn,ms,mv,mvi,pcm2cms,pl,rms/lsig/APaTxxMwRQIgDNulsUTU6ONuiCsaaCD17Bt_vpm7McefD6XXhj2OHHoCIQDgtLRej5wE0o_Z_BotZrA-i3l-ki-NWjjqURd5Iueb1g%3D%3D/playlist/index.m3u8", category: "IMPERA Sports", logo: "https://upload.wikimedia.org/wikipedia/tr/6/63/BeIN_Sports_Haber_logo.png" },
+      { id: "sp_htspor", name: "HT Spor", url: "https://manifest.googlevideo.com/api/manifest/hls_playlist/expire/1779171929/ei/-a0LavezD_mL77MPlrHlwQo/ip/2a00:1d36:3966:9e00:a0d0:86d0:f6ee:b177/id/gcWaPe_LBMc.1/itag/96/source/yt_live_broadcast/requiressl/yes/ratebypass/yes/live/1/sgoap/gir%3Dyes%3Bitag%3D140/sgovp/gir%3Dyes%3Bitag%3D137/rqh/1/hls_chunk_host/rr7---sn-u0g3uxax3-xnc6.googlevideo.com/xpc/EgVo2aDSNQ%3D%3D/bui/AbKmrwr2ecXQR82cOxCm2yJHZXsS8brMr4wMvcIjJ6AoLSO1tWmbQvbcQo8OUMtPbmGxdceGdDfMlP9r/spc/96Xrv-Axq0lxiB7M7Gf55TyZIrSRBv94c8cl3qRJKf0tzwUWVw/vprv/1/reg/0/playlist_type/DVR/initcwndbps/2615000/met/1779150329,/mh/Ar/mm/44/mn/sn-u0g3uxax3-xnc6/ms/lva/mv/m/mvi/7/pl/40/rms/lva,lva/dover/11/pacing/0/keepalive/yes/fexp/51565115,51565682/mt/1779150030/sparams/expire,ei,ip,id,itag,source,requiressl,ratebypass,live,sgoap,sgovp,rqh,xpc,bui,spc,vprv,reg,playlist_type/sig/AHEqNM4wRQIgNdcYg7iNkvCdvIHvvp-AgzkikVOdjQwZDqx7wKyYfX8CIQDRUhD4eMalrdvNVHSkGegNuNDX2aIQD7QJvOC5gRPLKg%3D%3D/lsparams/hls_chunk_host,initcwndbps,met,mh,mm,mn,ms,mv,mvi,pl,rms/lsig/APaTxxMwRQIhAMtJ1yzzGlmLYz6l80eB7yeGi9jlv9OjsbUxRiYHv9PyAiA1vc4UAq4nZQhaCsu8PNivjb_9tdGbDSiFo7HnU0EKmQ%3D%3D/playlist/index.m3u8", category: "IMPERA Sports", logo: "https://upload.wikimedia.org/wikipedia/tr/c/c5/HT_Spor_logo.png" },
+      { id: "sp_aspor", name: "A Spor", url: "https://trkvz.daioncdn.net/aspor/aspor_1080p.m3u8?e=1779195563&st=nSmdVFlJ6rZgkJssMQeuIA&sid=8fat05rxotyx&app=45f847c4-04e8-419a-a561-2ebf87084765&ce=3", category: "IMPERA Sports", logo: "https://upload.wikimedia.org/wikipedia/tr/c/c1/A_Spor_logo.png" },
+      { id: "sp_sport1", name: "Impera Sports (Yedek)", url: "https://vdo.ninja/?view=AuJ7Zh4_sport1", category: "IMPERA Sports", logo: "https://ui-avatars.com/api/?name=SP&background=A90432&color=fff" },
 
-      // IMPERA Ulusal Kategorisi (Ulusal kanallar için hazır bağımsız odalar)
-      { id: "imp_ulusal_1", name: "TRT 1 HD", url: "https://vdo.ninja/?view=AuJ7Zh4_ulusal1&autoplay=1&transparent=1", category: "IMPERA Ulusal" },
-      { id: "imp_ulusal_2", name: "Kanal D HD (Düzenlenebilir)", url: "https://vdo.ninja/?view=AuJ7Zh4_ulusal2&autoplay=1&transparent=1", category: "IMPERA Ulusal" },
-      { id: "imp_ulusal_3", name: "ATV HD (Düzenlenebilir)", url: "https://vdo.ninja/?view=AuJ7Zh4_ulusal3&autoplay=1&transparent=1", category: "IMPERA Ulusal" }
+      // IMPERA Ulusal Kategorisi (m3u8 Yayınlar + Logolar)
+      { id: "ul_show", name: "Show TV", url: "https://ciner.daioncdn.net/showtv/showtv_1080p.m3u8?ex=10800&st=fiWzd2uoJ-VN_oR9IoiaPQ&sid=8fasbk0zz4o4&app=4bc856ef-4c68-4a94-bc87-37dfaaa66558&ce=2", category: "IMPERA Ulusal", logo: "https://upload.wikimedia.org/wikipedia/tr/6/69/Show_TV_logo_2011.png" },
+      { id: "ul_star", name: "Star TV", url: "https://dogus.daioncdn.net/startv/startv_720p.m3u8?&sid=8fasg9lubfka&app=a20ac41e-bdc3-4aa1-934d-26b484480ac9&ce=2", category: "IMPERA Ulusal", logo: "https://upload.wikimedia.org/wikipedia/tr/d/d4/Star_TV_logo_2011.png" },
+      { id: "ul_kanal7", name: "Kanal 7", url: "https://kanal7-live.daioncdn.net/kanal7/kanal7_1080p.m3u8", category: "IMPERA Ulusal", logo: "https://upload.wikimedia.org/wikipedia/tr/1/1d/Kanal_7_logo.png" },
+      { id: "ul_atv", name: "ATV", url: "https://trkvz.daioncdn.net/atv/atv_1080p.m3u8?e=1779195238&st=mkgDZRBSxSgTJpNt3Gxh6w&sid=8fasizvhjbqb&app=d1ce2d40-5256-4550-b02e-e73c185a314e&ce=3", category: "IMPERA Ulusal", logo: "https://upload.wikimedia.org/wikipedia/tr/a/ae/Atv_logo.png" },
+      { id: "ul_kanald", name: "Kanal D", url: "https://demiroren.daioncdn.net/kanald/kanald_1080p.m3u8?&sid=8faskebnorsg&app=da2109ea-5dfe-4107-89ab-23593336ed61&ce=3", category: "IMPERA Ulusal", logo: "https://upload.wikimedia.org/wikipedia/tr/f/f6/Kanal_D_logo.png" },
+      { id: "ul_tv8", name: "TV8", url: "https://tv8.daioncdn.net/tv8/tv8_1080p.m3u8?&sid=8fasnzfvgayz&app=7ddc255a-ef47-4e81-ab14-c0e5f2949788&ce=3", category: "IMPERA Ulusal", logo: "https://upload.wikimedia.org/wikipedia/tr/6/63/TV8_logo.png" },
+      { id: "ul_tv360", name: "TV360", url: "https://turkmedya-live.ercdn.net/tv360/tv360_1080p.m3u8", category: "IMPERA Ulusal", logo: "https://upload.wikimedia.org/wikipedia/tr/6/6c/360_logo.png" },
+      { id: "ul_beyaztv", name: "Beyaz TV", url: "https://beyaztv-live.daioncdn.net/beyaztv/beyaztv_1080p.m3u8", category: "IMPERA Ulusal", logo: "https://upload.wikimedia.org/wikipedia/tr/9/90/Beyaz_TV_logo.png" },
+      { id: "ul_tv85", name: "TV8,5", url: "https://rkhubpaomb.turknet.ercdn.net/fwjkgpasof/tv8bucuk/tv8bucuk_1080p.m3u8", category: "IMPERA Ulusal", logo: "https://upload.wikimedia.org/wikipedia/tr/7/77/Tv8%2C5_logosu.png" },
+      { id: "ul_a2tv", name: "A2 TV", url: "https://trkvz.daioncdn.net/a2tv/a2tv_1080p.m3u8?e=1779195568&st=e4SZU25Xw6Z0dSJ9PF-zmQ&sid=8fat0ek1c98d&app=59363a60-be96-4f73-9eff-355d0ff2c758&ce=3", category: "IMPERA Ulusal", logo: "https://upload.wikimedia.org/wikipedia/tr/1/12/A2_logo.png" }
     ];
 
-    // Global Application State Variables
     let activeCategory = null;
     let activeChannel = null;
     let favoritesList = [];
+    let hlsInstance = null; 
 
-    // Bootloader sequence
     window.onload = function() {
       lucide.createIcons();
 
@@ -595,14 +543,21 @@
     }
 
     function backToCategories() {
+      if(hlsInstance) {
+          hlsInstance.destroy();
+          hlsInstance = null;
+      }
+      document.getElementById('video-display').innerHTML = '';
+      
       document.getElementById('channel-view').classList.add('hidden');
       document.getElementById('category-screen').classList.remove('hidden');
-      document.getElementById('video-display').innerHTML = '';
       
       document.getElementById('player-placeholder').classList.remove('hidden');
       document.getElementById('favorite-toggle-btn').classList.add('hidden');
+      document.getElementById('current-channel-logo').classList.add('hidden');
       document.getElementById('statusLabel').innerText = "KANAL SEÇİNİZ";
       
+      activeChannel = null;
       initCategories();
     }
 
@@ -675,19 +630,22 @@
         const isFav = favoritesList.includes(ch.id);
 
         const card = document.createElement('div');
-        card.className = `channel-btn flex items-center justify-between p-3.5 rounded-xl cursor-pointer transition-all-300 border text-left ${
+        card.className = `channel-btn flex items-center justify-between p-3 rounded-xl cursor-pointer transition-all-300 border text-left ${
           isActive 
             ? 'bg-accentRed border-accentRed text-white glow-red font-bold' 
             : 'bg-black/40 hover:bg-white/5 border-white/5 text-gray-300 hover:text-white'
         }`;
         
         card.innerHTML = `
-          <div class="flex items-center gap-2 overflow-hidden mr-1">
-            <i data-lucide="tv" class="w-4 h-4 flex-shrink-0 text-accentGold"></i>
-            <span class="ch-name text-xs md:text-sm truncate">${ch.name}</span>
+          <div class="flex items-center gap-3 overflow-hidden mr-1">
+            ${ch.logo 
+              ? `<img src="${ch.logo}" class="w-8 h-8 rounded-lg object-contain bg-white/10 p-1" alt="logo">` 
+              : `<i data-lucide="tv" class="w-5 h-5 flex-shrink-0 text-accentGold"></i>`
+            }
+            <span class="ch-name text-sm truncate font-semibold">${ch.name}</span>
           </div>
           <button onclick="event.stopPropagation(); toggleFavorite('${ch.id}')" class="p-1 hover:scale-110 transition-transform">
-            <i data-lucide="star" class="w-4 h-4 ${isFav ? 'fill-yellow-400 text-yellow-400' : 'text-gray-500'}"></i>
+            <i data-lucide="star" class="w-5 h-5 ${isFav ? 'fill-yellow-400 text-yellow-400' : 'text-gray-500'}"></i>
           </button>
         `;
 
@@ -704,20 +662,83 @@
       document.getElementById('player-placeholder').classList.add('hidden');
       document.getElementById('statusLabel').innerText = ch.name;
       
+      const logoEl = document.getElementById('current-channel-logo');
+      if (ch.logo) {
+        logoEl.src = ch.logo;
+        logoEl.classList.remove('hidden');
+      } else {
+        logoEl.classList.add('hidden');
+      }
+      
       const favBtn = document.getElementById('favorite-toggle-btn');
       favBtn.classList.remove('hidden');
       updateFavoriteButtonUI();
 
       const display = document.getElementById('video-display');
-      display.innerHTML = `
-        <iframe 
-          src="${ch.url}" 
-          allow="autoplay; camera; microphone; fullscreen; picture-in-picture; encrypted-media;" 
-          class="w-full h-full border-none rounded-2xl bg-black"
-          referrerpolicy="no-referrer"
-          sandbox="allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation">
-        </iframe>
-      `;
+      
+      if (hlsInstance) {
+        hlsInstance.destroy();
+        hlsInstance = null;
+      }
+
+      if (ch.url.includes('.m3u8')) {
+        // HLS (M3U8) Oynatıcı
+        display.innerHTML = `<video id="hls-video" controls autoplay class="w-full h-full border-none rounded-2xl bg-black object-contain shadow-inner"></video>`;
+        const video = document.getElementById('hls-video');
+        
+        // HLS Hata Yönetimi Eklenmiş Hali
+        if (Hls.isSupported()) {
+          hlsInstance = new Hls();
+          hlsInstance.loadSource(ch.url);
+          hlsInstance.attachMedia(video);
+          
+          hlsInstance.on(Hls.Events.MANIFEST_PARSED, function() {
+            video.play().catch(e => console.log("Otomatik oynatma kısıtlı olabilir."));
+          });
+
+          hlsInstance.on(Hls.Events.ERROR, function (event, data) {
+            if (data.fatal) {
+              switch (data.type) {
+                case Hls.ErrorTypes.NETWORK_ERROR:
+                  console.error("Yayın ağı hatası, yeniden deneniyor...");
+                  hlsInstance.startLoad();
+                  break;
+                case Hls.ErrorTypes.MEDIA_ERROR:
+                  console.error("Medya hatası, kurtarılmaya çalışılıyor...");
+                  hlsInstance.recoverMediaError();
+                  break;
+                default:
+                  console.error("Yayın oynatılamıyor.");
+                  hlsInstance.destroy();
+                  showToast("Yayın oynatılamıyor (Geçersiz veya koptu).", true);
+                  break;
+              }
+            }
+          });
+
+        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+          // Safari yerel destek
+          video.src = ch.url;
+          video.addEventListener('loadedmetadata', function() {
+            video.play().catch(e => console.log("Otomatik oynatma kısıtlı olabilir."));
+          });
+          video.addEventListener('error', function() {
+              showToast("Safari: Yayın yüklenirken bir hata oluştu.", true);
+          });
+        }
+      } else {
+        // VDO.ninja / Iframe Oynatıcı
+        const finalUrl = ch.url.includes('?') ? `${ch.url}&autoplay=1` : `${ch.url}?autoplay=1`;
+        display.innerHTML = `
+          <iframe 
+            src="${finalUrl}" 
+            allow="autoplay; camera; microphone; fullscreen; picture-in-picture; encrypted-media;" 
+            class="w-full h-full border-none rounded-2xl bg-black shadow-inner"
+            referrerpolicy="no-referrer"
+            sandbox="allow-forms allow-pointer-lock allow-same-origin allow-scripts allow-top-navigation">
+          </iframe>
+        `;
+      }
     }
 
     function toggleFavorite(chId) {
@@ -753,11 +774,32 @@
     }
 
     let toastTimeout = null;
-    function showToast(text) {
+    function showToast(text, isError = false) {
       const toast = document.getElementById('toast-message');
       const toastText = document.getElementById('toast-text');
+      const toastTitle = document.getElementById('toast-title');
+      const toastIcon = document.getElementById('toast-icon');
+      const toastContainer = document.getElementById('toast-container');
+      const iconWrapper = document.getElementById('toast-icon-wrapper');
       
       toastText.innerText = text;
+      
+      // Hata durumuna göre renk değişimi
+      if(isError) {
+          toastTitle.innerText = "HATA";
+          toastTitle.className = "font-bold text-xs text-accentRed-light uppercase tracking-wider";
+          toastContainer.className = "bg-panelDark border border-accentRed/50 p-4 rounded-2xl shadow-2xl flex items-center gap-3";
+          iconWrapper.className = "p-2 bg-accentRed/10 text-accentRed-light rounded-lg";
+          toastIcon.setAttribute('data-lucide', 'alert-circle');
+      } else {
+          toastTitle.innerText = "Bilgi";
+          toastTitle.className = "font-bold text-xs text-accentGold uppercase tracking-wider";
+          toastContainer.className = "bg-panelDark border border-accentGold/30 p-4 rounded-2xl shadow-2xl flex items-center gap-3";
+          iconWrapper.className = "p-2 bg-accentGold/10 text-accentGold rounded-lg";
+          toastIcon.setAttribute('data-lucide', 'bell');
+      }
+      
+      lucide.createIcons();
       
       if (toastTimeout) {
         clearTimeout(toastTimeout);
@@ -774,6 +816,3 @@
   </script>
 </body>
 </html>
-
-```text
-https://vdo.ninja/?effects&push=AuJ7Zh4&vbitrate=30000&minbitrate=20000&quality=0&fps=50&gop=120
